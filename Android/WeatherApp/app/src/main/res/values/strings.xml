@@ -17,6 +17,9 @@
     <string name="phone_number">Phone Number</string>
     <string name="enter_your_phone_number">Enter your phone number</string>
     <string name="email_address">Email Address</string>
+    <string name="log_out">Logout</string>
+    <string name="profile">Profile</string>
+    <string name="dies">Phone number</string>
 
     <string name="action_sign_in_short">Register</string>
     <string name="email">Email</string>
