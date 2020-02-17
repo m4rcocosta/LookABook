@@ -6,6 +6,46 @@
     android:layout_height="match_parent"
     tools:context="uni.mobile.mobileapp.SettingsActivity">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Theme"
+            android:id="@+id/theme_textview"></TextView>
+
+        <Button
+            android:id="@+id/buttonDayMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/theme_textview"
+            android:text="Day" />
+
+        <Button
+            android:id="@+id/buttonNightMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/buttonDayMode"
+            android:text="Night" />
+
+        <Button
+            android:id="@+id/buttonAutoMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/buttonNightMode"
+            android:text="Auto" />
+
+        <Button
+            android:id="@+id/buttonBatteryMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/buttonAutoMode"
+            android:text="Battery" />
+    </RelativeLayout>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id = "@+id/bottom_navigation"
         android:layout_width="match_parent"
