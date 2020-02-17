@@ -11,13 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="uni.mobile.mobileapp.ProfileActivity"></activity>
-        <activity android:name="uni.mobile.mobileapp.HomeActivity" />
-        <activity android:name="uni.mobile.mobileapp.EditProfileActivity" />
-        <activity android:name="uni.mobile.mobileapp.ResetPasswordActivity" />
-        <activity android:name="uni.mobile.mobileapp.SignInActivity" />
-        <activity android:name="uni.mobile.mobileapp.SignUpActivity" />
-        <activity android:name="uni.mobile.mobileapp.MainActivity">
+        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".EditProfileActivity" />
+        <activity android:name=".ResetPasswordActivity" />
+        <activity android:name=".SignInActivity" />
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

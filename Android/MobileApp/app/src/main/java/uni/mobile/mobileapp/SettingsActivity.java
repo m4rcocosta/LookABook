@@ -10,12 +10,12 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class HomeActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_settings);
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
@@ -25,16 +25,15 @@ public class HomeActivity extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.action_home:
-                                Toast.makeText(getApplicationContext(), "Home", Toast.LENGTH_SHORT).show();
-                                break;
-                            case R.id.action_profile:
-                                Intent intentProfile = new Intent(HomeActivity.this, ProfileActivity.class);
+                                Intent intentProfile = new Intent(SettingsActivity.this, HomeActivity.class);
                                 startActivity(intentProfile);
                                 finish();
                                 break;
-                            case R.id.action_settings:
-                                startActivity(new Intent(HomeActivity.this, SettingsActivity.class));
+                            case R.id.action_profile:
+                                startActivity(new Intent(SettingsActivity.this, ProfileActivity.class));
                                 finish();
+                                break;
+                            case R.id.action_settings:
                                 break;
                         }
                         return true;

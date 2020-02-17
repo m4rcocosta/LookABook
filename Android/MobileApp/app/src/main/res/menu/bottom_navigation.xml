@@ -2,13 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id = "@+id/action_favorites"
-        android:enabled = "true"
-        android:icon="@drawable/ic_favorite_white_24dp"
-        android:title="Favorites"
-        app:showAsAction = "ifRoom"
-        />
-    <item
         android:id = "@+id/action_home"
         android:enabled = "true"
         android:icon="@drawable/baseline_home_white_24dp"
@@ -20,6 +13,13 @@
         android:enabled = "true"
         android:icon="@drawable/ic_person_white_24dp"
         android:title="Profile"
+        app:showAsAction = "ifRoom"
+        />
+    <item
+        android:id = "@+id/action_settings"
+        android:enabled = "true"
+        android:icon="@drawable/ic_settings_white_24dp"
+        android:title="Settings"
         app:showAsAction = "ifRoom"
         />
 </menu>
