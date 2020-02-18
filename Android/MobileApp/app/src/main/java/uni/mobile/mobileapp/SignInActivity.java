@@ -7,12 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -20,7 +21,7 @@ public class SignInActivity extends AppCompatActivity {
 
     private EditText SignInMail, SignInPass;
     private FirebaseAuth auth;
-    private Button SignInButton;
+    private MaterialButton SignInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +32,18 @@ public class SignInActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_signin);
 
-        SignInMail = (EditText) findViewById(R.id.SignInMail);
-        SignInPass = (EditText) findViewById(R.id.SignInPass);
-        SignInButton = (Button) findViewById(R.id.SignInButton);
+        SignInMail = findViewById(R.id.SignInMail);
+        SignInPass = findViewById(R.id.SignInPass);
+        SignInButton = findViewById(R.id.SignInButton);
+
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
+
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
 
         SignInButton.setOnClickListener(new View.OnClickListener() {
             @Override

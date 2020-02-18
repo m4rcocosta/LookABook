@@ -7,18 +7,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ResetPasswordActivity extends AppCompatActivity {
 
     private EditText inputEmail;
-    private Button btnReset;
+    private MaterialButton btnReset;
     private FirebaseAuth auth;
 
     @Override
@@ -26,8 +26,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
-        inputEmail = (EditText) findViewById(R.id.EditTextSurname);
-        btnReset = (Button) findViewById(R.id.btn_reset_password);
+        inputEmail = findViewById(R.id.EditTextEmailRP);
+        btnReset = findViewById(R.id.btn_reset_password);
         auth = FirebaseAuth.getInstance();
 
         btnReset.setOnClickListener(new View.OnClickListener() {

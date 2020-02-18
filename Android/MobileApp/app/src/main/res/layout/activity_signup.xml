@@ -44,20 +44,30 @@
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:singleLine="true"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"/>
         <EditText
             android:id="@+id/SignUpPass"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:hint="@string/password"
-            android:inputType="textPassword"/>
-        <Button
-            android:id="@+id/SignUpButton"
-            style="?android:textAppearanceSmall"
+            android:inputType="textPassword"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"/>
+        <EditText
+            android:id="@+id/SignUpConfirmPass"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:hint="@string/confirm_password"
+            android:inputType="textPassword"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/SignUpButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@color/colorAccent"
+            android:backgroundTint="@color/colorAccent"
             android:text="@string/action_sign_in_short"
             android:textColor="@android:color/black"
             android:textStyle="bold"/>

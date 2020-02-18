@@ -8,6 +8,7 @@
     <string name="already_a_member">Already registered</string>
     <string name="mail_address">Email</string>
     <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
     <string name="ok">OK</string>
     <string name="create_profile">Create Profile</string>
     <string name="name">Name</string>

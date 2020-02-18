@@ -68,15 +68,16 @@
                     android:text="@string/name"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="25sp"/>
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonEditName"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/profile_name_textView"
                     android:drawableRight="@drawable/baseline_create_black_24dp"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"/>
+                    android:layout_marginBottom="1dp"
+                    android:backgroundTint="@color/colorAccent"/>
             </TableRow>
             <TableRow
                 android:layout_width="fill_parent"
@@ -100,15 +101,16 @@
                     android:text="@string/surname"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="25sp"/>
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonEditSurname"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/profile_name_textView"
                     android:drawableRight="@drawable/baseline_create_black_24dp"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"/>
+                    android:layout_marginBottom="1dp"
+                    android:backgroundTint="@color/colorAccent"/>
             </TableRow>
             <TableRow
                 android:layout_width="fill_parent"
@@ -132,15 +134,16 @@
                     android:text="@string/dies"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="25sp"/>
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonEditPhoneNo"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/profile_name_textView"
                     android:drawableRight="@drawable/baseline_dialpad_black_24dp"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"/>
+                    android:layout_marginBottom="1dp"
+                    android:backgroundTint="@color/colorAccent"/>
             </TableRow>
             <TableRow
                 android:layout_width="fill_parent"
@@ -165,7 +168,7 @@
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="25sp"/>
             </TableRow>
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonLogout"
                 android:textSize="20sp"
                 android:layout_width="wrap_content"
@@ -176,7 +179,8 @@
                 android:text="@string/log_out"
                 android:clickable="true"
                 android:gravity="center"
-                android:textColor="@color/colorPrimaryDark"/>
+                android:backgroundTint="@color/colorAccent"
+                android:textColor="@android:color/black"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
