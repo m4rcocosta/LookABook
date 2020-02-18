@@ -26,11 +26,10 @@ public class SignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
 
-        setContentView(R.layout.activity_sign_in);
+        setContentView(R.layout.activity_signin);
 
         SignInMail = (EditText) findViewById(R.id.SignInMail);
         SignInPass = (EditText) findViewById(R.id.SignInPass);
@@ -75,13 +74,14 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     public void NavigateSignUp(View v) {
-        Intent inent = new Intent(this, SignUpActivity.class);
-        startActivity(inent);
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
         finish();
     }
+
     public void NavigateForgetMyPassword(View v) {
-        Intent inent = new Intent(this, ResetPasswordActivity.class);
-        startActivity(inent);
+        Intent intent = new Intent(this, ResetPasswordActivity.class);
+        startActivity(intent);
         finish();
     }
 }

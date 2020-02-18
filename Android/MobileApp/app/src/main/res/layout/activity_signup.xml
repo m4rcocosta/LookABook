@@ -69,7 +69,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:text="@string/already_a_member"
-            android:onClick="navigate_sign_in"
+            android:onClick="navigateSignIn"
             android:clickable="true"
             android:gravity="center"
             android:textColor="@color/colorAccent"/>

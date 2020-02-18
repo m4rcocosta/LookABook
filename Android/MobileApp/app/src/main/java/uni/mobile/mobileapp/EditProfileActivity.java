@@ -38,7 +38,7 @@ import java.io.IOException;
 public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = EditProfileActivity.class.getSimpleName();
-    Button btnsave;
+    private Button btnsave;
     private FirebaseAuth firebaseAuth;
     private TextView textViewemailname;
     private DatabaseReference databaseReference;
@@ -48,28 +48,14 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     private ImageView profileImageView;
     private FirebaseStorage firebaseStorage;
     private static int PICK_IMAGE = 123;
-    Uri imagePath;
+    private Uri imagePath;
     private StorageReference storageReference;
 
-    public EditProfileActivity() {
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data.getData() != null) {
-            imagePath = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imagePath);
-                profileImageView.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+
         firebaseAuth=FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() == null){
             finish();
@@ -98,6 +84,21 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             }
         });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data.getData() != null) {
+            imagePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imagePath);
+                profileImageView.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void userInformation(){
         String name = editTextName.getText().toString().trim();
         String surname = editTextSurname.getText().toString().trim();

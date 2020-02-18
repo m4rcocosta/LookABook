@@ -3,7 +3,6 @@ package uni.mobile.mobileapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,10 +21,11 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private Button btnReset;
     private FirebaseAuth auth;
 
-    @SuppressLint("WrongViewCast")
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
+
         inputEmail = (EditText) findViewById(R.id.EditTextSurname);
         btnReset = (Button) findViewById(R.id.btn_reset_password);
         auth = FirebaseAuth.getInstance();
@@ -56,7 +56,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
     }
 
     public void NavigateSignUp(View v) {
-        Intent inent = new Intent(this, SignUpActivity.class);
-        startActivity(inent);
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
+        finish();;
     }
 }

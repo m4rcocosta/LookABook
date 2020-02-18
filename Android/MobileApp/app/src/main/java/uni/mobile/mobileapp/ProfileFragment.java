@@ -1,24 +1,26 @@
 package uni.mobile.mobileapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,7 +32,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-public class ProfileActivity extends AppCompatActivity {
+
+public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     private DatabaseReference databaseReference;
     private TextView profileNameTextView, profileSurnameTextView, profilePhonenoTextView;
@@ -40,40 +43,33 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseStorage firebaseStorage;
     private TextView textViewemailname;
     private EditText editTextName;
+    private Button buttonEditName, buttonEditSurname, buttonEditPhoneNo, buttonLogout;
 
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_profile, container, false);
+    }
 
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        buttonEditName = view.findViewById(R.id.buttonEditName);
+        buttonEditSurname = view.findViewById(R.id.buttonEditSurname);
+        buttonEditPhoneNo = view.findViewById(R.id.buttonEditPhoneNo);
+        buttonLogout = view.findViewById(R.id.buttonLogout);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.action_home:
-                                Intent intentProfile = new Intent(ProfileActivity.this, HomeActivity.class);
-                                startActivity(intentProfile);
-                                finish();
-                                break;
-                            case R.id.action_profile:
-                                break;
-                            case R.id.action_settings:
-                                startActivity(new Intent(ProfileActivity.this, SettingsActivity.class));
-                                finish();
-                                break;
-                        }
-                        return true;
-                    }
-                });
+        buttonEditName.setOnClickListener(this);
+        buttonEditSurname.setOnClickListener(this);
+        buttonEditPhoneNo.setOnClickListener(this);
+        buttonLogout.setOnClickListener(this);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        editTextName = (EditText)findViewById(R.id.et_username);
-        profilePicImageView = findViewById(R.id.profile_pic_imageView);
-        profileNameTextView = findViewById(R.id.profile_name_textView);
-        profileSurnameTextView = findViewById(R.id.profile_surname_textView);
-        profilePhonenoTextView = findViewById(R.id.profile_phoneno_textView);
+        editTextName = (EditText) view.findViewById(R.id.et_username);
+        profilePicImageView = view.findViewById(R.id.profile_pic_imageView);
+        profileNameTextView = view.findViewById(R.id.profile_name_textView);
+        profileSurnameTextView = view.findViewById(R.id.profile_surname_textView);
+        profilePhonenoTextView = view.findViewById(R.id.profile_phoneno_textView);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
@@ -90,8 +86,8 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
         if (firebaseAuth.getCurrentUser() == null){
-            finish();
-            startActivity(new Intent(getApplicationContext(),SignInActivity.class));
+            startActivity(new Intent(getActivity(), SignInActivity.class));
+            getActivity().finish();
         }
         final FirebaseUser user=firebaseAuth.getCurrentUser();
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -101,20 +97,22 @@ public class ProfileActivity extends AppCompatActivity {
                 profileNameTextView.setText(userProfile.getUserName());
                 profileSurnameTextView.setText(userProfile.getUserSurname());
                 profilePhonenoTextView.setText(userProfile.getUserPhoneno());
-                textViewemailname=(TextView)findViewById(R.id.textViewEmailAdress);
+                textViewemailname=(TextView) getView().findViewById(R.id.textViewEmailAdress);
                 textViewemailname.setText(user.getEmail());
             }
             @Override
             public void onCancelled( DatabaseError databaseError) {
-                Toast.makeText(ProfileActivity.this, databaseError.getCode(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), databaseError.getCode(), Toast.LENGTH_SHORT).show();
             }
         });
+
     }
-    public void buttonClickedEditName(View view) {
+
+    private void buttonClickedEditName() {
         LayoutInflater inflater = getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_name, null);
         final EditText etUsername = alertLayout.findViewById(R.id.et_username);
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
         alert.setTitle("Name Edit");
         // this is set the view from XML inside AlertDialog
         alert.setView(alertLayout);
@@ -141,11 +139,12 @@ public class ProfileActivity extends AppCompatActivity {
         AlertDialog dialog = alert.create();
         dialog.show();
     }
-    public void buttonClickedEditSurname(View view) {
+
+    private void buttonClickedEditSurname() {
         LayoutInflater inflater = getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_surname, null);
         final EditText etUserSurname = alertLayout.findViewById(R.id.et_userSurname);
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
         alert.setTitle("Surname Edit");
         // this is set the view from XML inside AlertDialog
         alert.setView(alertLayout);
@@ -173,11 +172,12 @@ public class ProfileActivity extends AppCompatActivity {
         AlertDialog dialog = alert.create();
         dialog.show();
     }
-    public void buttonClickedEditPhoneNo(View view) {
+
+    private void buttonClickedEditPhoneNo() {
         LayoutInflater inflater = getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_phoneno, null);
         final EditText etUserPhoneno = alertLayout.findViewById(R.id.et_userPhoneno);
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
         alert.setTitle("Phone No Edit");
         // this is set the view from XML inside AlertDialog
         alert.setView(alertLayout);
@@ -205,9 +205,29 @@ public class ProfileActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void navigateLogOut(View v){
+    private void buttonClickedLogout(){
         FirebaseAuth.getInstance().signOut();
-        Intent inent = new Intent(this, MainActivity.class);
-        startActivity(inent);
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        startActivity(intent);
+        getActivity().finish();
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.buttonEditName:
+                buttonClickedEditName();
+                break;
+            case R.id.buttonEditSurname:
+                buttonClickedEditSurname();
+                break;
+            case R.id.buttonEditPhoneNo:
+                buttonClickedEditPhoneNo();
+                break;
+            case R.id.buttonLogout:
+                buttonClickedLogout();
+                break;
+        }
     }
 }
