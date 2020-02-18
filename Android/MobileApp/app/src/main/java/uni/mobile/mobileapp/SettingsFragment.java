@@ -1,6 +1,9 @@
 package uni.mobile.mobileapp;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
@@ -14,15 +17,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 
-public class SettingsFragment extends Fragment implements View.OnClickListener {
+public class SettingsFragment extends Fragment {
 
-    //Button Variable
-    private Button buttonDayMode;
-    private Button buttonNightMode;
-    private Button buttonAutoMode;
-    private Button buttonBatteryMode;
+    private RadioGroup radioTheme;
+    private RadioButton radioDay, radioNight, radioAuto, radioBattery;
 
     private SharedPreferences preferenceManager;
     private SharedPreferences.Editor editor;
@@ -40,44 +42,61 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         preferenceManager = PreferenceManager.getDefaultSharedPreferences(getContext());
         editor = preferenceManager.edit();
 
-        buttonDayMode = (Button) view.findViewById(R.id.buttonDayMode);
-        buttonNightMode = (Button) view.findViewById(R.id.buttonNightMode);
-        buttonAutoMode = (Button) view.findViewById(R.id.buttonAutoMode);
-        buttonBatteryMode = (Button) view.findViewById(R.id.buttonBatteryMode);
+        radioTheme = view.findViewById(R.id.radioTheme);
+        radioDay = view.findViewById(R.id.radioDay);
+        radioNight = view.findViewById(R.id.radioNight);
+        radioAuto = view.findViewById(R.id.radioAuto);
+        radioBattery = view.findViewById(R.id.radioBattery);
 
-        buttonDayMode.setOnClickListener(this);
-        buttonNightMode.setOnClickListener(this);
-        buttonAutoMode.setOnClickListener(this);
-        buttonBatteryMode.setOnClickListener(this);
+        radioTheme.check(preferenceManager.getInt("radioThemeId", R.id.radioDay));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) buttonBatteryMode.setVisibility(View.GONE);
-        else buttonAutoMode.setVisibility(View.GONE);
+        radioTheme.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup arg0, int id) {
+                switch (id) {
+                    case R.id.radioDay:
+                        editor.putInt("Theme", AppCompatDelegate.MODE_NIGHT_NO);
+                        editor.commit();
+                        editor.putInt("radioThemeId", R.id.radioDay);
+                        editor.commit();
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                        restartApp();
+                        break;
+                    case R.id.radioNight:
+                        editor.putInt("Theme", AppCompatDelegate.MODE_NIGHT_YES);
+                        editor.commit();
+                        editor.putInt("radioThemeId", R.id.radioNight);
+                        editor.commit();
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                        restartApp();
+                        break;
+                    case R.id.radioAuto:
+                        editor.putInt("Theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                        editor.commit();
+                        editor.putInt("radioThemeId", R.id.radioAuto);
+                        editor.commit();
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                        restartApp();
+                        break;
+                    case R.id.radioBattery:
+                        editor.putInt("Theme", AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
+                        editor.commit();
+                        editor.putInt("radioThemeId", R.id.radioBattery);
+                        editor.commit();
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
+                        restartApp();
+                        break;
+                }
+            }
+        });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) radioBattery.setVisibility(View.GONE);
+        else radioBattery.setVisibility(View.GONE);
     }
 
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-            case R.id.buttonDayMode:
-                editor.putInt("Theme", AppCompatDelegate.MODE_NIGHT_NO);
-                editor.commit();
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                break;
-            case R.id.buttonNightMode:
-                editor.putInt("Theme", AppCompatDelegate.MODE_NIGHT_YES);
-                editor.commit();
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                break;
-            case R.id.buttonAutoMode:
-                editor.putInt("Theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                editor.commit();
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                break;
-            case R.id.buttonBatteryMode:
-                editor.putInt("Theme", AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
-                editor.commit();
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
-                break;
-        }
+    private void restartApp() {
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        this.startActivity(intent);
+        getActivity().finish();
     }
+
 }

@@ -5,44 +5,37 @@
     android:layout_height="match_parent"
     tools:context=".SettingsFragment">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal">
-
+    <RadioGroup
+        android:id="@+id/radioTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checkedButton="@+id/radioDay"
+        android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Theme"
             android:id="@+id/theme_textview"></TextView>
-
-        <Button
-            android:id="@+id/buttonDayMode"
+        <RadioButton
+            android:id="@+id/radioDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/theme_textview"
-            android:text="Day" />
-
-        <Button
-            android:id="@+id/buttonNightMode"
+            android:text="Day"/>
+        <RadioButton
+            android:id="@+id/radioNight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/buttonDayMode"
-            android:text="Night" />
-
-        <Button
-            android:id="@+id/buttonAutoMode"
+            android:text="Night"/>
+        <RadioButton
+            android:id="@+id/radioAuto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/buttonNightMode"
-            android:text="Auto" />
-
-        <Button
-            android:id="@+id/buttonBatteryMode"
+            android:text="Auto"/>
+        <RadioButton
+            android:id="@+id/radioBattery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/buttonAutoMode"
-            android:text="Battery" />
-    </RelativeLayout>
+            android:text="Battery"/>
+    </RadioGroup>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
