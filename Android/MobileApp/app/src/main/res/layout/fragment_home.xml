@@ -6,11 +6,10 @@
     tools:context=".HomeFragment">
 
     <TextView
+        android:id="@+id/hometw"
+        android:padding="10dp"
+        android:scrollbars="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Home"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+        android:layout_height="wrap_content">Home</TextView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

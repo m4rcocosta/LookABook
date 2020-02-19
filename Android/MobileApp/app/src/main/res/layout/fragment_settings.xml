@@ -15,26 +15,36 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Theme"
+            android:textColor="@color/colorPrimary"
+            android:textSize="30dp"
             android:id="@+id/theme_textview"></TextView>
         <RadioButton
             android:id="@+id/radioDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20dp"
             android:text="Day"/>
         <RadioButton
             android:id="@+id/radioNight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20dp"
             android:text="Night"/>
         <RadioButton
             android:id="@+id/radioAuto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20dp"
             android:text="Auto"/>
         <RadioButton
             android:id="@+id/radioBattery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20dp"
             android:text="Battery"/>
     </RadioGroup>
 
