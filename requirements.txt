@@ -1,0 +1,7 @@
+- responsive layout [0.5 points]
+- authentication service (e.g. google sign in, facebook login ecc...) [0.5 points]
+- multi-thread (RecyclerView, AsyncTack, Vollwy, Thread ecc...) [1-2 points]
+- use of WebApis [1-2 points]
+- external storage service (e.g MongoDB, Firebase db etc...) [1-2 points]
+- personal backend (e.g. Ruby on rails, Node.js) [2-3 points]
+- **new** sensors [? points]
