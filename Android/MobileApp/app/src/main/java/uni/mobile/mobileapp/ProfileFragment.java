@@ -63,7 +63,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         buttonLogout.setOnClickListener(this);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        editTextName = (EditText) view.findViewById(R.id.et_username);
+        editTextName = view.findViewById(R.id.et_username);
         profilePicImageView = view.findViewById(R.id.profile_pic_imageView);
         profileNameTextView = view.findViewById(R.id.profile_name_textView);
         profileSurnameTextView = view.findViewById(R.id.profile_surname_textView);

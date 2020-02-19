@@ -16,7 +16,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,11 +25,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignInActivity extends AppCompatActivity {
 
     private EditText SignInMail, SignInPass;
     private FirebaseAuth auth;
+    private DatabaseReference databaseReference;
     private MaterialButton SignInButton;
     private com.google.android.gms.common.SignInButton GoogleSignInButton;
     private GoogleSignInClient mGoogleSignInClient;
@@ -49,6 +51,8 @@ public class SignInActivity extends AppCompatActivity {
         SignInPass = findViewById(R.id.SignInPass);
         SignInButton = findViewById(R.id.SignInButton);
         GoogleSignInButton = findViewById(R.id.GoogleSignInButton);
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
@@ -107,7 +111,7 @@ public class SignInActivity extends AppCompatActivity {
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         auth.signInWithCredential(credential)
@@ -117,6 +121,8 @@ public class SignInActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = auth.getCurrentUser();
+                            databaseReference.child(user.getUid()).setValue(new Userinformation(acct.getGivenName(), acct.getFamilyName(), ""));
+
                         } else {
                             // If sign in fails, display a message to the user.
                         }
