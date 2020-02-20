@@ -16,8 +16,10 @@ import java.util.List;
 public class MainActivity extends Activity {
 
 
-    ListView listView = null;
-    Boolean isStoppedCamera = false;
+    private ListView listView = null;
+    private Boolean isStoppedCamera = false;
+    private MyCamera c;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,15 +30,14 @@ public class MainActivity extends Activity {
 
 
 
-        final CustomAdapter adapter = new CustomAdapter(this, titles);
-        listView.setAdapter(adapter);
 
 
-        CheckBoxThread checkBoxThread= new CheckBoxThread(listView,adapter);
+        CheckBoxThread checkBoxThread= new CheckBoxThread(listView,this);
+        checkBoxThread.start();
 
-        checkBoxThread.run();
+        checkBoxThread.setTitles("New");
 
-        MyCamera c = new MyCamera(getApplicationContext(),this);
+        c = new MyCamera(getApplicationContext(),this,checkBoxThread);
         c.startCameraSource();
 
     }
@@ -46,8 +47,13 @@ public class MainActivity extends Activity {
     public void onClickBtn(View v){
         Toast.makeText(this, "Camera "+ (isStoppedCamera?"ON":"OFF"), Toast.LENGTH_LONG).show();
         isStoppedCamera = !isStoppedCamera;
+        c.stopCamera();
     }
 
+    public void onClickSfc(View v){
+        Toast.makeText(this, "Camera picture taken", Toast.LENGTH_LONG).show();
+        c.snap();
+    }
 
 
 

@@ -1,26 +1,34 @@
 package com.example.textrecognition;
 
+import android.app.Activity;
 import android.view.View;
+import android.widget.ActionMenuView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckBoxThread implements Runnable {
+public class CheckBoxThread extends Thread{
 
     private ListView listView;
-    private CustomAdapter adapter;
-
-    public CheckBoxThread(ListView ls,CustomAdapter ad ){
+    private Activity act;
+    final CustomAdapter adapter;
+    public CheckBoxThread(ListView ls,Activity activity){
      listView=ls;
-     adapter=ad;
+     act=activity;
+
+     adapter = new CustomAdapter(act, titles);
+     listView.setAdapter(adapter);
+
     }
 
     final List<TitleModel> titles = new ArrayList<>();
 
     @Override
     public void run() {
+
+
         titles.add(new TitleModel(false, "Divina Commedia"));
         titles.add(new TitleModel(false, "Se questo è un uomo"));
 
@@ -46,8 +54,10 @@ public class CheckBoxThread implements Runnable {
 
 }
 
-    public void setTitles(){
-        titles.add(new TitleModel(false, "mmm"));
+    public void setTitles(String newTitle){
+        if(! titles.contains(newTitle) )
+            titles.add(new TitleModel(false, newTitle));
+            adapter.updateRecords(titles);
 
     }
 
