@@ -12,11 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:layout_weight="4"
-        android:onClick="onClickSfc">
-
-
-    </SurfaceView>
-
+        android:onClick="onClickSfc" />
 
     <Button
         android:id="@+id/button2"
@@ -39,11 +35,6 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:visibility="visible"
-
-        android:autoSizeTextType="uniform"
-        android:autoSizeMinTextSize="12sp"
-        android:autoSizeMaxTextSize="100sp"
-        android:autoSizeStepGranularity="2sp"
         />
 
     <ListView

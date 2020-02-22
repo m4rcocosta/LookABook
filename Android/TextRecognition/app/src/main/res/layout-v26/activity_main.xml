@@ -33,18 +33,18 @@
         android:layout_height="100dp"
         android:layout_margin="8dp"
         android:layout_weight="2"
-        android:gravity="center"
-        android:text="@string/txt_message"
-        android:textColor="@android:color/holo_red_dark"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:visibility="visible"
-
-        android:autoSizeTextType="uniform"
+        android:autoSizeMaxTextSize="50sp"
         android:autoSizeMinTextSize="12sp"
-        android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
-        />
+        android:autoSizeTextType="uniform"
+        android:fontFamily="@font/julius_sans_one"
+        android:gravity="center"
+        android:text="No text recognized"
+
+        android:textColor="@android:color/background_dark"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:visibility="visible" />
 
     <ListView
         android:id="@+id/listview"
