@@ -44,7 +44,9 @@ public class MyCamera {
 
     private SurfaceHolder sHholder;
 
-    String filename = "trBitmap.png";
+    private String FILENAME = "trBitmap.png";
+
+    private Boolean isReady=false;
     private Context ctx;
     private MainActivity act;
    // private CheckBoxThread checkBoxThread;
@@ -188,6 +190,7 @@ public class MyCamera {
             });
 
             textRecognizer.setProcessor(proc);
+            isReady=true;
         }
     }
 
@@ -195,7 +198,7 @@ public class MyCamera {
     public void stopCamera() {
         mCameraSource.stop();
         textRecognizer.release();
-
+        isReady=false;
     }
 
     //Will do detection just on one frame
@@ -234,7 +237,7 @@ public class MyCamera {
                     }*/
 
 
-                    act.onSnapped(stringRead,filename);
+                    act.onSnapped(stringRead,FILENAME);
 
                 }
             });
@@ -258,8 +261,8 @@ public class MyCamera {
                         //Write file
 
                         try {
-                            FileOutputStream stream = act.openFileOutput(filename, Context.MODE_PRIVATE);
-                            bm.compress(Bitmap.CompressFormat.PNG, 70, stream);
+                            FileOutputStream stream = act.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+                            bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
 
                             //Cleanup
                             stream.close();
@@ -280,6 +283,14 @@ public class MyCamera {
                 }
             }
         });
+    }
+
+    public String getFILENAME() {
+        return FILENAME;
+    }
+
+    public Boolean getReady() {
+        return isReady;
     }
 }
 

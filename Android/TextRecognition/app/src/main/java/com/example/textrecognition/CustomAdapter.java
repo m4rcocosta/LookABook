@@ -17,7 +17,7 @@ import java.util.List;
 public class CustomAdapter extends BaseAdapter {
 
     Activity activity;
-    List<TitleModel> users;
+    List<TitleModel> entries;
     LayoutInflater inflater;
 
     //short to create constructer using command+n for mac & Alt+Insert for window
@@ -27,9 +27,9 @@ public class CustomAdapter extends BaseAdapter {
         this.activity = activity;
     }
 
-    public CustomAdapter(Activity activity, List<TitleModel> users) {
+    public CustomAdapter(Activity activity, List<TitleModel> entries) {
         this.activity   = activity;
-        this.users      = users;
+        this.entries      = entries;
 
         inflater        = activity.getLayoutInflater();
     }
@@ -37,7 +37,7 @@ public class CustomAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return users.size();
+        return entries.size();
     }
 
     @Override
@@ -61,16 +61,16 @@ public class CustomAdapter extends BaseAdapter {
 
             holder = new ViewHolder();
 
-            holder.tvUserName = (TextView)view.findViewById(R.id.tv_user_name);
+            holder.name = (TextView)view.findViewById(R.id.entry_name);
             holder.ivCheckBox = (ImageView) view.findViewById(R.id.iv_check_box);
 
             view.setTag(holder);
         }else
             holder = (ViewHolder)view.getTag();
 
-        TitleModel model = users.get(i);
+        TitleModel model = entries.get(i);
 
-        holder.tvUserName.setText(model.gettitleName());
+        holder.name.setText(model.gettitleName());
 
         if (model.isSelected())
             holder.ivCheckBox.setBackgroundResource(R.drawable.checked);
@@ -82,15 +82,17 @@ public class CustomAdapter extends BaseAdapter {
 
     }
 
-    public void updateRecords(List<TitleModel> users){
-        this.users = users;
+    public void updateRecords(List<TitleModel> entries){
+        this.entries = entries;
 
         notifyDataSetChanged();
     }
 
+
+
     class ViewHolder{
 
-        TextView tvUserName;
+        TextView name;
         ImageView ivCheckBox;
 
     }

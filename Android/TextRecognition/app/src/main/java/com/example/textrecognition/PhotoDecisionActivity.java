@@ -17,8 +17,9 @@ import static com.example.textrecognition.MainActivity.EXTRA_MESSAGE;
 
 public class PhotoDecisionActivity extends AppCompatActivity {
 
-    String titles;
-    Bitmap bm;
+    private String titles;
+    private Bitmap bm;
+    private String filename;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,7 @@ public class PhotoDecisionActivity extends AppCompatActivity {
         Intent intent = getIntent();
         titles = intent.getStringExtra(EXTRA_MESSAGE);
 
-        String filename= intent.getStringExtra(EXTRA_MESSAGE+"bitmapFilename");
+        filename= intent.getStringExtra(EXTRA_MESSAGE+"bitmapFilename");
 
         try {
             FileInputStream is = this.openFileInput(filename);
@@ -44,12 +45,12 @@ public class PhotoDecisionActivity extends AppCompatActivity {
     }
 
 
-    protected void onDislikedPhoto(View v){
+    public void onDislikedPhoto(View v){
         Toast.makeText(this, "No", Toast.LENGTH_LONG).show();
         onBackPressed();
 
     }
-    protected void onLikedPhoto(View v){
+    public void onLikedPhoto(View v){
         Toast.makeText(this, "Yes", Toast.LENGTH_LONG).show();
 
         //Intent intent = new Intent(this, SelectTitlesActivity.class);

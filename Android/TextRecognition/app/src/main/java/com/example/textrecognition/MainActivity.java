@@ -35,23 +35,18 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         //---------------------------------------------------------
 
-        listView  = (ListView) findViewById(R.id.listview);
-
-
-
-
+        listView  = (ListView) findViewById(R.id.listview); //view of list of titles with checkboxes
 
         //CheckBoxThread checkBoxThread= new CheckBoxThread(listView,this);
         //checkBoxThread.start();
-
         //checkBoxThread.setTitles("New");
-
         //c = new MyCamera(getApplicationContext(),this,checkBoxThread);
 
-        c = new MyCamera(getApplicationContext(),this,null);
-
+        c = new MyCamera(getApplicationContext(),this,null);    //class to handle camera recognition stuff
         c.startCameraSource();
 
     }
@@ -67,14 +62,14 @@ public class MainActivity extends Activity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         Toast.makeText(this, "onSave", Toast.LENGTH_LONG).show();
-
+    //Todo
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
     }
 
 
 
-    public void onClickBtn(View v){
+    public void onClickBtn(View v){ //Todo toglle on/off the camera (not working)
         Toast.makeText(this, "Camera "+ (isStoppedCamera?"ON":"OFF"), Toast.LENGTH_LONG).show();
         isStoppedCamera = !isStoppedCamera;
         if(isStoppedCamera) {
@@ -86,13 +81,15 @@ public class MainActivity extends Activity {
 
         }
 
-    public void onClickSfc(View v){
-        Toast.makeText(this, "Camera picture taken", Toast.LENGTH_LONG).show();
-        findViewById(R.id.text_view);
-        c.snap();
+    public void onClickSfc(View v){ //Tap on the camera happened
+        if(c.getReady()) {
+            Toast.makeText(this, "Camera picture taken", Toast.LENGTH_LONG).show();
+            c.snap();
+        }
     }
 
-    public void onSnapped(String msgToPass, String filename){
+    // onClickSfg() -> c.snap() -> ... -> onSnapped()
+    public void onSnapped(String msgToPass, String filename){   //Camera took text from the tapped image
         //Intent intent = new Intent(this, SelectTitlesActivity.class);
         Intent intent = new Intent(this, PhotoDecisionActivity.class);
 
