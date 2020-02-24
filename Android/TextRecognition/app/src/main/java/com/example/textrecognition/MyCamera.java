@@ -41,6 +41,7 @@ public class MyCamera {
     private CameraSource mCameraSource;
     private TextRecognizer textRecognizer;
     private TextView mTextView;
+    private TextView numberView;
 
     private SurfaceHolder sHholder;
 
@@ -59,6 +60,7 @@ public class MyCamera {
        // this.checkBoxThread = checkBoxThread;
         mCameraView = act.findViewById(R.id.surfaceView);
         mTextView = act.findViewById(R.id.text_view);
+        numberView = act.findViewById(R.id.numberView);
 
 
         //Set the TextRecognizer's Processor.
@@ -122,8 +124,12 @@ public class MyCamera {
                             String stringRead = stringBuilder.toString();
                             mTextView.setText(stringRead);
                             Log.i("FROM LIVE", stringRead);
-
-
+                            String[] arr = stringRead.split("\n");
+                            int counter=0;
+                            for(int i=0; i<arr.length;i++){if(arr[i].length()>5)counter++;}
+                            numberView.setText( Integer.toString(counter));
+                            if(counter>0)numberView.setTextColor(Color.GREEN);
+                            else numberView.setTextColor(Color.RED);
 
                         }
                     });
@@ -251,10 +257,12 @@ public class MyCamera {
         mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
             @Override
             public void onPictureTaken(byte[] bytes) {
+                //Creating bitmap from tap on surfaceview
                 ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(bytes);
                 Bitmap bitmap = BitmapFactory.decodeStream(arrayInputStream);
                 bm=bitmap;
 
+                //Creating thread to store the bitmap for the next activity
                 Thread bmToFile = new Thread(new Runnable() {
                     @Override
                     public void run() {

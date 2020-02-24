@@ -8,8 +8,10 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,6 +24,7 @@ public class SelectTitlesActivity extends AppCompatActivity {
     private final List<TitleModel> titles = new ArrayList<>();
     private CustomAdapter adapter;
     private ListView listView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,14 @@ public class SelectTitlesActivity extends AppCompatActivity {
         titles.add(new TitleModel(false, "Se questo è un uomo"));
 */
         listView.setEmptyView(findViewById(R.id.emptyElement));
+        /*
+        for (int i = 0; i < listView.getChildCount(); i++) {
+            View view = listView.getChildAt(i);
+            EditText et = view.findViewById(R.id.entry_name);
+            et.setBackgroundResource(android.R.color.transparent);
+            et.setClickable(false);
+
+        }*/
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -60,6 +71,18 @@ public class SelectTitlesActivity extends AppCompatActivity {
 
                 //now update adapter
                 adapter.updateRecords(titles);
+            }
+
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(view.getContext(), "TODO", Toast.LENGTH_LONG).show();
+                EditText et=(EditText) view.findViewById(R.id.entry_name);
+                et.setFocusable(true);
+
+                return true;
             }
         });
 
@@ -95,10 +118,12 @@ public class SelectTitlesActivity extends AppCompatActivity {
 
     }
 
+    //On click send data to rails backend
     public void onSendClick(View v) {
         //TODO send to rails app
         Toast.makeText(this, "Should send to rails", Toast.LENGTH_LONG).show();
     }
+
 
 
 }

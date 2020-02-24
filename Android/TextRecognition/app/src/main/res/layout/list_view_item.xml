@@ -14,12 +14,14 @@
         android:background="@drawable/book"/>
 
 
-    <TextView
-        android:layout_toRightOf="@id/bookIcon"
-        android:layout_marginLeft="10dp"
+    <EditText
+        android:layout_toEndOf="@id/bookIcon"
+        android:layout_marginStart="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/entry_name"
+
+        android:focusable="false"
         android:gravity="center_vertical"/>
 
 

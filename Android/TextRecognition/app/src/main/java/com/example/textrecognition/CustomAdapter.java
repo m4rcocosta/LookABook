@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -61,7 +62,7 @@ public class CustomAdapter extends BaseAdapter {
 
             holder = new ViewHolder();
 
-            holder.name = (TextView)view.findViewById(R.id.entry_name);
+            holder.name = (EditText)view.findViewById(R.id.entry_name);
             holder.ivCheckBox = (ImageView) view.findViewById(R.id.iv_check_box);
 
             view.setTag(holder);
@@ -92,7 +93,7 @@ public class CustomAdapter extends BaseAdapter {
 
     class ViewHolder{
 
-        TextView name;
+        EditText name;
         ImageView ivCheckBox;
 
     }

@@ -39,14 +39,14 @@ public class MainActivity extends Activity {
 
         //---------------------------------------------------------
 
-        listView  = (ListView) findViewById(R.id.listview); //view of list of titles with checkboxes
+        listView = (ListView) findViewById(R.id.listview); //view of list of titles with checkboxes
 
         //CheckBoxThread checkBoxThread= new CheckBoxThread(listView,this);
         //checkBoxThread.start();
         //checkBoxThread.setTitles("New");
         //c = new MyCamera(getApplicationContext(),this,checkBoxThread);
 
-        c = new MyCamera(getApplicationContext(),this,null);    //class to handle camera recognition stuff
+        c = new MyCamera(getApplicationContext(), this, null);    //class to handle camera recognition stuff
         c.startCameraSource();
 
     }
@@ -55,56 +55,48 @@ public class MainActivity extends Activity {
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         Toast.makeText(this, "onRestore", Toast.LENGTH_LONG).show();
-
+        //Todo
     }
 
     // invoked when the activity may be temporarily destroyed, save the instance state here
     @Override
     public void onSaveInstanceState(Bundle outState) {
         Toast.makeText(this, "onSave", Toast.LENGTH_LONG).show();
-    //Todo
-        // call superclass to save any view hierarchy
+        //Todo
+        //call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
     }
 
 
-
-    public void onClickBtn(View v){ //Todo toglle on/off the camera (not working)
-        Toast.makeText(this, "Camera "+ (isStoppedCamera?"ON":"OFF"), Toast.LENGTH_LONG).show();
+    public void onClickBtn(View v) { //Todo toglle on/off the camera (not working)
+        Toast.makeText(this, "Camera " + (isStoppedCamera ? "ON" : "OFF"), Toast.LENGTH_LONG).show();
         isStoppedCamera = !isStoppedCamera;
-        if(isStoppedCamera) {
+        if (isStoppedCamera) {
             c.stopCamera();
-        }
-        else{
+        } else {
             c.startCameraSource();
         }
 
-        }
+    }
 
-    public void onClickSfc(View v){ //Tap on the camera happened
-        if(c.getReady()) {
+    public void onClickSfc(View v) { //Tap on the camera happened
+        if (c.getReady()) {
             Toast.makeText(this, "Camera picture taken", Toast.LENGTH_LONG).show();
             c.snap();
         }
     }
 
     // onClickSfg() -> c.snap() -> ... -> onSnapped()
-    public void onSnapped(String msgToPass, String filename){   //Camera took text from the tapped image
+    public void onSnapped(String msgToPass, String filename) {   //Camera took text from the tapped image
         //Intent intent = new Intent(this, SelectTitlesActivity.class);
         Intent intent = new Intent(this, PhotoDecisionActivity.class);
 
 
-
         intent.putExtra(EXTRA_MESSAGE, msgToPass);
-        intent.putExtra(EXTRA_MESSAGE+"bitmapFilename", filename);
+        intent.putExtra(EXTRA_MESSAGE + "bitmapFilename", filename);
         startActivity(intent);
 
     }
-
-
-
-
-
 
 
 }
