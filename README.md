@@ -1,2 +1,2 @@
 # lookABookApp
-Project for Mobile Application and Cloud Compting course
+Project for Mobile Application and Cloud Computing course
