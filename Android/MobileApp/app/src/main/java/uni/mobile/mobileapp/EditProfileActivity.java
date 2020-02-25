@@ -110,7 +110,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     }
     @Override
     public void onClick(View view) {
-        if (view==btnsave){
+        if (view == btnsave){
             if (imagePath == null) {
 
                 Drawable drawable = this.getResources().getDrawable(R.drawable.defavatar);
