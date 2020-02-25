@@ -17,14 +17,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
+
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 
 public class SettingsFragment extends Fragment {
 
     private RadioGroup radioTheme;
     private RadioButton radioDay, radioNight, radioAuto, radioBattery;
+    private SwitchMaterial useBiometricsSwitch;
 
     private SharedPreferences preferenceManager;
     private SharedPreferences.Editor editor;
@@ -48,7 +53,10 @@ public class SettingsFragment extends Fragment {
         radioAuto = view.findViewById(R.id.radioAuto);
         radioBattery = view.findViewById(R.id.radioBattery);
 
+        useBiometricsSwitch = view.findViewById(R.id.useBiometricsSwitch);
+
         radioTheme.check(preferenceManager.getInt("radioThemeId", R.id.radioDay));
+        useBiometricsSwitch.setChecked(preferenceManager.getBoolean("UseBiometrics", false));
 
         radioTheme.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup arg0, int id) {
@@ -90,7 +98,20 @@ public class SettingsFragment extends Fragment {
         });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) radioBattery.setVisibility(View.GONE);
-        else radioBattery.setVisibility(View.GONE);
+        else radioAuto.setVisibility(View.GONE);
+
+        useBiometricsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    editor.putBoolean("UseBiometrics", true);
+                    editor.commit();
+                }
+                else {
+                    editor.putBoolean("UseBiometrics", false);
+                    editor.commit();
+                }
+            }
+        });
     }
 
     private void restartApp() {
