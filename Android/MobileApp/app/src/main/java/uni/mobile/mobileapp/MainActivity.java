@@ -17,6 +17,8 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import uni.mobile.mobileapp.auth2.SignInActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences preferenceManager;

@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 
+import uni.mobile.mobileapp.recognition.TextRecognitionActivity;
+
 public class HomeFragment extends Fragment {
 
     private MaterialButton startTextRecognitionButton;

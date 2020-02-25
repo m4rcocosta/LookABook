@@ -16,7 +16,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import uni.mobile.mobileapp.EditProfileActivity;
+import uni.mobile.mobileapp.auth2.EditProfileActivity;
 import uni.mobile.mobileapp.R;
 
 public class SignUpActivity extends AppCompatActivity {
