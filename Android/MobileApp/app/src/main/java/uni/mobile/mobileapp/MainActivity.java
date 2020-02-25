@@ -52,8 +52,9 @@ public class MainActivity extends AppCompatActivity {
                 super.onAuthenticationError(errorCode, errString);
                 if (errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON) {
                     // user clicked negative button
+                    FirebaseAuth.getInstance().signOut();
                 } else {
-                    //TODO: Called when an unrecoverable error has been encountered and the operation is complete.
+
                 }
             }
 
@@ -63,20 +64,18 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                 startActivity(intent);
                 finish();
-                //TODO: Called when a biometric is recognized.
             }
 
             @Override
             public void onAuthenticationFailed() {
                 super.onAuthenticationFailed();
-                //TODO: Called when a biometric is valid but not recognized.
+                biometricPrompt.authenticate(promptInfo);
             }
         });
 
         promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Set the title to display.")
-                .setSubtitle("Set the subtitle to display.")
-                .setDescription("Set the description to display")
+                .setTitle("Biometric authentication.")
+                .setDescription("Use fingerprint for authentication")
                 .setNegativeButtonText("Cancel")
                 .build();
     }
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
             if (firebaseUser == null) {
-                Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
+                Intent intent = new Intent(MainActivity.this, SignInActivity.class);
                 startActivity(intent);
                 finish();
             }

@@ -2,8 +2,12 @@ package uni.mobile.mobileapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -38,6 +42,8 @@ public class SignInActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
 
+    private static final int STORAGE_PERMISSION_CODE = 101;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +52,12 @@ public class SignInActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         setContentView(R.layout.activity_signin);
+
+        // Permission
+        if (ContextCompat.checkSelfPermission(SignInActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)  == PackageManager.PERMISSION_DENIED) {
+            // Requesting the permission
+            ActivityCompat.requestPermissions(SignInActivity.this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, STORAGE_PERMISSION_CODE);
+        }
 
         SignInMail = findViewById(R.id.SignInMail);
         SignInPass = findViewById(R.id.SignInPass);
@@ -104,6 +116,20 @@ public class SignInActivity extends AppCompatActivity {
                 googleSignIn();
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == STORAGE_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(SignInActivity.this, "Storage Permission Granted", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(SignInActivity.this, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void googleSignIn() {
