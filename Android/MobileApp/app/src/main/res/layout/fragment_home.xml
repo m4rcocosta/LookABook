@@ -5,11 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".HomeFragment">
 
-    <TextView
-        android:id="@+id/hometw"
-        android:padding="10dp"
-        android:scrollbars="vertical"
+    <com.google.android.material.button.MaterialButton
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">Home</TextView>
+        android:layout_height="wrap_content"
+        android:id="@+id/startTextRecognitionButton"
+        android:text="Start Text\nRecognition"
+        android:textColor="@color/colorAccent"
+        android:layout_gravity="center"
+        android:textSize="30dp"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
