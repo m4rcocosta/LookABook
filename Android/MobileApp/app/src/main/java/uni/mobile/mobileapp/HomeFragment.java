@@ -41,7 +41,6 @@ public class HomeFragment extends Fragment {
                 else {
                     Intent intent = new Intent(getActivity(), TextRecognitionActivity.class);
                     startActivity(intent);
-                    getActivity().finish();
                 }
             }
         });
@@ -56,7 +55,6 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getContext(), "Storage Permission Granted", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), TextRecognitionActivity.class);
                 startActivity(intent);
-                getActivity().finish();
             }
             else {
                 Toast.makeText(getContext(), "Storage Permission Denied", Toast.LENGTH_SHORT).show();
