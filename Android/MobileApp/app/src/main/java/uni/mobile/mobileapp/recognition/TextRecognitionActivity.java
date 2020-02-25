@@ -2,6 +2,7 @@ package uni.mobile.mobileapp.recognition;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,7 +11,7 @@ import android.widget.Toast;
 
 import uni.mobile.mobileapp.R;
 
-public class TextRecognitionActivity extends AppCompatActivity {
+public class TextRecognitionActivity extends Activity {
 
     public static final String EXTRA_MESSAGE = "lookABook";
     private ListView listView = null;
@@ -25,14 +26,14 @@ public class TextRecognitionActivity extends AppCompatActivity {
 
         //---------------------------------------------------------
 
-        listView = (ListView) findViewById(R.id.listview); //view of list of titles with checkboxes
+        listView = findViewById(R.id.listview); //view of list of titles with checkboxes
 
         //CheckBoxThread checkBoxThread= new CheckBoxThread(listView,this);
         //checkBoxThread.start();
         //checkBoxThread.setTitles("New");
         //c = new MyCamera(getApplicationContext(),this,checkBoxThread);
 
-        c = new MyCamera(getApplicationContext(), TextRecognitionActivity.this);    //class to handle camera recognition stuff
+        c = new MyCamera(getApplicationContext(), this);    //class to handle camera recognition stuff
         c.startCameraSource();
 
     }

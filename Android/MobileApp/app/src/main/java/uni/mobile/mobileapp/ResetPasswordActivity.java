@@ -1,4 +1,4 @@
-package uni.mobile.mobileapp.Auth;
+package uni.mobile.mobileapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,8 +14,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
-
-import uni.mobile.mobileapp.R;
 
 public class ResetPasswordActivity extends AppCompatActivity {
 
@@ -60,6 +58,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
     public void NavigateSignUp(View v) {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
-        finish();;
+        finish();
     }
 }

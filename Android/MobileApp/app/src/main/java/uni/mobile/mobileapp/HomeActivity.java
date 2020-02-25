@@ -14,9 +14,6 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import uni.mobile.mobileapp.auth2.ProfileFragment;
-import uni.mobile.mobileapp.auth2.SettingsFragment;
-
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private BottomNavigationView bottomNavigationView;

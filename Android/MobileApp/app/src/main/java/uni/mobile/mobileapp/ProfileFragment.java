@@ -1,4 +1,4 @@
-package uni.mobile.mobileapp.auth2;
+package uni.mobile.mobileapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,9 +29,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
-import uni.mobile.mobileapp.MainActivity;
-import uni.mobile.mobileapp.R;
 
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {

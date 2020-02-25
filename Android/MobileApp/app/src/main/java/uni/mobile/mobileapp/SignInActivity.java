@@ -1,4 +1,4 @@
-package uni.mobile.mobileapp.auth2;
+package uni.mobile.mobileapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,9 +29,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import uni.mobile.mobileapp.HomeActivity;
-import uni.mobile.mobileapp.R;
 
 public class SignInActivity extends AppCompatActivity {
 

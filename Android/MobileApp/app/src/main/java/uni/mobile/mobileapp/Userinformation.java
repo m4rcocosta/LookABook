@@ -1,4 +1,4 @@
-package uni.mobile.mobileapp.auth2;
+package uni.mobile.mobileapp;
 
 class Userinformation {
     public String name;

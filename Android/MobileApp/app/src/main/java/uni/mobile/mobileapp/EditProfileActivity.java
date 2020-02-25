@@ -1,4 +1,4 @@
-package uni.mobile.mobileapp.auth2;
+package uni.mobile.mobileapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -34,9 +34,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
-
-import uni.mobile.mobileapp.HomeActivity;
-import uni.mobile.mobileapp.R;
 
 public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
