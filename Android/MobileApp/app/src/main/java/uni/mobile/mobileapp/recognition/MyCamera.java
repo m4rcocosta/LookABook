@@ -27,7 +27,7 @@ import java.io.IOException;
 
 import uni.mobile.mobileapp.R;
 
-class MyCamera {
+public class MyCamera {
     private static final String TAG = "DBG";
     private SurfaceView mCameraView;
     private CameraSource mCameraSource;

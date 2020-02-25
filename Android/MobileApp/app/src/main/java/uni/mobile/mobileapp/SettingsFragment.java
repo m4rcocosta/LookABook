@@ -1,4 +1,4 @@
-package uni.mobile.mobileapp.auth2;
+package uni.mobile.mobileapp;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

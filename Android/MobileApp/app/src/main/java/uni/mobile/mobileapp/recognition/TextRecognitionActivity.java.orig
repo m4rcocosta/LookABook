@@ -2,15 +2,17 @@ package uni.mobile.mobileapp.recognition;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import uni.mobile.mobileapp.R;
 
-public class TextRecognitionActivity extends AppCompatActivity {
+public class TextRecognitionActivity extends Activity {
 
     public static final String EXTRA_MESSAGE = "lookABook";
     private ListView listView = null;
@@ -25,20 +27,23 @@ public class TextRecognitionActivity extends AppCompatActivity {
 
         //---------------------------------------------------------
 
-        listView = (ListView) findViewById(R.id.listview); //view of list of titles with checkboxes
+        listView = findViewById(R.id.listview); //view of list of titles with checkboxes
 
         //CheckBoxThread checkBoxThread= new CheckBoxThread(listView,this);
         //checkBoxThread.start();
         //checkBoxThread.setTitles("New");
         //c = new MyCamera(getApplicationContext(),this,checkBoxThread);
 
+<<<<<<< HEAD
         c = new MyCamera(getApplicationContext(), TextRecognitionActivity.this);    //class to handle camera recognition stuff
         Log.i("cam","Camera initialized");
+=======
+        c = new MyCamera(getApplicationContext(), this);    //class to handle camera recognition stuff
+>>>>>>> 7fa664de76ad99219d2bd15157e623d92a5773f8
         c.startCameraSource();
         Log.i("cam","Camera started");
     }
 
-    }
 
 
     @Override
