@@ -44,8 +44,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private MaterialButton buttonEditName, buttonEditSurname, buttonEditPhoneNo, buttonLogout;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
@@ -63,14 +62,18 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         buttonLogout.setOnClickListener(this);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
+
         editTextName = view.findViewById(R.id.et_username);
         profilePicImageView = view.findViewById(R.id.profile_pic_imageView);
         profileNameTextView = view.findViewById(R.id.profile_name_textView);
         profileSurnameTextView = view.findViewById(R.id.profile_surname_textView);
         profilePhonenoTextView = view.findViewById(R.id.profile_phoneno_textView);
+        textViewemailname = view.findViewById(R.id.textViewEmailAdress);
+
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
+
         DatabaseReference databaseReference = firebaseDatabase.getReference(firebaseAuth.getUid());
         StorageReference storageReference = firebaseStorage.getReference();
         // Get the image stored on Firebase via "User id/Images/Profile Pic.jpg".
@@ -87,7 +90,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             startActivity(new Intent(getActivity(), SignInActivity.class));
             getActivity().finish();
         }
-        final FirebaseUser user=firebaseAuth.getCurrentUser();
+        final FirebaseUser user = firebaseAuth.getCurrentUser();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange( DataSnapshot dataSnapshot) {
@@ -95,7 +98,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 profileNameTextView.setText(userProfile.getUserName());
                 profileSurnameTextView.setText(userProfile.getUserSurname());
                 profilePhonenoTextView.setText(userProfile.getUserPhoneno());
-                textViewemailname=(TextView) getView().findViewById(R.id.textViewEmailAdress);
                 textViewemailname.setText(user.getEmail());
             }
             @Override
@@ -130,7 +132,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 Userinformation userinformation = new Userinformation(name,surname, phoneno);
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 databaseReference.child(user.getUid()).setValue(userinformation);
-                databaseReference.child(user.getUid()).setValue(userinformation);
                 etUsername.onEditorAction(EditorInfo.IME_ACTION_DONE);
             }
         });
@@ -163,7 +164,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 Userinformation userinformation = new Userinformation(name,surname, phoneno);
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 databaseReference.child(user.getUid()).setValue(userinformation);
-                databaseReference.child(user.getUid()).setValue(userinformation);
                 etUserSurname.onEditorAction(EditorInfo.IME_ACTION_DONE);
             }
         });
@@ -194,7 +194,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 String phoneno =  etUserPhoneno.getText().toString();
                 Userinformation userinformation = new Userinformation(name,surname, phoneno);
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                databaseReference.child(user.getUid()).setValue(userinformation);
                 databaseReference.child(user.getUid()).setValue(userinformation);
                 etUserPhoneno.onEditorAction(EditorInfo.IME_ACTION_DONE);
             }

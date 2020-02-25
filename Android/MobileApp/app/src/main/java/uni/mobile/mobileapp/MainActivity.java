@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 .setTitle("Set the title to display.")
                 .setSubtitle("Set the subtitle to display.")
                 .setDescription("Set the description to display")
-                .setNegativeButtonText("Negative Button")
+                .setNegativeButtonText("Cancel")
                 .build();
     }
 
