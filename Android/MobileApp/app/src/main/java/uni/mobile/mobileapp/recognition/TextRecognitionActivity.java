@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -20,7 +21,7 @@ public class TextRecognitionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_text_recognition);
 
 
         //---------------------------------------------------------
@@ -33,9 +34,11 @@ public class TextRecognitionActivity extends AppCompatActivity {
         //c = new MyCamera(getApplicationContext(),this,checkBoxThread);
 
         c = new MyCamera(getApplicationContext(), TextRecognitionActivity.this);    //class to handle camera recognition stuff
+        Log.i("cam","Camera initialized");
         c.startCameraSource();
-
+        Log.i("cam","Camera started");
     }
+
 
 
     @Override

@@ -29,7 +29,7 @@ import uni.mobile.mobileapp.R;
 
 class MyCamera {
     private static final String TAG = "DBG";
-    private final SurfaceView mCameraView;
+    private SurfaceView mCameraView;
     private CameraSource mCameraSource;
     private TextRecognizer textRecognizer;
     private TextView mTextView;
@@ -82,12 +82,12 @@ class MyCamera {
 
 
                                 //Draw Rectangle
-
+/*
                                 //The Color of the Rectangle to Draw on top of Text
                                 Paint rectPaint = new Paint();
                                 rectPaint.setColor(Color.RED);
                                 rectPaint.setStyle(Paint.Style.STROKE);
-                                rectPaint.setStrokeWidth(4.0f);
+                                rectPaint.setStrokeWidth(4.0f);*/
 
                                 //Va in errore
 
@@ -117,8 +117,11 @@ class MyCamera {
                             mTextView.setText(stringRead);
                             Log.i("FROM LIVE", stringRead);
                             String[] arr = stringRead.split("\n");
+
+                            //consider only words of 5 or more letters
                             int counter=0;
                             for(int i=0; i<arr.length;i++){if(arr[i].length()>5)counter++;}
+
                             numberView.setText( Integer.toString(counter));
                             if(counter>0)numberView.setTextColor(Color.GREEN);
                             else numberView.setTextColor(Color.RED);
