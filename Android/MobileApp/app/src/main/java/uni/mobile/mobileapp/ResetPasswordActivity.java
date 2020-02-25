@@ -58,6 +58,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
     public void NavigateSignUp(View v) {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
-        finish();;
+        finish();
     }
 }

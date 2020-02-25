@@ -58,8 +58,8 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
         firebaseAuth=FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() == null){
-            finish();
             startActivity(new Intent(getApplicationContext(),SignInActivity.class));
+            finish();
         }
         databaseReference = FirebaseDatabase.getInstance().getReference();
         editTextName = (EditText)findViewById(R.id.EditTextName);
@@ -118,14 +118,14 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 // openSelectProfilePictureDialog();
                 userInformation();
                 // sendUserData();
-                finish();
                 startActivity(new Intent(EditProfileActivity.this, HomeActivity.class));
+                finish();
             }
             else {
                 userInformation();
                 sendUserData();
-                finish();
                 startActivity(new Intent(EditProfileActivity.this, HomeActivity.class));
+                finish();
             }
         }
     }
