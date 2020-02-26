@@ -34,12 +34,10 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         //loading the default fragment
         loadFragment(new HomeFragment());
 
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
     }
-
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -54,9 +52,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
             }
         }
     }
-
-
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -80,10 +75,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     private boolean loadFragment(Fragment fragment) {
         //switching fragment
         if (fragment != null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
             return true;
         }
         return false;

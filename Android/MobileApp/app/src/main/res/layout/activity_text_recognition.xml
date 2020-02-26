@@ -12,15 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="4"
-        android:onClick="onClickSfc">
-
-
-    </SurfaceView>
+        android:onClick="onClickSfc" />
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/colorAccent"
         android:layout_weight="0.1"
         android:onClick="onClickBtn"
         android:text="ON/OFF Camera" />
@@ -37,10 +36,8 @@
             android:layout_weight="0.1"
             android:fontFamily="@font/bungee_inline"
             android:gravity="center"
-
             android:text="Elements recognized: "
-
-            android:textColor="@android:color/holo_blue_dark"
+            android:textColor="@color/colorPrimary"
             android:textSize="20sp"
             android:visibility="visible"
             tools:targetApi="o" />
@@ -53,15 +50,12 @@
             android:layout_weight="0.4"
             android:fontFamily="@font/bungee_inline"
             android:gravity="center"
-
             android:text="0"
-
             android:textColor="@android:color/holo_red_dark"
             android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="visible"
             tools:targetApi="o" />
-
 
     </LinearLayout>
 
@@ -77,10 +71,8 @@
         android:autoSizeTextType="uniform"
         android:fontFamily="@font/julius_sans_one"
         android:text="No text recognized"
-
         android:textAlignment="viewStart"
-
-        android:textColor="@android:color/black"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="20sp"
         android:textStyle="bold"
         android:visibility="visible"
@@ -90,8 +82,5 @@
         android:layout_width="wrap_content"
         android:layout_height="349dp"
         android:visibility="gone" />
-
-
-
 
 </LinearLayout>

@@ -17,8 +17,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class ResetPasswordActivity extends AppCompatActivity {
 
-    private EditText inputEmail;
-    private MaterialButton btnReset;
+    private EditText emailResetPassword;
+    private MaterialButton resetButton;
     private FirebaseAuth auth;
 
     @Override
@@ -26,21 +26,20 @@ public class ResetPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
-        inputEmail = findViewById(R.id.EditTextEmailRP);
-        btnReset = findViewById(R.id.btn_reset_password);
+        emailResetPassword = findViewById(R.id.emailResetPasswordEditText);
+        resetButton = findViewById(R.id.resetPasswordButton);
         auth = FirebaseAuth.getInstance();
 
-        btnReset.setOnClickListener(new View.OnClickListener() {
+        resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = inputEmail.getText().toString().trim();
+                String email = emailResetPassword.getText().toString().trim();
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(getApplication(), "Enter your mail address", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                auth.sendPasswordResetEmail(email)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                auth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {

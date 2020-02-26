@@ -22,8 +22,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText SignUpMail, SignUpPass, SignUpConfirmPass;
-    private MaterialButton SignUpButton;
+    private EditText emailSignUp, passwordSignUp, confirmPasswordSignUp;
+    private MaterialButton signUpButton;
     private FirebaseAuth auth;
 
     private static final int STORAGE_PERMISSION_CODE = 101;
@@ -39,18 +39,18 @@ public class SignUpActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(SignUpActivity.this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, STORAGE_PERMISSION_CODE);
         }
 
-        SignUpMail = findViewById(R.id.SignUpMail);
-        SignUpPass = findViewById(R.id.SignUpPass);
-        SignUpConfirmPass = findViewById(R.id.SignUpConfirmPass);
+        emailSignUp = findViewById(R.id.emailSignUpEditText);
+        passwordSignUp = findViewById(R.id.passwordSignUpEditText);
+        confirmPasswordSignUp = findViewById(R.id.confirmPasswordSignUpEditText);
         auth = FirebaseAuth.getInstance();
-        SignUpButton = findViewById(R.id.SignUpButton);
+        signUpButton = findViewById(R.id.signUpButton);
 
-        SignUpButton.setOnClickListener(new View.OnClickListener() {
+        signUpButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                String email = SignUpMail.getText().toString();
-                String pass = SignUpPass.getText().toString();
-                String confirmPass = SignUpConfirmPass.getText().toString();
+                String email = emailSignUp.getText().toString();
+                String pass = passwordSignUp.getText().toString();
+                String confirmPass = confirmPasswordSignUp.getText().toString();
 
                 if(TextUtils.isEmpty(email)){
                     Toast.makeText(getApplicationContext(),"Please enter your E-mail address",Toast.LENGTH_LONG).show();

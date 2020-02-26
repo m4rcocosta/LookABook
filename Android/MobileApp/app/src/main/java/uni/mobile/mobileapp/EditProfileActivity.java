@@ -38,13 +38,11 @@ import java.io.IOException;
 public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = EditProfileActivity.class.getSimpleName();
-    private Button btnsave;
+    private Button saveButton;
     private FirebaseAuth firebaseAuth;
-    private TextView textViewemailname;
+    private TextView emailTextView;
     private DatabaseReference databaseReference;
-    private EditText editTextName;
-    private EditText editTextSurname;
-    private EditText editTextPhoneNo;
+    private EditText nameEditText, surnameEditText, phoneNumberEditText;
     private ImageView profileImageView;
     private FirebaseStorage firebaseStorage;
     private static int PICK_IMAGE = 123;
@@ -62,15 +60,15 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             finish();
         }
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        editTextName = (EditText)findViewById(R.id.EditTextName);
-        editTextSurname = (EditText)findViewById(R.id.EditTextSurname);
-        editTextPhoneNo = (EditText)findViewById(R.id.EditTextPhoneNo);
-        btnsave=(Button)findViewById(R.id.btnSaveButton);
+        nameEditText = findViewById(R.id.nameEditProfileEditText);
+        surnameEditText = findViewById(R.id.surnameEditProfileEditText);
+        phoneNumberEditText = findViewById(R.id.phoneNumberEditProfileEditText);
+        saveButton = findViewById(R.id.saveEditProfileButton);
         FirebaseUser user=firebaseAuth.getCurrentUser();
-        btnsave.setOnClickListener(this);
-        textViewemailname=(TextView)findViewById(R.id.textViewEmailAdress);
-        textViewemailname.setText(user.getEmail());
-        profileImageView = findViewById(R.id.update_imageView);
+        saveButton.setOnClickListener(this);
+        emailTextView = findViewById(R.id.userEmailEditProfileTextView);
+        emailTextView.setText(user.getEmail());
+        profileImageView = findViewById(R.id.editProfileImageView);
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
 
@@ -100,9 +98,9 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void userInformation(){
-        String name = editTextName.getText().toString().trim();
-        String surname = editTextSurname.getText().toString().trim();
-        String phoneno = editTextPhoneNo.getText().toString().trim();
+        String name = nameEditText.getText().toString().trim();
+        String surname = surnameEditText.getText().toString().trim();
+        String phoneno = phoneNumberEditText.getText().toString().trim();
         Userinformation userinformation = new Userinformation(name,surname,phoneno);
         FirebaseUser user = firebaseAuth.getCurrentUser();
         databaseReference.child(user.getUid()).setValue(userinformation);
@@ -110,7 +108,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     }
     @Override
     public void onClick(View view) {
-        if (view == btnsave){
+        if (view == saveButton){
             if (imagePath == null) {
 
                 Drawable drawable = this.getResources().getDrawable(R.drawable.defavatar);

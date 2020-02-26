@@ -24,7 +24,7 @@
 
 
         <TextView
-            android:id="@+id/sign_up_TextView"
+            android:id="@+id/signUpTextView"
             android:textSize="40dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
 
 
         <EditText
-            android:id="@+id/SignUpMail"
+            android:id="@+id/emailSignUpEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email"
@@ -47,7 +47,7 @@
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"/>
         <EditText
-            android:id="@+id/SignUpPass"
+            android:id="@+id/passwordSignUpEditText"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:hint="@string/password"
@@ -55,7 +55,7 @@
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"/>
         <EditText
-            android:id="@+id/SignUpConfirmPass"
+            android:id="@+id/confirmPasswordSignUpEditText"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:hint="@string/confirm_password"
@@ -63,7 +63,7 @@
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"/>
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/SignUpButton"
+            android:id="@+id/signUpButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -72,7 +72,7 @@
             android:textColor="@android:color/black"
             android:textStyle="bold"/>
         <TextView
-            android:id="@+id/AlreadyMember"
+            android:id="@+id/alreadyRegisteredButton"
             android:textSize="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

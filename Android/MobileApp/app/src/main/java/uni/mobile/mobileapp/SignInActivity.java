@@ -32,11 +32,11 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class SignInActivity extends AppCompatActivity {
 
-    private EditText SignInMail, SignInPass;
+    private EditText emailSignIn, passwordSignIn;
     private FirebaseAuth auth;
     private DatabaseReference databaseReference;
-    private MaterialButton SignInButton;
-    private com.google.android.gms.common.SignInButton GoogleSignInButton;
+    private MaterialButton signInButton;
+    private com.google.android.gms.common.SignInButton googleSignInButton;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
 
@@ -57,10 +57,10 @@ public class SignInActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(SignInActivity.this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, STORAGE_PERMISSION_CODE);
         }
 
-        SignInMail = findViewById(R.id.SignInMail);
-        SignInPass = findViewById(R.id.SignInPass);
-        SignInButton = findViewById(R.id.SignInButton);
-        GoogleSignInButton = findViewById(R.id.GoogleSignInButton);
+        emailSignIn = findViewById(R.id.emailSignInEditText);
+        passwordSignIn = findViewById(R.id.passwordSignInEditText);
+        signInButton = findViewById(R.id.signInButton);
+        googleSignInButton = findViewById(R.id.googleSignInButton);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -74,11 +74,11 @@ public class SignInActivity extends AppCompatActivity {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        SignInButton.setOnClickListener(new View.OnClickListener() {
+        signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = SignInMail.getText().toString();
-                final String password = SignInPass.getText().toString();
+                String email = emailSignIn.getText().toString();
+                final String password = passwordSignIn.getText().toString();
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(getApplicationContext(), "Enter your mail address", Toast.LENGTH_SHORT).show();
                     return;
@@ -108,7 +108,7 @@ public class SignInActivity extends AppCompatActivity {
                         });
             }
         });
-        GoogleSignInButton.setOnClickListener(new View.OnClickListener() {
+        googleSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 googleSignIn();

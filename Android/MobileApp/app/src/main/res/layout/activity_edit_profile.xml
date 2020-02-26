@@ -17,7 +17,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:contentScrim="?attr/colorPrimary">
             <ImageView
-                android:id="@+id/update_imageView"
+                android:id="@+id/editProfileImageView"
                 android:layout_width="match_parent"
                 android:layout_height="182dp"
                 android:gravity="center_vertical"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/textViewProfile"
+                android:id="@+id/editProfileTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
@@ -48,59 +48,59 @@
                 android:textColor="@color/colorPrimaryDark"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
             <TextView
-                android:id="@+id/TextViewName"
+                android:id="@+id/nameEditProfileTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/name"
                 android:textColor="@color/colorPrimaryDark"/>
             <EditText
-                android:id="@+id/EditTextName"
+                android:id="@+id/nameEditProfileEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName|textCapSentences"
                 android:hint="@string/enter_your_name"/>
             <TextView
-                android:id="@+id/TextViewSurName"
+                android:id="@+id/surnameEditProfileTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/surname"
                 android:textColor="@color/colorPrimaryDark"/>
             <EditText
-                android:id="@+id/EditTextSurname"
+                android:id="@+id/surnameEditProfileEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName|textCapSentences"
                 android:hint="@string/enter_your_surname"/>
             <TextView
-                android:id="@+id/TextViewPhoneNo"
+                android:id="@+id/phoneNumberEditProfileTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/phone_number"
                 android:textColor="@color/colorPrimaryDark"/>
             <EditText
-                android:id="@+id/EditTextPhoneNo"
+                android:id="@+id/phoneNumberEditProfileEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/enter_your_phone_number"
                 android:inputType="number"/>
             <TextView
-                android:id="@+id/TextViewEmail"
+                android:id="@+id/emailEditProfileTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/email"
                 android:textColor="@color/colorPrimaryDark"/>
             <TextView
-                android:id="@+id/textViewEmailAdress"
+                android:id="@+id/userEmailEditProfileTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:text="@string/email_address"
                 android:textColor="@color/colorPrimaryDark"/>
             <Button
-                android:id="@+id/btnSaveButton"
+                android:id="@+id/saveEditProfileButton"
                 android:text="@string/ok"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

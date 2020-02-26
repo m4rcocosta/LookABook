@@ -3,15 +3,15 @@ package uni.mobile.mobileapp;
 class Userinformation {
     public String name;
     public String surname;
-    public String phoneno;
+    public String phoneNumber;
 
     public Userinformation(){
     }
 
-    public Userinformation(String name,String surname, String phoneno){
+    public Userinformation(String name,String surname, String phoneNumber){
         this.name = name;
         this.surname = surname;
-        this.phoneno = phoneno;
+        this.phoneNumber = phoneNumber;
     }
     public String getUserName() {
         return name;
@@ -19,7 +19,7 @@ class Userinformation {
     public String getUserSurname() {
         return surname;
     }
-    public String getUserPhoneno() {
-        return phoneno;
+    public String getUserPhoneNumber() {
+        return phoneNumber;
     }
 }

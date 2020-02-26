@@ -34,13 +34,11 @@ import com.squareup.picasso.Picasso;
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     private DatabaseReference databaseReference;
-    private TextView profileNameTextView, profileSurnameTextView, profilePhonenoTextView;
+    private TextView nameProfileTextView, surnameProfileTextView, phoneNumberProfileTextView, emailProfileTextView;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private ImageView profilePicImageView;
     private FirebaseStorage firebaseStorage;
-    private TextView textViewemailname;
-    private EditText editTextName;
     private MaterialButton buttonEditName, buttonEditSurname, buttonEditPhoneNo, buttonLogout;
 
     @Override
@@ -51,10 +49,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        buttonEditName = view.findViewById(R.id.buttonEditName);
-        buttonEditSurname = view.findViewById(R.id.buttonEditSurname);
-        buttonEditPhoneNo = view.findViewById(R.id.buttonEditPhoneNo);
-        buttonLogout = view.findViewById(R.id.buttonLogout);
+        buttonEditName = view.findViewById(R.id.editNameProfileButton);
+        buttonEditSurname = view.findViewById(R.id.editSurnameProfileButton);
+        buttonEditPhoneNo = view.findViewById(R.id.editPhoneNumberProfileButton);
+        buttonLogout = view.findViewById(R.id.logoutButton);
 
         buttonEditName.setOnClickListener(this);
         buttonEditSurname.setOnClickListener(this);
@@ -63,12 +61,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        editTextName = view.findViewById(R.id.et_username);
-        profilePicImageView = view.findViewById(R.id.profile_pic_imageView);
-        profileNameTextView = view.findViewById(R.id.profile_name_textView);
-        profileSurnameTextView = view.findViewById(R.id.profile_surname_textView);
-        profilePhonenoTextView = view.findViewById(R.id.profile_phoneno_textView);
-        textViewemailname = view.findViewById(R.id.textViewEmailAdress);
+        profilePicImageView = view.findViewById(R.id.imageProfileImageView);
+        nameProfileTextView = view.findViewById(R.id.nameProfileTextView);
+        surnameProfileTextView = view.findViewById(R.id.surnameProfileTextView);
+        phoneNumberProfileTextView = view.findViewById(R.id.phoneNumberProfileTextView);
+        emailProfileTextView = view.findViewById(R.id.emailProfileTextView);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -95,10 +92,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onDataChange( DataSnapshot dataSnapshot) {
                 Userinformation userProfile = dataSnapshot.getValue(Userinformation.class);
-                profileNameTextView.setText(userProfile.getUserName());
-                profileSurnameTextView.setText(userProfile.getUserSurname());
-                profilePhonenoTextView.setText(userProfile.getUserPhoneno());
-                textViewemailname.setText(user.getEmail());
+                nameProfileTextView.setText(userProfile.getUserName());
+                surnameProfileTextView.setText(userProfile.getUserSurname());
+                phoneNumberProfileTextView.setText(userProfile.getUserPhoneNumber());
+                emailProfileTextView.setText(user.getEmail());
             }
             @Override
             public void onCancelled( DatabaseError databaseError) {
@@ -111,7 +108,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private void buttonClickedEditName() {
         LayoutInflater inflater = getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_name, null);
-        final EditText etUsername = alertLayout.findViewById(R.id.et_username);
+        final EditText setUserName = alertLayout.findViewById(R.id.setUserName);
         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
         alert.setTitle("Name Edit");
         // this is set the view from XML inside AlertDialog
@@ -126,13 +123,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String name = etUsername.getText().toString();
-                String surname = profileSurnameTextView.getText().toString();
-                String phoneno =  profilePhonenoTextView.getText().toString();
-                Userinformation userinformation = new Userinformation(name,surname, phoneno);
+                String name = setUserName.getText().toString();
+                String surname = surnameProfileTextView.getText().toString();
+                String phoneNumber =  phoneNumberProfileTextView.getText().toString();
+                Userinformation userinformation = new Userinformation(name,surname, phoneNumber);
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 databaseReference.child(user.getUid()).setValue(userinformation);
-                etUsername.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                setUserName.onEditorAction(EditorInfo.IME_ACTION_DONE);
             }
         });
         AlertDialog dialog = alert.create();
@@ -142,7 +139,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private void buttonClickedEditSurname() {
         LayoutInflater inflater = getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_surname, null);
-        final EditText etUserSurname = alertLayout.findViewById(R.id.et_userSurname);
+        final EditText setUserSurname = alertLayout.findViewById(R.id.setUserSurname);
         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
         alert.setTitle("Surname Edit");
         // this is set the view from XML inside AlertDialog
@@ -158,23 +155,23 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                String name = profileNameTextView.getText().toString();
-                String surname = etUserSurname.getText().toString();
-                String phoneno =  profilePhonenoTextView.getText().toString();
-                Userinformation userinformation = new Userinformation(name,surname, phoneno);
+                String name = nameProfileTextView.getText().toString();
+                String surname = setUserSurname.getText().toString();
+                String phoneNumber =  phoneNumberProfileTextView.getText().toString();
+                Userinformation userinformation = new Userinformation(name,surname, phoneNumber);
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 databaseReference.child(user.getUid()).setValue(userinformation);
-                etUserSurname.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                setUserSurname.onEditorAction(EditorInfo.IME_ACTION_DONE);
             }
         });
         AlertDialog dialog = alert.create();
         dialog.show();
     }
 
-    private void buttonClickedEditPhoneNo() {
+    private void buttonClickedEditPhoneNumber() {
         LayoutInflater inflater = getLayoutInflater();
-        View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_phoneno, null);
-        final EditText etUserPhoneno = alertLayout.findViewById(R.id.et_userPhoneno);
+        View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_phone_number, null);
+        final EditText setUserPhoneNumber = alertLayout.findViewById(R.id.setUserPhoneNumber);
         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
         alert.setTitle("Phone No Edit");
         // this is set the view from XML inside AlertDialog
@@ -189,13 +186,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String name = profileNameTextView.getText().toString();
-                String surname = profileSurnameTextView.getText().toString();
-                String phoneno =  etUserPhoneno.getText().toString();
-                Userinformation userinformation = new Userinformation(name,surname, phoneno);
+                String name = nameProfileTextView.getText().toString();
+                String surname = surnameProfileTextView.getText().toString();
+                String phoneNumber =  setUserPhoneNumber.getText().toString();
+                Userinformation userinformation = new Userinformation(name,surname, phoneNumber);
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 databaseReference.child(user.getUid()).setValue(userinformation);
-                etUserPhoneno.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                setUserPhoneNumber.onEditorAction(EditorInfo.IME_ACTION_DONE);
             }
         });
         AlertDialog dialog = alert.create();
@@ -213,16 +210,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.buttonEditName:
+            case R.id.editNameProfileButton:
                 buttonClickedEditName();
                 break;
-            case R.id.buttonEditSurname:
+            case R.id.editSurnameProfileButton:
                 buttonClickedEditSurname();
                 break;
-            case R.id.buttonEditPhoneNo:
-                buttonClickedEditPhoneNo();
+            case R.id.editPhoneNumberProfileButton:
+                buttonClickedEditPhoneNumber();
                 break;
-            case R.id.buttonLogout:
+            case R.id.logoutButton:
                 buttonClickedLogout();
                 break;
         }
