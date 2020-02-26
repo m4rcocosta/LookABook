@@ -17,46 +17,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
-
     </ListView>
 
-    <Button
-        android:id="@+id/button6"
-        android:layout_width="wrap_content"
+    <TableLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginBottom="32dp"
-        android:onClick="onNoneClick"
-        android:text="Select None"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:shrinkColumns="*"
+        android:stretchColumns="*">
 
-    <Button
-        android:id="@+id/button7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="168dp"
-        android:layout_marginBottom="32dp"
-        android:onClick="onAllClick"
-        android:text="Select All"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.043"
-        app:layout_constraintLeft_toRightOf="@+id/button6"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/button8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="300dp"
-
-        android:layout_marginBottom="32dp"
-        android:onClick="onSendClick"
-        android:text="CONFIRM"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/button7"
-        app:layout_constraintStart_toStartOf="parent" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="10dp">
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onNoneClick"
+                android:text="Select None"
+                android:textColor="@color/colorAccent" />
+            <TextView android:layout_height="match_parent" android:layout_width="wrap_content"/>
+            <Button
+                android:id="@+id/button7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onAllClick"
+                android:text="Select All"
+                android:textColor="@color/colorAccent" />
+            <TextView android:layout_height="match_parent" android:layout_width="wrap_content"/>
+            <Button
+                android:id="@+id/button8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:onClick="onSendClick"
+                android:text="CONFIRM" />
+        </TableRow>
+    </TableLayout>
 
     <TextView
         android:id="@+id/emptyElement"
