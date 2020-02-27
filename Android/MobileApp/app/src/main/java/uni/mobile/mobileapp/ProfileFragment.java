@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -73,21 +74,29 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         DatabaseReference databaseReference = firebaseDatabase.getReference(firebaseAuth.getUid());
         StorageReference storageReference = firebaseStorage.getReference();
-        // Get the image stored on Firebase via "User id/Images/Profile Pic.jpg".
-        storageReference.child(firebaseAuth.getUid()).child("Images").child("Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                // Using "Picasso" (http://square.github.io/picasso/) after adding the dependency in the Gradle.
-                // ".fit().centerInside()" fits the entire image into the specified area.
-                // Finally, add "READ" and "WRITE" external storage permissions in the Manifest.
-                Picasso.get().load(uri).fit().centerInside().into(profilePicImageView);
-            }
-        });
+
         if (firebaseAuth.getCurrentUser() == null){
             startActivity(new Intent(getActivity(), SignInActivity.class));
             getActivity().finish();
         }
+
         final FirebaseUser user = firebaseAuth.getCurrentUser();
+        Uri imageUrl = user.getPhotoUrl();
+
+        if (imageUrl != null) Picasso.get().load(Uri.parse(imageUrl.toString())).fit().centerInside().into(profilePicImageView);
+        else {
+            // Get the image stored on Firebase via "User id/Images/Profile Pic.jpg".
+            storageReference.child(firebaseAuth.getUid()).child("Images").child("Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    // Using "Picasso" (http://square.github.io/picasso/) after adding the dependency in the Gradle.
+                    // ".fit().centerInside()" fits the entire image into the specified area.
+                    // Finally, add "READ" and "WRITE" external storage permissions in the Manifest.
+                    Picasso.get().load(uri).fit().centerInside().into(profilePicImageView);
+                }
+            });
+        }
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange( DataSnapshot dataSnapshot) {
