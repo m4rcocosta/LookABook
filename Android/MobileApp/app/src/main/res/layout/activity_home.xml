@@ -20,10 +20,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:itemBackground = "@color/colorPrimary"
-        style="@style/Widget.MaterialComponents.BottomNavigationView"
-        app:itemIconTint="#fff"
-        app:itemTextColor="#fff"
+        android:background = "@color/colorPrimary"
+        app:itemIconTint="@drawable/selected_bottom_navigation_item_color"
+        app:itemTextColor="@drawable/selected_bottom_navigation_item_color"
         app:menu = "@menu/bottom_navigation"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

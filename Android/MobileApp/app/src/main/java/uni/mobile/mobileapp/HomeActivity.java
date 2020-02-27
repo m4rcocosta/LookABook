@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -14,7 +15,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
 
@@ -31,12 +32,27 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
             ActivityCompat.requestPermissions(HomeActivity.this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, STORAGE_PERMISSION_CODE);
         }
 
+        bottomNavigationView = findViewById(R.id.bottomNavigation);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.navigation_home:
+                        openFragment(HomeFragment.newInstance("", ""));
+                        return true;
+                    case R.id.navigation_profile:
+                        openFragment(ProfileFragment.newInstance("", ""));
+                        return true;
+                    case R.id.navigation_settings:
+                        openFragment(SettingsFragment.newInstance("", ""));
+                        return true;
+                }
+                return false;
+            }
+        });
+
         //loading the default fragment
-        loadFragment(new HomeFragment());
-
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        openFragment(HomeFragment.newInstance("", ""));
     }
 
     @Override
@@ -53,31 +69,10 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         }
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Fragment fragment = null;
-
-        switch (item.getItemId()) {
-            case R.id.navigation_home:
-                fragment = new HomeFragment();
-                break;
-            case R.id.navigation_profile:
-                fragment = new ProfileFragment();
-                break;
-            case R.id.navigation_settings:
-                fragment = new SettingsFragment();
-                break;
-        }
-
-        return loadFragment(fragment);
-    }
-
-    private boolean loadFragment(Fragment fragment) {
-        //switching fragment
-        if (fragment != null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
-            return true;
-        }
-        return false;
+    public void openFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainer, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

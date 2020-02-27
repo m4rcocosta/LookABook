@@ -30,12 +30,36 @@ import uni.mobile.mobileapp.R;
 
 public class SettingsFragment extends Fragment {
 
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    private String mParam1;
+    private String mParam2;
+
     private RadioGroup radioTheme;
     private RadioButton radioDay, radioNight, radioAuto, radioBattery;
     private SwitchMaterial useBiometricsSwitch;
 
     private SharedPreferences preferenceManager;
     private SharedPreferences.Editor editor;
+
+    public static Fragment newInstance(String param1, String param2) {
+        SettingsFragment fragment = new SettingsFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,7 +94,6 @@ public class SettingsFragment extends Fragment {
                         editor.putInt("radioThemeId", R.id.radioDay);
                         editor.commit();
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                        restartApp();
                         break;
                     case R.id.radioNight:
                         editor.putInt("Theme", AppCompatDelegate.MODE_NIGHT_YES);
@@ -78,7 +101,6 @@ public class SettingsFragment extends Fragment {
                         editor.putInt("radioThemeId", R.id.radioNight);
                         editor.commit();
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                        restartApp();
                         break;
                     case R.id.radioAuto:
                         editor.putInt("Theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
@@ -86,7 +108,6 @@ public class SettingsFragment extends Fragment {
                         editor.putInt("radioThemeId", R.id.radioAuto);
                         editor.commit();
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                        restartApp();
                         break;
                     case R.id.radioBattery:
                         editor.putInt("Theme", AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
@@ -94,7 +115,6 @@ public class SettingsFragment extends Fragment {
                         editor.putInt("radioThemeId", R.id.radioBattery);
                         editor.commit();
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
-                        restartApp();
                         break;
                 }
             }
