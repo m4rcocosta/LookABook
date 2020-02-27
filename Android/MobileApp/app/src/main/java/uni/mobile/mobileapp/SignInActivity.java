@@ -8,8 +8,10 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -20,6 +22,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.AuthCredential;
@@ -29,12 +33,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class SignInActivity extends AppCompatActivity {
 
     private EditText emailSignIn, passwordSignIn;
     private FirebaseAuth auth;
     private DatabaseReference databaseReference;
+    private StorageReference storageReference;
     private MaterialButton signInButton;
     private com.google.android.gms.common.SignInButton googleSignInButton;
     private GoogleSignInClient mGoogleSignInClient;
@@ -46,8 +55,6 @@ public class SignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Get Firebase auth instance
-        auth = FirebaseAuth.getInstance();
 
         setContentView(R.layout.activity_signin);
 
@@ -88,8 +95,7 @@ public class SignInActivity extends AppCompatActivity {
                     return;
                 }
                 //authenticate user
-                auth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
+                auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (!task.isSuccessful()) {
@@ -138,13 +144,31 @@ public class SignInActivity extends AppCompatActivity {
     private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        auth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        auth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = auth.getCurrentUser();
+
+                            Uri imageUri = acct.getPhotoUrl();
+                            if (imageUri != null) {
+                                Log.i("Image", "Not null: "+imageUri);
+                                storageReference = FirebaseStorage.getInstance().getReference();
+                                StorageReference imageReference = storageReference.child(auth.getUid()).child("Images").child("Profile Pic"); //User id/Images/Profile Pic.jpg
+                                UploadTask uploadTask = imageReference.putFile(imageUri);
+                                uploadTask.addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(SignInActivity.this, "Error: Uploading profile picture", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        Toast.makeText(SignInActivity.this, "Profile picture uploaded", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
                             databaseReference.child(user.getUid()).setValue(new Userinformation(acct.getGivenName(), acct.getFamilyName(), ""));
 
                         } else {

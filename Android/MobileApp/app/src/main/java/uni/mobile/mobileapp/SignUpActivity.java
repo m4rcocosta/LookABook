@@ -81,10 +81,8 @@ public class SignUpActivity extends AppCompatActivity {
                     return;
                 }
                 else{
-                    auth.createUserWithEmailAndPassword(email,pass)
-                            .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
+                    auth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-
                                     if (!task.isSuccessful()) {
                                         Toast.makeText(SignUpActivity.this, "ERROR",Toast.LENGTH_LONG).show();
                                     }

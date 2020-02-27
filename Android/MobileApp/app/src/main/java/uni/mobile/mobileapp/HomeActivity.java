@@ -20,6 +20,7 @@ public class HomeActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
 
     private static final int STORAGE_PERMISSION_CODE = 101;
+    private int selectedItem ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +39,19 @@ public class HomeActivity extends AppCompatActivity {
             @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
-                        openFragment(HomeFragment.newInstance("", ""));
+                        if (item.getItemId() == selectedItem) break;
+                        selectedItem = R.id.navigation_home;
+                        openFragment(new HomeFragment());
                         return true;
                     case R.id.navigation_profile:
-                        openFragment(ProfileFragment.newInstance("", ""));
+                        if (item.getItemId() == selectedItem) break;
+                        selectedItem = R.id.navigation_profile;
+                        openFragment(new ProfileFragment());
                         return true;
                     case R.id.navigation_settings:
-                        openFragment(SettingsFragment.newInstance("", ""));
+                        if (item.getItemId() == selectedItem) break;
+                        selectedItem = R.id.navigation_settings;
+                        openFragment(new SettingsFragment());
                         return true;
                 }
                 return false;
@@ -52,7 +59,8 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         //loading the default fragment
-        openFragment(HomeFragment.newInstance("", ""));
+        selectedItem = R.id.navigation_home;
+        openFragment(new HomeFragment());
     }
 
     @Override
@@ -72,7 +80,6 @@ public class HomeActivity extends AppCompatActivity {
     public void openFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragmentContainer, fragment);
-        transaction.addToBackStack(null);
         transaction.commit();
     }
 }

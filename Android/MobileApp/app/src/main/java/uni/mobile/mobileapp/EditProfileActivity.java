@@ -54,8 +54,9 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        firebaseAuth=FirebaseAuth.getInstance();
-        if (firebaseAuth.getCurrentUser() == null){
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user == null){
             startActivity(new Intent(getApplicationContext(),SignInActivity.class));
             finish();
         }
@@ -64,7 +65,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         surnameEditText = findViewById(R.id.surnameEditProfileEditText);
         phoneNumberEditText = findViewById(R.id.phoneNumberEditProfileEditText);
         saveButton = findViewById(R.id.saveEditProfileButton);
-        FirebaseUser user=firebaseAuth.getCurrentUser();
         saveButton.setOnClickListener(this);
         emailTextView = findViewById(R.id.userEmailEditProfileTextView);
         emailTextView.setText(user.getEmail());
@@ -100,8 +100,8 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     private void userInformation(){
         String name = nameEditText.getText().toString().trim();
         String surname = surnameEditText.getText().toString().trim();
-        String phoneno = phoneNumberEditText.getText().toString().trim();
-        Userinformation userinformation = new Userinformation(name,surname,phoneno);
+        String phoneNumber = phoneNumberEditText.getText().toString().trim();
+        Userinformation userinformation = new Userinformation(name,surname,phoneNumber);
         FirebaseUser user = firebaseAuth.getCurrentUser();
         databaseReference.child(user.getUid()).setValue(userinformation);
         Toast.makeText(getApplicationContext(),"User information updated",Toast.LENGTH_LONG).show();
@@ -110,12 +110,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View view) {
         if (view == saveButton){
             if (imagePath == null) {
-
-                Drawable drawable = this.getResources().getDrawable(R.drawable.defavatar);
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.defavatar);
-                // openSelectProfilePictureDialog();
                 userInformation();
-                // sendUserData();
                 startActivity(new Intent(EditProfileActivity.this, HomeActivity.class));
                 finish();
             }
@@ -129,9 +124,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void sendUserData() {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         // Get "User UID" from Firebase > Authentification > Users.
-        DatabaseReference databaseReference = firebaseDatabase.getReference(firebaseAuth.getUid());
         StorageReference imageReference = storageReference.child(firebaseAuth.getUid()).child("Images").child("Profile Pic"); //User id/Images/Profile Pic.jpg
         UploadTask uploadTask = imageReference.putFile(imagePath);
         uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -145,34 +138,5 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 Toast.makeText(EditProfileActivity.this, "Profile picture uploaded", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    public void openSelectProfilePictureDialog() {
-        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        TextView title = new TextView(this);
-        title.setText("Profile Picture");
-        title.setPadding(10, 10, 10, 10);   // Set Position
-        title.setGravity(Gravity.CENTER);
-        title.setTextColor(Color.BLACK);
-        title.setTextSize(20);
-        alertDialog.setCustomTitle(title);
-        TextView msg = new TextView(this);
-        msg.setText("Please select a profile picture \n Tap the sample avatar logo");
-        msg.setGravity(Gravity.CENTER_HORIZONTAL);
-        msg.setTextColor(Color.BLACK);
-        alertDialog.setView(msg);
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL,"OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // Perform Action on Button
-            }
-        });
-        new Dialog(getApplicationContext());
-        alertDialog.show();
-        final Button okBT = alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
-        LinearLayout.LayoutParams neutralBtnLP = (LinearLayout.LayoutParams) okBT.getLayoutParams();
-        neutralBtnLP.gravity = Gravity.FILL_HORIZONTAL;
-        okBT.setPadding(50, 10, 10, 10);   // Set Position
-        okBT.setTextColor(Color.BLUE);
-        okBT.setLayoutParams(neutralBtnLP);
     }
 }

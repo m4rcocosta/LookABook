@@ -45,7 +45,8 @@
                 android:text="@string/profile"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="35sp"/>
+                android:textSize="35sp"
+                android:textStyle="bold"/>
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -77,7 +78,8 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_marginTop="1dp"
                     android:layout_marginBottom="1dp"
-                    android:backgroundTint="@color/colorAccent"/>
+                    android:backgroundTint="@color/colorPrimary"
+                    android:drawableTint="@color/colorAccent"/>
             </TableRow>
             <TableRow
                 android:layout_width="fill_parent"
@@ -110,7 +112,8 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_marginTop="1dp"
                     android:layout_marginBottom="1dp"
-                    android:backgroundTint="@color/colorAccent"/>
+                    android:backgroundTint="@color/colorPrimary"
+                    android:drawableTint="@color/colorAccent"/>
             </TableRow>
             <TableRow
                 android:layout_width="fill_parent"
@@ -140,10 +143,10 @@
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/profile_name_textView"
                     android:drawableRight="@drawable/ic_dialpad_black_24dp"
-                    style="?android:attr/borderlessButtonStyle"
                     android:layout_marginTop="1dp"
                     android:layout_marginBottom="1dp"
-                    android:backgroundTint="@color/colorAccent"/>
+                    android:backgroundTint="@color/colorPrimary"
+                    android:drawableTint="@color/colorAccent"/>
             </TableRow>
             <TableRow
                 android:layout_width="fill_parent"
@@ -179,8 +182,8 @@
                 android:text="@string/log_out"
                 android:clickable="true"
                 android:gravity="center"
-                android:backgroundTint="@color/colorAccent"
-                android:textColor="@android:color/black"/>
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@color/colorAccent"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

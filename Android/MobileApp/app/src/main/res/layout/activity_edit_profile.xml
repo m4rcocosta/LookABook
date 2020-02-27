@@ -46,6 +46,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/create_profile"
                 android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
             <TextView
                 android:id="@+id/nameEditProfileTextView"
@@ -105,8 +106,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dip"
-                android:background="@color/colorAccent"
-                android:textColor="@android:color/black"/>
+                android:textColor="@color/colorAccent"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

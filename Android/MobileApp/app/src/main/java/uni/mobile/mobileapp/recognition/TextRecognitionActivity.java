@@ -26,7 +26,7 @@ public class TextRecognitionActivity extends AppCompatActivity {
 
         //---------------------------------------------------------
 
-        listView = (ListView) findViewById(R.id.listview); //view of list of titles with checkboxes
+        listView = findViewById(R.id.listview); //view of list of titles with checkboxes
 
         //CheckBoxThread checkBoxThread= new CheckBoxThread(listView,this);
         //checkBoxThread.start();
@@ -39,7 +39,6 @@ public class TextRecognitionActivity extends AppCompatActivity {
         Log.i("cam","Camera started");
 
     }
-
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -56,7 +55,6 @@ public class TextRecognitionActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-
     public void onClickBtn(View v) { //Todo toglle on/off the camera (not working)
         Toast.makeText(this, "Camera " + (isStoppedCamera ? "ON" : "OFF"), Toast.LENGTH_LONG).show();
         isStoppedCamera = !isStoppedCamera;
@@ -65,7 +63,6 @@ public class TextRecognitionActivity extends AppCompatActivity {
         } else {
             c.startCameraSource();
         }
-
     }
 
     public void onClickSfc(View v) { //Tap on the camera happened
@@ -79,11 +76,8 @@ public class TextRecognitionActivity extends AppCompatActivity {
     public void onSnapped(String msgToPass, String filename) {   //Camera took text from the tapped image
         //Intent intent = new Intent(this, SelectTitlesActivity.class);
         Intent intent = new Intent(this, PhotoDecisionActivity.class);
-
-
         intent.putExtra(EXTRA_MESSAGE, msgToPass);
         intent.putExtra(EXTRA_MESSAGE + "bitmapFilename", filename);
         startActivity(intent);
-
     }
 }
