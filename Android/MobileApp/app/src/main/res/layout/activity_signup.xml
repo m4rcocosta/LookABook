@@ -10,7 +10,6 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/colorPrimaryDark"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin">
@@ -32,44 +31,64 @@
             android:layout_marginTop="20dp"
             android:text="@string/sign_up"
             android:gravity="center"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorPrimary"
             style="?android:attr/listSeparatorTextViewStyle"/>
 
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_marginBottom="10dp"
+            app:endIconMode="clear_text">
 
-        <EditText
-            android:id="@+id/emailSignUpEditText"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/emailSignUpEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"/>
-        <EditText
-            android:id="@+id/passwordSignUpEditText"
-            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:hint="@string/hint_password"
+            app:endIconMode="password_toggle"
+            app:helperText="@string/password_helper_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passwordSignUpEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"/>
-        <EditText
-            android:id="@+id/confirmPasswordSignUpEditText"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
+            android:layout_margin="4dp"
             android:hint="@string/confirm_password"
-            android:inputType="textPassword"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"/>
+            app:endIconMode="password_toggle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/confirmPasswordSignUpEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/signUpButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:backgroundTint="@color/colorAccent"
+            android:backgroundTint="@color/colorPrimary"
             android:text="@string/action_sign_in_short"
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorAccent"
             android:textStyle="bold"/>
         <TextView
             android:id="@+id/alreadyRegisteredButton"
@@ -82,7 +101,7 @@
             android:onClick="navigateSignIn"
             android:clickable="true"
             android:gravity="center"
-            android:textColor="@color/colorAccent"/>
+            android:textColor="@color/colorPrimary"/>
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

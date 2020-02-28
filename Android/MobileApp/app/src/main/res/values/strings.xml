@@ -19,6 +19,7 @@
     <string name="enter_your_phone_number">Enter your phone number</string>
     <string name="email_address">Email Address</string>
     <string name="log_out">Logout</string>
+    <string name="delete_account">Delete Account</string>
     <string name="profile">Profile</string>
     <string name="dies">Phone number</string>
 
@@ -50,4 +51,6 @@
     <string name="btn_sign_out">Sign Out</string>
     <string name="lbl_forgot_password">Forgot password?</string>
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
+
+    <string name="password_helper_text">Password must be at least 8 characters.</string>
 </resources>

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
@@ -17,7 +18,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,7 +43,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private FirebaseDatabase firebaseDatabase;
     private ImageView profilePicImageView;
     private FirebaseStorage firebaseStorage;
-    private MaterialButton buttonEditName, buttonEditSurname, buttonEditPhoneNo, buttonLogout;
+    private MaterialButton editNameButton, editSurnameButton, editPhoneNumberButton, logoutButton, deleteUserButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,15 +53,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        buttonEditName = view.findViewById(R.id.editNameProfileButton);
-        buttonEditSurname = view.findViewById(R.id.editSurnameProfileButton);
-        buttonEditPhoneNo = view.findViewById(R.id.editPhoneNumberProfileButton);
-        buttonLogout = view.findViewById(R.id.logoutButton);
+        editNameButton = view.findViewById(R.id.editNameProfileButton);
+        editSurnameButton = view.findViewById(R.id.editSurnameProfileButton);
+        editPhoneNumberButton = view.findViewById(R.id.editPhoneNumberProfileButton);
+        logoutButton = view.findViewById(R.id.logoutButton);
+        deleteUserButton = view.findViewById(R.id.deleteUserButton);
 
-        buttonEditName.setOnClickListener(this);
-        buttonEditSurname.setOnClickListener(this);
-        buttonEditPhoneNo.setOnClickListener(this);
-        buttonLogout.setOnClickListener(this);
+        editNameButton.setOnClickListener(this);
+        editSurnameButton.setOnClickListener(this);
+        editPhoneNumberButton.setOnClickListener(this);
+        logoutButton.setOnClickListener(this);
+        deleteUserButton.setOnClickListener(this);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -83,7 +88,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         final FirebaseUser user = firebaseAuth.getCurrentUser();
         Uri imageUrl = user.getPhotoUrl();
 
-        if (imageUrl != null) Picasso.get().load(Uri.parse(imageUrl.toString())).fit().centerInside().into(profilePicImageView);
+        if (imageUrl != null) Picasso.get().load(imageUrl).fit().centerInside().into(profilePicImageView);
         else {
             // Get the image stored on Firebase via "User id/Images/Profile Pic.jpg".
             storageReference.child(firebaseAuth.getUid()).child("Images").child("Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -208,16 +213,34 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         dialog.show();
     }
 
-    private void buttonClickedLogout(){
+    private void userLogout() {
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(getActivity(), MainActivity.class);
         startActivity(intent);
         getActivity().finish();
     }
 
+    private void userDelete() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getContext(), "Your profile is deleted!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getActivity(), MainActivity.class);
+                                startActivity(intent);
+                                getActivity().finish();
+                            } else {
+                                Toast.makeText(getContext(), "Failed to delete your account!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
+    }
+
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
             case R.id.editNameProfileButton:
                 buttonClickedEditName();
@@ -229,7 +252,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 buttonClickedEditPhoneNumber();
                 break;
             case R.id.logoutButton:
-                buttonClickedLogout();
+                userLogout();
+                break;
+            case R.id.deleteUserButton:
+                userDelete();
                 break;
         }
     }
