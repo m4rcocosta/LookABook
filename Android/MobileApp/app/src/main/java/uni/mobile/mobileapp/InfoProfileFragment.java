@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,8 +35,7 @@ public class InfoProfileFragment extends Fragment implements View.OnClickListene
     private MaterialButton editNameButton, editSurnameButton, editPhoneNumberButton;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_info_profile, container, false);
     }
@@ -86,111 +86,92 @@ public class InfoProfileFragment extends Fragment implements View.OnClickListene
 
     }
 
-    private void buttonClickedEditName() {
+    private void editName() {
         LayoutInflater inflater = getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_name, null);
         final EditText setUserName = alertLayout.findViewById(R.id.setUserName);
-        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-        alert.setTitle("Name Edit");
-        // this is set the view from XML inside AlertDialog
-        alert.setView(alertLayout);
-        // disallow cancel of AlertDialog on click of back button and outside touch
-        alert.setCancelable(false);
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String name = setUserName.getText().toString();
-                String surname = surnameProfileTextView.getText().toString();
-                String phoneNumber =  phoneNumberProfileTextView.getText().toString();
-                Userinformation userinformation = new Userinformation(name,surname, phoneNumber);
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                databaseReference.child(user.getUid()).setValue(userinformation);
-                setUserName.onEditorAction(EditorInfo.IME_ACTION_DONE);
-            }
-        });
-        AlertDialog dialog = alert.create();
-        dialog.show();
+        new MaterialAlertDialogBuilder(getContext())
+                .setTitle("Edit name")
+                .setMessage("Insert the new name")
+                .setView(alertLayout) // this is set the view from XML inside AlertDialog
+                .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String name = setUserName.getText().toString();
+                        String surname = surnameProfileTextView.getText().toString();
+                        String phoneNumber =  phoneNumberProfileTextView.getText().toString();
+                        Userinformation userinformation = new Userinformation(name,surname, phoneNumber);
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        databaseReference.child(user.getUid()).setValue(userinformation);
+                        setUserName.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
-    private void buttonClickedEditSurname() {
+    private void editSurname() {
         LayoutInflater inflater = getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_surname, null);
         final EditText setUserSurname = alertLayout.findViewById(R.id.setUserSurname);
-        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-        alert.setTitle("Surname Edit");
-        // this is set the view from XML inside AlertDialog
-        alert.setView(alertLayout);
-        // disallow cancel of AlertDialog on click of back button and outside touch
-        alert.setCancelable(false);
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                String name = nameProfileTextView.getText().toString();
-                String surname = setUserSurname.getText().toString();
-                String phoneNumber =  phoneNumberProfileTextView.getText().toString();
-                Userinformation userinformation = new Userinformation(name,surname, phoneNumber);
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                databaseReference.child(user.getUid()).setValue(userinformation);
-                setUserSurname.onEditorAction(EditorInfo.IME_ACTION_DONE);
-            }
-        });
-        AlertDialog dialog = alert.create();
-        dialog.show();
+        new MaterialAlertDialogBuilder(getContext())
+                .setTitle("Edit surname")
+                .setMessage("Insert the new surname")
+                .setView(alertLayout) // this is set the view from XML inside AlertDialog
+                .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String name = nameProfileTextView.getText().toString();
+                        String surname = setUserSurname.getText().toString();
+                        String phoneNumber =  phoneNumberProfileTextView.getText().toString();
+                        Userinformation userinformation = new Userinformation(name,surname, phoneNumber);
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        databaseReference.child(user.getUid()).setValue(userinformation);
+                        setUserSurname.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
-    private void buttonClickedEditPhoneNumber() {
+    private void editPhoneNumber() {
         LayoutInflater inflater = getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_phone_number, null);
         final EditText setUserPhoneNumber = alertLayout.findViewById(R.id.setUserPhoneNumber);
-        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-        alert.setTitle("Phone No Edit");
-        // this is set the view from XML inside AlertDialog
-        alert.setView(alertLayout);
-        // disallow cancel of AlertDialog on click of back button and outside touch
-        alert.setCancelable(false);
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String name = nameProfileTextView.getText().toString();
-                String surname = surnameProfileTextView.getText().toString();
-                String phoneNumber =  setUserPhoneNumber.getText().toString();
-                Userinformation userinformation = new Userinformation(name,surname, phoneNumber);
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                databaseReference.child(user.getUid()).setValue(userinformation);
-                setUserPhoneNumber.onEditorAction(EditorInfo.IME_ACTION_DONE);
-            }
-        });
-        AlertDialog dialog = alert.create();
-        dialog.show();
+        new MaterialAlertDialogBuilder(getContext())
+                .setTitle("Edit phone number")
+                .setMessage("Insert the new phone number")
+                .setView(alertLayout) // this is set the view from XML inside AlertDialog
+                .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String name = nameProfileTextView.getText().toString();
+                        String surname = surnameProfileTextView.getText().toString();
+                        String phoneNumber =  setUserPhoneNumber.getText().toString();
+                        Userinformation userinformation = new Userinformation(name,surname, phoneNumber);
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        databaseReference.child(user.getUid()).setValue(userinformation);
+                        setUserPhoneNumber.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.editNameProfileButton:
-                buttonClickedEditName();
+                editName();
                 break;
             case R.id.editSurnameProfileButton:
-                buttonClickedEditSurname();
+                editSurname();
                 break;
             case R.id.editPhoneNumberProfileButton:
-                buttonClickedEditPhoneNumber();
+                editPhoneNumber();
                 break;
         }
     }
