@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
@@ -32,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         preferenceManager = PreferenceManager.getDefaultSharedPreferences(this);
-        theme = preferenceManager.getInt("Theme", AppCompatDelegate.MODE_NIGHT_NO);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) theme = preferenceManager.getInt("Theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        else theme = preferenceManager.getInt("Theme", AppCompatDelegate.MODE_NIGHT_NO);
         AppCompatDelegate.setDefaultNightMode(theme);
 
         setContentView(R.layout.activity_main);
@@ -53,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
                 if (errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON) {
                     // user clicked negative button
                     FirebaseAuth.getInstance().signOut();
-                } else {
-
                 }
             }
 
