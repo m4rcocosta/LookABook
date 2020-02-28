@@ -7,128 +7,140 @@
     android:layout_height="match_parent"
     tools:context=".InfoProfileFragment">
 
-    <TableRow
-        android:layout_width="match_parent"
+    <RelativeLayout
         android:layout_height="wrap_content"
-        android:weightSum="2">
-        <ImageView
-            android:id="@+id/nameProfileImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/ic_account_circle_primarycolor_24dp"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"/>
-        <TextView
-            android:id="@+id/nameProfileTextView"
-            android:layout_width="280dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp"
-            android:text="@string/name"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="25sp"/>
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp">
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/editNameProfileButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/profile_name_textView"
-            android:drawableRight="@drawable/ic_create_black_24dp"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="5dp"
             android:backgroundTint="@color/colorPrimary"
-            android:drawableTint="@color/colorAccent"/>
-    </TableRow>
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="2">
-        <ImageView
-            android:id="@+id/surnameProfileImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/ic_account_box_primarycolor_24dp"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"/>
-        <TextView
-            android:id="@+id/surnameProfileTextView"
-            android:layout_width="280dp"
+            android:drawableEnd="@drawable/ic_create_black_24dp"
+            android:drawableTint="@color/colorAccent" />
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp"
-            android:text="@string/surname"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="25sp"/>
+            android:layout_toStartOf="@id/editNameProfileButton"
+            app:startIconDrawable="@drawable/ic_account_circle_primarycolor_24dp"
+            app:startIconTint="@color/colorPrimary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nameProfileTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:hint="@string/name"
+                android:inputType="text"
+                android:textSize="25sp"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp">
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/editSurnameProfileButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/profile_name_textView"
-            android:drawableRight="@drawable/ic_create_black_24dp"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="5dp"
             android:backgroundTint="@color/colorPrimary"
-            android:drawableTint="@color/colorAccent"/>
-    </TableRow>
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="2">
-        <ImageView
-            android:id="@+id/phoneProfileImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/ic_phone_primarycolor_24dp"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"/>
-        <TextView
-            android:id="@+id/phoneNumberProfileTextView"
-            android:layout_width="280dp"
+            android:drawableEnd="@drawable/ic_create_black_24dp"
+            android:drawableTint="@color/colorAccent" />
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp"
-            android:text="@string/dies"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="25sp"/>
+            android:layout_toStartOf="@id/editSurnameProfileButton"
+            app:startIconDrawable="@drawable/ic_account_box_primarycolor_24dp"
+            app:startIconTint="@color/colorPrimary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/surnameProfileTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:hint="@string/surname"
+                android:inputType="text"
+                android:textSize="25sp"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp">
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/editPhoneNumberProfileButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/profile_name_textView"
-            android:drawableRight="@drawable/ic_dialpad_black_24dp"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="5dp"
             android:backgroundTint="@color/colorPrimary"
-            android:drawableTint="@color/colorAccent"/>
-    </TableRow>
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="2">
-        <ImageView
-            android:id="@+id/mailProfileImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/ic_email_primarycolor_24dp"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"/>
-        <TextView
-            android:id="@+id/emailProfileTextView"
-            android:layout_width="377dp"
+            android:drawableEnd="@drawable/ic_dialpad_black_24dp"
+            android:drawableTint="@color/colorAccent" />
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp"
-            android:text="@string/mail_address"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="25sp"/>
-    </TableRow>
+            android:layout_toStartOf="@id/editPhoneNumberProfileButton"
+            app:startIconDrawable="@drawable/ic_phone_primarycolor_24dp"
+            app:startIconTint="@color/colorPrimary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/phoneNumberProfileTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:hint="@string/phone_number"
+                android:inputType="phone"
+                android:textSize="25sp"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp">
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:startIconDrawable="@drawable/ic_email_primarycolor_24dp"
+            app:startIconTint="@color/colorPrimary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/emailProfileTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:hint="@string/hint_email"
+                android:inputType="textEmailAddress"
+                android:textSize="25sp"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </RelativeLayout>
 </LinearLayout>
