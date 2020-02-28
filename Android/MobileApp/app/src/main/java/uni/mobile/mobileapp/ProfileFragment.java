@@ -42,7 +42,7 @@ public class ProfileFragment extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText("Advanced"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final TabAdapter adapter = new TabAdapter(getContext(), getActivity().getSupportFragmentManager(), tabLayout.getTabCount());
+        final TabAdapter adapter = new TabAdapter(getChildFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
