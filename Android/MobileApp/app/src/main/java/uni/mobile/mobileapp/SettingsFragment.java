@@ -31,7 +31,7 @@ import uni.mobile.mobileapp.R;
 public class SettingsFragment extends Fragment {
 
     private RadioGroup radioTheme;
-    private RadioButton radioDay, radioNight, radioAuto, radioBattery;
+    private RadioButton radioAuto, radioBattery;
     private SwitchMaterial useBiometricsSwitch;
 
     private SharedPreferences preferenceManager;
@@ -51,14 +51,19 @@ public class SettingsFragment extends Fragment {
         editor = preferenceManager.edit();
 
         radioTheme = view.findViewById(R.id.radioTheme);
-        radioDay = view.findViewById(R.id.radioDay);
-        radioNight = view.findViewById(R.id.radioNight);
         radioAuto = view.findViewById(R.id.radioAuto);
         radioBattery = view.findViewById(R.id.radioBattery);
 
         useBiometricsSwitch = view.findViewById(R.id.useBiometricsSwitch);
 
-        radioTheme.check(preferenceManager.getInt("radioThemeId", R.id.radioDay));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            radioTheme.check(preferenceManager.getInt("radioThemeId", R.id.radioAuto));
+            radioBattery.setVisibility(View.GONE);
+        }
+        else {
+            radioTheme.check(preferenceManager.getInt("radioThemeId", R.id.radioDay));
+            radioAuto.setVisibility(View.GONE);
+        }
         useBiometricsSwitch.setChecked(preferenceManager.getBoolean("UseBiometrics", false));
 
         radioTheme.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -66,57 +71,48 @@ public class SettingsFragment extends Fragment {
                 switch (id) {
                     case R.id.radioDay:
                         editor.putInt("Theme", AppCompatDelegate.MODE_NIGHT_NO);
-                        editor.commit();
+                        editor.apply();
                         editor.putInt("radioThemeId", R.id.radioDay);
-                        editor.commit();
+                        editor.apply();
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                         break;
                     case R.id.radioNight:
                         editor.putInt("Theme", AppCompatDelegate.MODE_NIGHT_YES);
-                        editor.commit();
+                        editor.apply();
                         editor.putInt("radioThemeId", R.id.radioNight);
-                        editor.commit();
+                        editor.apply();
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                         break;
                     case R.id.radioAuto:
                         editor.putInt("Theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                        editor.commit();
+                        editor.apply();
                         editor.putInt("radioThemeId", R.id.radioAuto);
-                        editor.commit();
+                        editor.apply();
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                         break;
                     case R.id.radioBattery:
                         editor.putInt("Theme", AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
-                        editor.commit();
+                        editor.apply();
                         editor.putInt("radioThemeId", R.id.radioBattery);
-                        editor.commit();
+                        editor.apply();
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
                         break;
                 }
             }
         });
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) radioBattery.setVisibility(View.GONE);
-        else radioAuto.setVisibility(View.GONE);
-
         useBiometricsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
                     editor.putBoolean("UseBiometrics", true);
-                    editor.commit();
+                    editor.apply();
                 }
                 else {
                     editor.putBoolean("UseBiometrics", false);
-                    editor.commit();
+                    editor.apply();
                 }
             }
         });
-    }
-
-    private void restartApp() {
-        Intent intent = new Intent(getContext(), MainActivity.class);
-        this.startActivity(intent);
-        getActivity().finish();
     }
 
 }

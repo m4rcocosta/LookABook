@@ -54,12 +54,12 @@ public class HomeFragment extends Fragment {
 
         if (requestCode == CAMERA_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(getContext(), "Storage Permission Granted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Camera Permission Granted", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), TextRecognitionActivity.class);
                 startActivity(intent);
             }
             else {
-                Toast.makeText(getContext(), "Storage Permission Denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Camera Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }

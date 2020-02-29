@@ -42,7 +42,7 @@ public class AdvancedProfileFragment extends Fragment implements View.OnClickLis
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(getActivity(), MainActivity.class);
         startActivity(intent);
-        getActivity().finish();
+        getActivity().finishAffinity();
     }
 
     private void userDelete() {
@@ -55,7 +55,7 @@ public class AdvancedProfileFragment extends Fragment implements View.OnClickLis
                         Toast.makeText(getContext(), "Your profile is deleted!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getActivity(), MainActivity.class);
                         startActivity(intent);
-                        getActivity().finish();
+                        getActivity().finishAffinity();
                     } else {
                         Toast.makeText(getContext(), "Failed to delete your account!", Toast.LENGTH_SHORT).show();
                     }
