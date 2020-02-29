@@ -16,8 +16,8 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/editNameProfileButton"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="@dimen/edit_info_button_size"
+            android:layout_height="@dimen/edit_info_button_size"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="5dp"
             android:backgroundTint="@color/colorPrimary"
@@ -40,7 +40,7 @@
                 android:focusable="false"
                 android:hint="@string/name"
                 android:inputType="text"
-                android:textSize="25sp"
+                android:textSize="@dimen/text_input_size"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
     </RelativeLayout>
@@ -52,8 +52,8 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/editSurnameProfileButton"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="@dimen/edit_info_button_size"
+            android:layout_height="@dimen/edit_info_button_size"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="5dp"
             android:backgroundTint="@color/colorPrimary"
@@ -76,7 +76,7 @@
                 android:focusable="false"
                 android:hint="@string/surname"
                 android:inputType="text"
-                android:textSize="25sp"
+                android:textSize="@dimen/text_input_size"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
     </RelativeLayout>
@@ -88,8 +88,8 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/editPhoneNumberProfileButton"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="@dimen/edit_info_button_size"
+            android:layout_height="@dimen/edit_info_button_size"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="5dp"
             android:backgroundTint="@color/colorPrimary"
@@ -112,7 +112,7 @@
                 android:focusable="false"
                 android:hint="@string/phone_number"
                 android:inputType="phone"
-                android:textSize="25sp"
+                android:textSize="@dimen/text_input_size"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
     </RelativeLayout>
@@ -139,7 +139,7 @@
                 android:focusable="false"
                 android:hint="@string/email"
                 android:inputType="textEmailAddress"
-                android:textSize="25sp"
+                android:textSize="@dimen/text_input_size"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
     </RelativeLayout>

@@ -5,12 +5,11 @@
     android:orientation="vertical">
     <com.google.android.material.button.MaterialButton
         android:id="@+id/logoutButton"
-        android:textSize="20sp"
+        android:textSize="@dimen/button_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
         android:text="@string/log_out"
         android:clickable="true"
         android:gravity="center"
@@ -18,12 +17,11 @@
         android:textColor="@color/colorAccent"/>
     <com.google.android.material.button.MaterialButton
         android:id="@+id/deleteUserButton"
-        android:textSize="20sp"
+        android:textSize="@dimen/button_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
         android:text="@string/delete_account"
         android:clickable="true"
         android:gravity="center"

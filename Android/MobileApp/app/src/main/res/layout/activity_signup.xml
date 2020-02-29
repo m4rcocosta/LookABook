@@ -24,7 +24,7 @@
 
         <TextView
             android:id="@+id/signUpTextView"
-            android:textSize="40sp"
+            android:textSize="@dimen/title_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -88,11 +88,12 @@
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/colorPrimary"
             android:text="@string/register"
+            android:textSize="@dimen/button_size"
             android:textColor="@color/colorAccent"
             android:textStyle="bold"/>
         <TextView
             android:id="@+id/alreadyRegisteredButton"
-            android:textSize="20sp"
+            android:textSize="@dimen/options_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

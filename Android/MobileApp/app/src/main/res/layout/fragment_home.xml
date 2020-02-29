@@ -12,6 +12,6 @@
         android:text="@string/start_text_recognition"
         android:textColor="@color/colorAccent"
         android:layout_gravity="center"
-        android:textSize="30sp"/>
+        android:textSize="@dimen/button_size"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

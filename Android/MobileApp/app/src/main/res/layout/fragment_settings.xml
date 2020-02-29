@@ -17,7 +17,7 @@
             android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/colorPrimary"
-            android:textSize="40sp"/>
+            android:textSize="@dimen/title_size"/>
 
         <TableLayout
             android:layout_width="match_parent"
@@ -36,35 +36,35 @@
                 android:text="@string/theme"
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimary"
-                android:textSize="30sp"
+                android:textSize="@dimen/header_size"
                 android:id="@+id/theme_textview"/>
             <RadioButton
                 android:id="@+id/radioDay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
+                android:textSize="@dimen/options_size"
                 android:text="@string/day"/>
             <RadioButton
                 android:id="@+id/radioNight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
+                android:textSize="@dimen/options_size"
                 android:text="@string/night"/>
             <RadioButton
                 android:id="@+id/radioAuto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
+                android:textSize="@dimen/options_size"
                 android:text="@string/auto"/>
             <RadioButton
                 android:id="@+id/radioBattery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
+                android:textSize="@dimen/options_size"
                 android:text="@string/battery"/>
         </RadioGroup>
 
@@ -74,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:textSize="30sp"
+            android:textSize="@dimen/header_size"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
             app:useMaterialThemeColors="false"
