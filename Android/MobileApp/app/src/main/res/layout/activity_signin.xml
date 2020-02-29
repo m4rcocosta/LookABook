@@ -33,7 +33,7 @@
             android:gravity="center"
             android:text="@string/sign_in"
             android:textColor="@color/colorPrimary"
-            android:textSize="40dp" />
+            android:textSize="40sp" />
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -47,7 +47,7 @@
                 android:id="@+id/emailSignInEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_email"
+                android:hint="@string/email"
                 android:inputType="textEmailAddress"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:hint="@string/hint_password"
+            android:hint="@string/password"
             app:endIconMode="password_toggle">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
             android:backgroundTint="@color/colorPrimary"
-            android:text="@string/btn_login"
+            android:text="@string/login"
             android:textColor="@color/colorAccent" />
 
         <com.google.android.gms.common.SignInButton
@@ -89,10 +89,9 @@
             android:layout_marginTop="20dp"
             android:clickable="true"
             android:gravity="center"
-            android:onClick="NavigateSignUp"
             android:text="@string/sign_up"
             android:textColor="@color/colorPrimary"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/resetPasswordButton"
@@ -102,10 +101,9 @@
             android:layout_marginTop="20dp"
             android:clickable="true"
             android:gravity="center"
-            android:onClick="NavigateForgetMyPassword"
-            android:text="@string/forget_your_password"
+            android:text="@string/reset_password"
             android:textColor="@color/colorPrimary"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

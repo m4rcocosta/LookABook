@@ -24,7 +24,7 @@
 
         <TextView
             android:id="@+id/signUpTextView"
-            android:textSize="40dp"
+            android:textSize="40sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -46,7 +46,7 @@
                 android:id="@+id/emailSignUpEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_email"
+                android:hint="@string/email"
                 android:inputType="textEmailAddress"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:hint="@string/hint_password"
+            android:hint="@string/password"
             app:endIconMode="password_toggle"
             app:helperText="@string/password_helper_text">
 
@@ -87,18 +87,17 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/colorPrimary"
-            android:text="@string/action_sign_in_short"
+            android:text="@string/register"
             android:textColor="@color/colorAccent"
             android:textStyle="bold"/>
         <TextView
             android:id="@+id/alreadyRegisteredButton"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:text="@string/already_a_member"
-            android:onClick="navigateSignIn"
+            android:text="@string/already_registered"
             android:clickable="true"
             android:gravity="center"
             android:textColor="@color/colorPrimary"/>

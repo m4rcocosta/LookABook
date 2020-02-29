@@ -45,6 +45,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:text="@string/create_profile"
+                android:textSize="40sp"
                 android:textColor="@color/colorPrimaryDark"
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>

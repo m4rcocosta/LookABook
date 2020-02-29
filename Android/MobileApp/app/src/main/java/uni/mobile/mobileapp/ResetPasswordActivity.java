@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,6 +21,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private EditText emailResetPassword;
     private MaterialButton resetButton;
     private FirebaseAuth auth;
+    private TextView signInButton, signUpButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
         emailResetPassword = findViewById(R.id.emailResetPasswordEditText);
         resetButton = findViewById(R.id.resetPasswordButton);
         auth = FirebaseAuth.getInstance();
+        signInButton = findViewById(R.id.signInRPButton);
+        signUpButton = findViewById(R.id.signUpRPButton);
 
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,9 +56,29 @@ public class ResetPasswordActivity extends AppCompatActivity {
                         });
             }
         });
+
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateSignIn();
+            }
+        });
+
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateSignUp();
+            }
+        });
     }
 
-    public void NavigateSignUp(View v) {
+    private void navigateSignIn() {
+        Intent intent = new Intent(this, SignInActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void navigateSignUp() {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
         finish();

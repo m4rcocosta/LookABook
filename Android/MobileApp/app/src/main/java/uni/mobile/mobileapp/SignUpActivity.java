@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +25,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private EditText emailSignUp, passwordSignUp, confirmPasswordSignUp;
     private MaterialButton signUpButton;
+    private TextView alreadyRegisteredButton;
     private FirebaseAuth auth;
 
     private static final int STORAGE_PERMISSION_CODE = 101;
@@ -44,6 +46,7 @@ public class SignUpActivity extends AppCompatActivity {
         confirmPasswordSignUp = findViewById(R.id.confirmPasswordSignUpEditText);
         auth = FirebaseAuth.getInstance();
         signUpButton = findViewById(R.id.signUpButton);
+        alreadyRegisteredButton = findViewById(R.id.alreadyRegisteredButton);
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
 
@@ -94,6 +97,13 @@ public class SignUpActivity extends AppCompatActivity {
                             });}
             }
         });
+
+        alreadyRegisteredButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                navigateSignIn();
+            }
+        });
     }
 
     @Override
@@ -110,7 +120,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    public void navigateSignIn(View v){
+    private void navigateSignIn(){
         Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
         finish();

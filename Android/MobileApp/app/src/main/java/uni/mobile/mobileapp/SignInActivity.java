@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -29,15 +30,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.StorageReference;
 
 public class SignInActivity extends AppCompatActivity {
 
     private EditText emailSignIn, passwordSignIn;
     private FirebaseAuth auth;
     private DatabaseReference databaseReference;
-    private StorageReference storageReference;
     private MaterialButton signInButton;
+    private TextView notRegisteredButton, resetPasswordButton;
     private com.google.android.gms.common.SignInButton googleSignInButton;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
@@ -61,6 +61,8 @@ public class SignInActivity extends AppCompatActivity {
         passwordSignIn = findViewById(R.id.passwordSignInEditText);
         signInButton = findViewById(R.id.signInButton);
         googleSignInButton = findViewById(R.id.googleSignInButton);
+        notRegisteredButton = findViewById(R.id.notRegisteredButton);
+        resetPasswordButton = findViewById(R.id.resetPasswordButton);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -107,10 +109,25 @@ public class SignInActivity extends AppCompatActivity {
                         });
             }
         });
+
         googleSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 googleSignIn();
+            }
+        });
+
+        notRegisteredButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateSignUp();
+            }
+        });
+
+        resetPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateResetPassword();
             }
         });
     }
@@ -170,13 +187,13 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
-    public void NavigateSignUp(View v) {
+    private void navigateSignUp() {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
         finish();
     }
 
-    public void NavigateForgetMyPassword(View v) {
+    private void navigateResetPassword() {
         Intent intent = new Intent(this, ResetPasswordActivity.class);
         startActivity(intent);
         finish();

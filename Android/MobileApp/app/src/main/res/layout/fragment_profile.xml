@@ -34,14 +34,13 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
         <TextView
-            android:id="@+id/profileTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="@string/profile"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="35sp"
+            android:textSize="40sp"
             android:textStyle="bold"/>
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"

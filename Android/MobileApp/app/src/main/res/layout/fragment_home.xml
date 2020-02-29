@@ -9,9 +9,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/startTextRecognitionButton"
-        android:text="Start Text\nRecognition"
+        android:text="@string/start_text_recognition"
         android:textColor="@color/colorAccent"
         android:layout_gravity="center"
-        android:textSize="30dp"/>
+        android:textSize="30sp"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
