@@ -22,6 +22,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import uni.mobile.mobileapp.MainActivity;
@@ -37,9 +38,14 @@ public class SettingsFragment extends Fragment {
     private SharedPreferences preferenceManager;
     private SharedPreferences.Editor editor;
 
+    private BottomNavigationView bottomNavigationView;
+
+    public SettingsFragment(BottomNavigationView bottomNavigationView) {
+        this.bottomNavigationView = bottomNavigationView;
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
@@ -74,6 +80,7 @@ public class SettingsFragment extends Fragment {
                         editor.apply();
                         editor.putInt("radioThemeId", R.id.radioDay);
                         editor.apply();
+                        bottomNavigationView.setSelectedItemId(R.id.navigation_home);
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                         break;
                     case R.id.radioNight:
@@ -82,12 +89,14 @@ public class SettingsFragment extends Fragment {
                         editor.putInt("radioThemeId", R.id.radioNight);
                         editor.apply();
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                        bottomNavigationView.setSelectedItemId(R.id.navigation_home);
                         break;
                     case R.id.radioAuto:
                         editor.putInt("Theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                         editor.apply();
                         editor.putInt("radioThemeId", R.id.radioAuto);
                         editor.apply();
+                        bottomNavigationView.setSelectedItemId(R.id.navigation_home);
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                         break;
                     case R.id.radioBattery:
@@ -95,6 +104,7 @@ public class SettingsFragment extends Fragment {
                         editor.apply();
                         editor.putInt("radioThemeId", R.id.radioBattery);
                         editor.apply();
+                        bottomNavigationView.setSelectedItemId(R.id.navigation_home);
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
                         break;
                 }

@@ -51,7 +51,7 @@ public class HomeActivity extends AppCompatActivity {
                     case R.id.navigation_settings:
                         if (item.getItemId() == selectedItem) break;
                         selectedItem = R.id.navigation_settings;
-                        openFragment(new SettingsFragment());
+                        openFragment(new SettingsFragment(bottomNavigationView));
                         return true;
                 }
                 return false;
