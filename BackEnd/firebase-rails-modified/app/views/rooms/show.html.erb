@@ -1,0 +1,9 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @room.name %>
+</p>
+
+<%= link_to 'Edit', edit_user_house_room_path(@user,@house,@room) %> |
+<%= link_to 'Back', [@user,@house] %>

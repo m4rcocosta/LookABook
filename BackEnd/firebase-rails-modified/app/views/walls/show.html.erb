@@ -1,0 +1,9 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @wall.name %>
+</p>
+
+<%= link_to 'Edit', edit_user_house_room_wall_path(@user,@house,@room,@wall) %> |
+<%= link_to 'Back', user_house_room_walls_path(@user,@house,@room) %>

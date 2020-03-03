@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Shelves</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @shelves.each do |shelf| %>
+      <tr>
+        <td><%= shelf.name %></td>
+        <td><%= link_to 'Show', user_house_room_wall_shelf_path(@user,
+@house,@room,@wall,shelf) %></td>
+        <td><%= link_to 'Edit', edit_user_house_room_wall_shelf_path(@user,
+@house,@room,@wall,shelf) %></td>
+        <td><%= link_to 'Destroy', shelf, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Shelf', new_shelf_path %>

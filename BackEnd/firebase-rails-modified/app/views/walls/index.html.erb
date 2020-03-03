@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Walls</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @walls.each do |wall| %>
+      <tr>
+        <td><%= wall.name %></td>
+        <td><%= link_to 'Show',[@user,@house,@room] %></td>
+        <td><%= link_to 'Edit', edit_user_house_room_wall_path(@user,@house,@room,wall) %></td>
+        <td><%= link_to 'Destroy', [@user,@house,@room,wall], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Wall', new_user_house_room_wall_path(@user,@house,@room) %>

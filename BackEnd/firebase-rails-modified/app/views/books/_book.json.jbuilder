@@ -1,0 +1,2 @@
+json.extract! book, :id, :title, :authors, :publisher, :publishedDate, :description, :isbn, :pageCount, :categories, :imageLinks, :country, :price, :created_at, :updated_at
+json.url user_house_room_wall_shelf_book_url(@user,@house,@room,@wall,@shelf,book, format: :json)

@@ -1,0 +1,6 @@
+<h1>Editing Wall</h1>
+
+<%= render 'form', wall: @wall %>
+
+<%= link_to 'Show', user_house_room_walls_path(@user,@house,@room) %> |
+<%= link_to 'Back', [@user,@house,@room] %>

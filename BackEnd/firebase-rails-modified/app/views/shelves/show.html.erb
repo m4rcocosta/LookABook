@@ -1,0 +1,11 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @shelf.name %>
+</p>
+
+<%= link_to 'Edit', edit_user_house_room_wall_shelf_path(@user,
+@house,@room,@wall,@sheelf) %> |
+<%= link_to 'Back', user_house_room_wall_shelves_path(@user,
+@house,@room,@wall) %>

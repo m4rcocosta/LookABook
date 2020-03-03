@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @house.name %>
+</p>
+
+<p>
+  <strong>Latitude:</strong>
+  <%= @house.latitude %>
+</p>
+
+<p>
+  <strong>Longitude:</strong>
+  <%= @house.longitude %>
+</p>
+
+<p>
+  <strong>Ismainhouse:</strong>
+  <%= @house.isMainHouse %>
+</p>
+
+
+<%= link_to 'Edit', edit_user_house_path(@user, @house) %> |
+<%= link_to 'Back', user_houses_path(@user) %>
