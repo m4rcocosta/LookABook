@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ public class TextRecognitionActivity extends AppCompatActivity {
     private ListView listView = null;
     private Boolean isStoppedCamera = false;
     private MyCamera c;
+    private Button onOffButton, snapButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,21 @@ public class TextRecognitionActivity extends AppCompatActivity {
         //checkBoxThread.start();
         //checkBoxThread.setTitles("New");
         //c = new MyCamera(getApplicationContext(),this,checkBoxThread);
+
+        onOffButton = findViewById(R.id.onOffCameraButton);
+        snapButton = findViewById(R.id.snapButton);
+
+        onOffButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                onOffCamera();
+            }
+        });
+
+        snapButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                takePicture();
+            }
+        });
 
         c = new MyCamera(getApplicationContext(), TextRecognitionActivity.this);    //class to handle camera recognition stuff
         Log.i("cam","Camera initialized");
@@ -55,7 +72,7 @@ public class TextRecognitionActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    public void onClickBtn(View v) { //Todo toglle on/off the camera (not working)
+    private void onOffCamera() { //Todo toglle on/off the camera (not working)
         Toast.makeText(this, "Camera " + (isStoppedCamera ? "ON" : "OFF"), Toast.LENGTH_LONG).show();
         isStoppedCamera = !isStoppedCamera;
         if (isStoppedCamera) {
@@ -65,7 +82,7 @@ public class TextRecognitionActivity extends AppCompatActivity {
         }
     }
 
-    public void onClickSfc(View v) { //Tap on the camera happened
+    private void takePicture() { //Tap on the camera happened
         if (c.getReady()) {
             Toast.makeText(this, "Camera picture taken", Toast.LENGTH_LONG).show();
             c.snap();

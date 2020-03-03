@@ -14,7 +14,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp">
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/editNameProfileButton"
             android:layout_width="@dimen/edit_info_button_size"
             android:layout_height="@dimen/edit_info_button_size"
@@ -50,7 +50,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp">
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/editSurnameProfileButton"
             android:layout_width="@dimen/edit_info_button_size"
             android:layout_height="@dimen/edit_info_button_size"
@@ -86,7 +86,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp">
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/editPhoneNumberProfileButton"
             android:layout_width="@dimen/edit_info_button_size"
             android:layout_height="@dimen/edit_info_button_size"

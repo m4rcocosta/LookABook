@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature  android:name="android.hardware.camera" android:required="true" />
 
     <meta-data
         android:name="com.google.android.gms.vision.DEPENDENCIES"
@@ -20,7 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".recognition.SelectTitlesActivity"></activity>
+        <activity android:name=".recognition.SelectTitlesActivity" />
         <activity android:name=".recognition.PhotoDecisionActivity" />
         <activity android:name=".recognition.TextRecognitionActivity" />
         <activity android:name=".EditProfileActivity" />

@@ -11,20 +11,20 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText emailSignUp, passwordSignUp, confirmPasswordSignUp;
-    private MaterialButton signUpButton;
+    private Button signUpButton;
     private TextView alreadyRegisteredButton;
     private FirebaseAuth auth;
 
@@ -99,7 +99,6 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
         alreadyRegisteredButton.setOnClickListener(new View.OnClickListener() {
-
             public void onClick(View v) {
                 navigateSignIn();
             }

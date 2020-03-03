@@ -10,11 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,13 +25,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
-public class InfoProfileFragment extends Fragment implements View.OnClickListener {
+public class InfoProfileFragment extends Fragment {
 
     private DatabaseReference databaseReference;
     private TextView nameProfileTextView, surnameProfileTextView, phoneNumberProfileTextView, emailProfileTextView;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
-    private MaterialButton editNameButton, editSurnameButton, editPhoneNumberButton;
+    private Button editNameButton, editSurnameButton, editPhoneNumberButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,9 +45,21 @@ public class InfoProfileFragment extends Fragment implements View.OnClickListene
         editSurnameButton = view.findViewById(R.id.editSurnameProfileButton);
         editPhoneNumberButton = view.findViewById(R.id.editPhoneNumberProfileButton);
 
-        editNameButton.setOnClickListener(this);
-        editSurnameButton.setOnClickListener(this);
-        editPhoneNumberButton.setOnClickListener(this);
+        editNameButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                editName();
+            }
+        });
+        editSurnameButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                editSurname();
+            }
+        });
+        editPhoneNumberButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                editPhoneNumber();
+            }
+        });
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -158,20 +170,5 @@ public class InfoProfileFragment extends Fragment implements View.OnClickListene
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.editNameProfileButton:
-                editName();
-                break;
-            case R.id.editSurnameProfileButton:
-                editSurname();
-                break;
-            case R.id.editPhoneNumberProfileButton:
-                editPhoneNumber();
-                break;
-        }
     }
 }
