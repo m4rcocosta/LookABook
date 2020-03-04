@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,9 +64,12 @@ public class ProfileFragment extends Fragment {
         storageReference = FirebaseStorage.getInstance().getReference();
 
         final FirebaseUser user = firebaseAuth.getCurrentUser();
-        Uri imageUrl = user.getPhotoUrl();
+        Uri imageUri = user.getPhotoUrl();
 
-        if (imageUrl != null) Picasso.get().load(imageUrl).fit().centerInside().into(profilePicImageView);
+        if (imageUri != null) {
+            imageUri = increaseUriImageSize(imageUri);
+            Picasso.get().load(imageUri).fit().centerInside().into(profilePicImageView);
+        }
         else {
             // Get the image stored on Firebase via "User id/Images/Profile Pic.jpg".
             storageReference.child(firebaseAuth.getUid()).child("Images").child("Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -78,5 +82,27 @@ public class ProfileFragment extends Fragment {
                 }
             });
         }
+    }
+
+    private Uri increaseUriImageSize(Uri uri) {
+
+        // Variable holding the original String portion of the url that will be replaced
+        String originalPieceOfUrl = "s96-c";
+
+        // Variable holding the new String portion of the url that does the replacing, to improve image quality
+        String newPieceOfUrlToAdd = "s400-c";
+
+        // Check if the Url path is null
+        if (uri != null) {
+
+            // Convert the Url to a String and store into a variable
+            String photoPath = uri.toString();
+
+            // Replace the original part of the Url with the new part
+            String newString = photoPath.replace(originalPieceOfUrl, newPieceOfUrlToAdd);
+            Uri newUri = Uri.parse(newString);
+            return newUri;
+        }
+        return null;
     }
 }

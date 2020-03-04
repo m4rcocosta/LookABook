@@ -49,4 +49,8 @@
     <string name="password_helper_text">Password must be at least 8 characters.</string>
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
 
+
+    <string name="Open">open drawer</string>
+    <string name="Close">close drawer</string>
+
 </resources>

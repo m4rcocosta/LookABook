@@ -7,140 +7,152 @@
     android:layout_height="match_parent"
     tools:context=".InfoProfileFragment">
 
-    <RelativeLayout
-        android:layout_height="wrap_content"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp">
 
-        <Button
-            android:id="@+id/editNameProfileButton"
-            android:layout_width="@dimen/edit_info_button_size"
-            android:layout_height="@dimen/edit_info_button_size"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="5dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:drawableEnd="@drawable/ic_create_black_24dp"
-            android:drawableTint="@color/colorAccent" />
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@id/editNameProfileButton"
-            app:startIconDrawable="@drawable/ic_account_circle_primarycolor_24dp"
-            app:startIconTint="@color/colorPrimary">
+            android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/nameProfileTextView"
-                android:layout_width="match_parent"
+            <RelativeLayout
                 android:layout_height="wrap_content"
-                android:clickable="false"
-                android:cursorVisible="false"
-                android:focusable="false"
-                android:hint="@string/name"
-                android:inputType="text"
-                android:textSize="@dimen/text_input_size"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
-
-        <Button
-            android:id="@+id/editSurnameProfileButton"
-            android:layout_width="@dimen/edit_info_button_size"
-            android:layout_height="@dimen/edit_info_button_size"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="5dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:drawableEnd="@drawable/ic_create_black_24dp"
-            android:drawableTint="@color/colorAccent" />
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toStartOf="@id/editSurnameProfileButton"
-            app:startIconDrawable="@drawable/ic_account_box_primarycolor_24dp"
-            app:startIconTint="@color/colorPrimary">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/surnameProfileTextView"
                 android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp">
+
+                <Button
+                    android:id="@+id/editNameProfileButton"
+                    android:layout_width="@dimen/edit_info_button_size"
+                    android:layout_height="@dimen/edit_info_button_size"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="5dp"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:drawableEnd="@drawable/ic_create_black_24dp"
+                    android:drawableTint="@color/colorAccent" />
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/editNameProfileButton"
+                    app:startIconDrawable="@drawable/ic_account_circle_primarycolor_24dp"
+                    app:startIconTint="@color/colorPrimary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/nameProfileTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:hint="@string/name"
+                        android:inputType="text"
+                        android:textSize="@dimen/text_input_size"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </RelativeLayout>
+            <RelativeLayout
                 android:layout_height="wrap_content"
-                android:clickable="false"
-                android:cursorVisible="false"
-                android:focusable="false"
-                android:hint="@string/surname"
-                android:inputType="text"
-                android:textSize="@dimen/text_input_size"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
-
-        <Button
-            android:id="@+id/editPhoneNumberProfileButton"
-            android:layout_width="@dimen/edit_info_button_size"
-            android:layout_height="@dimen/edit_info_button_size"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="5dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:drawableEnd="@drawable/ic_dialpad_black_24dp"
-            android:drawableTint="@color/colorAccent" />
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toStartOf="@id/editPhoneNumberProfileButton"
-            app:startIconDrawable="@drawable/ic_phone_primarycolor_24dp"
-            app:startIconTint="@color/colorPrimary">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/phoneNumberProfileTextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:cursorVisible="false"
-                android:focusable="false"
-                android:hint="@string/phone_number"
-                android:inputType="phone"
-                android:textSize="@dimen/text_input_size"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:startIconDrawable="@drawable/ic_email_primarycolor_24dp"
-            app:startIconTint="@color/colorPrimary">
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/emailProfileTextView"
-                android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/editSurnameProfileButton"
+                    android:layout_width="@dimen/edit_info_button_size"
+                    android:layout_height="@dimen/edit_info_button_size"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="5dp"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:drawableEnd="@drawable/ic_create_black_24dp"
+                    android:drawableTint="@color/colorAccent" />
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/editSurnameProfileButton"
+                    app:startIconDrawable="@drawable/ic_account_box_primarycolor_24dp"
+                    app:startIconTint="@color/colorPrimary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/surnameProfileTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:hint="@string/surname"
+                        android:inputType="text"
+                        android:textSize="@dimen/text_input_size"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </RelativeLayout>
+            <RelativeLayout
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:clickable="false"
-                android:cursorVisible="false"
-                android:focusable="false"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress"
-                android:textSize="@dimen/text_input_size"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </RelativeLayout>
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp">
+
+                <Button
+                    android:id="@+id/editPhoneNumberProfileButton"
+                    android:layout_width="@dimen/edit_info_button_size"
+                    android:layout_height="@dimen/edit_info_button_size"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="5dp"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:drawableEnd="@drawable/ic_dialpad_black_24dp"
+                    android:drawableTint="@color/colorAccent" />
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/editPhoneNumberProfileButton"
+                    app:startIconDrawable="@drawable/ic_phone_primarycolor_24dp"
+                    app:startIconTint="@color/colorPrimary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/phoneNumberProfileTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:hint="@string/phone_number"
+                        android:inputType="phone"
+                        android:textSize="@dimen/text_input_size"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp">
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:startIconDrawable="@drawable/ic_email_primarycolor_24dp"
+                    app:startIconTint="@color/colorPrimary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/emailProfileTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:clickable="false"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:hint="@string/email"
+                        android:inputType="textEmailAddress"
+                        android:textSize="@dimen/text_input_size"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
