@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,7 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class AdvancedProfileFragment extends Fragment implements View.OnClickListener {
 
-    private Button logoutButton, deleteUserButton;
+    private Button deleteUserButton;
     private SharedPreferences.Editor editor;
 
     @Override
@@ -35,34 +34,11 @@ public class AdvancedProfileFragment extends Fragment implements View.OnClickLis
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        logoutButton = view.findViewById(R.id.logoutButton);
         deleteUserButton = view.findViewById(R.id.deleteUserButton);
+        deleteUserButton.setOnClickListener(this);
+
 
         editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
-
-        logoutButton.setOnClickListener(this);
-        deleteUserButton.setOnClickListener(this);
-    }
-
-    private void userLogout() {
-        editor.putBoolean("UseBiometrics", false);
-        editor.apply();
-
-        AuthUI.getInstance()
-                .signOut(getContext())
-                .addOnCompleteListener(new OnCompleteListener<Void>(){
-
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-
-                        // do something here
-
-                    }
-                });
-
-        Intent intent = new Intent(getActivity(), MainActivity.class);
-        startActivity(intent);
-        getActivity().finishAffinity();
     }
 
     private void userDelete() {
@@ -72,6 +48,8 @@ public class AdvancedProfileFragment extends Fragment implements View.OnClickLis
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
+                        editor.putBoolean("UseBiometrics", false);
+                        editor.apply();
                         Toast.makeText(getContext(), "Your profile is deleted!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getActivity(), MainActivity.class);
                         startActivity(intent);
@@ -87,9 +65,6 @@ public class AdvancedProfileFragment extends Fragment implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.logoutButton:
-                userLogout();
-                break;
             case R.id.deleteUserButton:
                 userDelete();
                 break;

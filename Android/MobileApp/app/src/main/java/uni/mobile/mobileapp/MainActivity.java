@@ -12,6 +12,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private Executor executor;
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         //Check current user
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuth.addAuthStateListener(authStateListener);
+        user = firebaseAuth.getCurrentUser();
 
         useBiometrics = preferenceManager.getBoolean("UseBiometrics", false);
 
@@ -80,6 +85,13 @@ public class MainActivity extends AppCompatActivity {
                 .build();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        boolean rememberMe = preferenceManager.getBoolean("RememberMe", false);
+        if (user != null && !rememberMe) userLogout();
+    }
+
     FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
         @Override
         public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -102,4 +114,16 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    private void userLogout() {
+        AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>(){
+
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finishAffinity();
+            }
+        });
+    }
 }

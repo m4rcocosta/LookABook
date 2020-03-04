@@ -72,11 +72,16 @@
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rememberMeCheckBox"
+                android:text="@string/remember_me"/>
+
             <Button
                 android:id="@+id/signInButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:backgroundTint="@color/colorPrimary"
                 android:text="@string/login"
                 android:textSize="@dimen/button_size"

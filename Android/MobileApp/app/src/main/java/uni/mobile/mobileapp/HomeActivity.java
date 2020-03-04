@@ -12,10 +12,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,14 +26,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -113,7 +124,7 @@ public class HomeActivity extends AppCompatActivity {
                         dl.closeDrawers();
                         return true;
                     case R.id.nav_logout:
-                        Toast.makeText(HomeActivity.this, "Logout",Toast.LENGTH_SHORT).show();
+                        userLogout();
                         return true;
                 }
 
@@ -153,10 +164,9 @@ public class HomeActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         final FirebaseUser user = firebaseAuth.getCurrentUser();
-        Uri imageUri = user != null ? user.getPhotoUrl() : null;
 
-        if (imageUri != null) {
-            imageUri = increaseUriImageSize(imageUri);
+        if (getUserProvider(user).equals("GOOGLE")) {
+            Uri imageUri = increaseUriImageSize(user.getPhotoUrl());
             Picasso.get().load(imageUri).fit().centerInside().into(profilePic);
         }
         else {
@@ -237,6 +247,28 @@ public class HomeActivity extends AppCompatActivity {
             return newUri;
         }
         return null;
+    }
+
+    private String getUserProvider(FirebaseUser user) {
+        List<? extends UserInfo> infos = user.getProviderData();
+        String provider = "FIREBASE";
+        for (UserInfo ui : infos) {
+            if (ui.getProviderId().equals(GoogleAuthProvider.PROVIDER_ID)) provider = "GOOGLE";
+            else if (ui.getProviderId().equals(FacebookAuthProvider.PROVIDER_ID)) provider = "FACEBOOK";
+        }
+        return provider;
+    }
+
+    private void userLogout() {
+        AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>(){
+
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finishAffinity();
+            }
+        });
     }
 
 }

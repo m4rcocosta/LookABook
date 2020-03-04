@@ -16,20 +16,19 @@
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
-        <!-- Toolbar is the actual app bar with text and the action items -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:titleTextColor="@color/colorAccent"
             app:layout_scrollFlags="scroll|enterAlways">
             <TextView
                 android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="MobileApp"
-                android:textColor="@android:color/white"
+                android:text="@string/app_name"
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                 android:layout_gravity="center"
                 />

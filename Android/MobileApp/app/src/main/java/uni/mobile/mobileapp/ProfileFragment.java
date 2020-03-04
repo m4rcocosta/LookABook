@@ -14,11 +14,16 @@ import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 
 public class ProfileFragment extends Fragment {
@@ -64,10 +69,9 @@ public class ProfileFragment extends Fragment {
         storageReference = FirebaseStorage.getInstance().getReference();
 
         final FirebaseUser user = firebaseAuth.getCurrentUser();
-        Uri imageUri = user.getPhotoUrl();
 
-        if (imageUri != null) {
-            imageUri = increaseUriImageSize(imageUri);
+        if (getUserProvider(user).equals("GOOGLE")) {
+            Uri imageUri = increaseUriImageSize(user.getPhotoUrl());
             Picasso.get().load(imageUri).fit().centerInside().into(profilePicImageView);
         }
         else {
@@ -104,5 +108,15 @@ public class ProfileFragment extends Fragment {
             return newUri;
         }
         return null;
+    }
+
+    private String getUserProvider(FirebaseUser user) {
+        List<? extends UserInfo> infos = user.getProviderData();
+        String provider = "FIREBASE";
+        for (UserInfo ui : infos) {
+            if (ui.getProviderId().equals(GoogleAuthProvider.PROVIDER_ID)) provider = "GOOGLE";
+            else if (ui.getProviderId().equals(FacebookAuthProvider.PROVIDER_ID)) provider = "FACEBOOK";
+        }
+        return provider;
     }
 }
