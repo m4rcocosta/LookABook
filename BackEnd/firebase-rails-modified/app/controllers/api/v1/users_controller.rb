@@ -5,23 +5,23 @@ class Api::V1::UsersController < ApiController
   # GET /users.json
   def index
     users = User.all
-    render json: {status: 'SUCCESS', message: 'Loaded all posts', data: users}, status: :ok
+    render json: {status: 'SUCCESS', message: 'Loaded all users', data: users}, status: :ok
 end
 
   # GET /users/1
   # GET /users/1.json
   def show
-    render json: {status: 'SUCCESS', message: 'Loaded all posts', data: @user}, status: :ok
+    render json: {status: 'SUCCESS', message: 'Loaded user', data: @user}, status: :ok
   end
 
   # GET /users/new
-  def new
-    @user = User.new
-  end
+  # def new
+  #   @user = User.new
+  # end
 
-  # GET /users/1/edit
-  def edit
-  end
+  # # GET /users/1/edit
+  # # def edit
+  # end
 
   # POST /users
   # POST /users.json
