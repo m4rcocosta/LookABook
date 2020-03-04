@@ -1,4 +1,4 @@
 class Shelf < ApplicationRecord
-    belongs_to :walls
+    belongs_to :wall
     has_many :books
 end
