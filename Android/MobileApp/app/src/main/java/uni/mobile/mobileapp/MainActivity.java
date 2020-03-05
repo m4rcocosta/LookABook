@@ -24,6 +24,7 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences preferenceManager;
+    private SharedPreferences.Editor editor;
     private int theme;
     private boolean useBiometrics;
     private FragmentActivity activity;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         preferenceManager = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = preferenceManager.edit();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) theme = preferenceManager.getInt("Theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         else theme = preferenceManager.getInt("Theme", AppCompatDelegate.MODE_NIGHT_NO);
         AppCompatDelegate.setDefaultNightMode(theme);
@@ -120,6 +122,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                editor.putBoolean("UseBiometrics" , false);
+                editor.apply();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 finishAffinity();

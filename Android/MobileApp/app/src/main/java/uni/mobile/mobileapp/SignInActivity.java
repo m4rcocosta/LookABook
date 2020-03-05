@@ -45,6 +45,7 @@ public class SignInActivity extends AppCompatActivity {
     private com.google.android.gms.common.SignInButton googleSignInButton;
     private GoogleSignInClient mGoogleSignInClient;
     private CheckBox rememberMe;
+    private SharedPreferences preferenceManager;
     private SharedPreferences.Editor editor;
     private static final int RC_SIGN_IN = 9001;
 
@@ -69,7 +70,8 @@ public class SignInActivity extends AppCompatActivity {
         resetPasswordButton = findViewById(R.id.resetPasswordButton);
         rememberMe = findViewById(R.id.rememberMeCheckBox);
 
-        editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+        preferenceManager = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        editor = preferenceManager.edit();
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -138,6 +140,7 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
 
+        rememberMe.setChecked(preferenceManager.getBoolean("RememberMe", false));
         rememberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
