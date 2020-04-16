@@ -73,7 +73,7 @@ GEM
     crass (1.0.4)
     erubi (1.7.1)
     execjs (2.7.0)
-    ffi (1.9.23)
+    ffi (1.12.2)
     firebase-ruby (0.2.0.1)
       jwt (~> 1.5)
     globalid (0.4.1)
