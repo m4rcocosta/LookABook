@@ -1,4 +1,5 @@
 #app/controllers/api_controller.rb
+
 class ApiController < ApplicationController 
     
     before_action :authenticate_user
@@ -6,7 +7,9 @@ class ApiController < ApplicationController
     
     skip_before_action :verify_authenticity_token
     
-    
+
+
+
     private
     def authenticate_user
         user_token = request.headers['TOKEN']

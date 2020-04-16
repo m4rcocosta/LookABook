@@ -1,3 +1,9 @@
+#require 'net/http'
+
+require 'async'
+require 'async/http/internet'
+require 'uri'
+
 class Api::V1::BooksController < ApiController
   
   
@@ -67,25 +73,64 @@ class Api::V1::BooksController < ApiController
       render error: { error: 'Error in destroy'}, status: 400
     end
   end
-
-  #POST /books-send
-  def books_send
+  
+  #GET /books-google
+  def books_google
     books = @shelf.books
     
-    Books::BooksSend.call(book_params) do |m|
-      m.success do
-        render json: {status: 'API-SUCCESS', message: 'ANALYZED all books', data: books}, status: :ok
-      end
-      m.failure do |failure|
-        render json: {status: 'API-FAIL', message: 'ANALYZED all books', data: books}, status: :ok
-
-      end
+    # Books::BooksSend.call(book_params) do |m|
+    #   m.success do
+    #     render json: {status: 'API-SUCCESS', message: 'ANALYZED all books', data: books}, status: :ok
+    #   end
+    #   m.failure do |failure|
+    #     render json: {status: 'API-FAIL', message: 'ANALYZED all books', data: books}, status: :ok
+    
+    #   end
+    # end
+    
+    
+    
+    # Thread.new do
+    #   puts "Google Api thread"
+    
+    #   url = URI.parse('http://www.example.com/index.html')
+    #   req = Net::HTTP::Get.new(url.to_s)
+    #   res = Net::HTTP.start(url.host, url.port) {|http|
+    #     http.request(req)
+    #   }
+    #   puts res.body
+    #   books.each do |b|
+    #     puts "Analyzing #{b}"
+    #   end
+    #   render json: {status: 'SUCCESS', message: 'ANALYZED all books', data: books}, status: :ok
+    
+    # end
+    
+    
+    Async do
+      puts " <<< Async job..."
+      # Make a new internet:
+      internet = Async::HTTP::Internet.new
+      
+      # Issues a GET request to Google:
+      url = "https://www.googleapis.com/books/v1/volumes?q=search+questo+è+un+uomo" 
+      url = URI::encode(url)
+      response = internet.get( url )
+      
+      # Save the response body to a local file:
+      #response.save("/tmp/search.html")
+      #puts response.body
+    ensure
+      # The internet is closed for business:
+      internet.close
+      puts "...Async ended >>>"
     end
-
-    render json: {status: 'SUCCESS', message: 'ANALYZED all books', data: books}, status: :ok
+    render json: {status: 'SUCCESS', message: 'ANALYZED all books', data: books}, status: :ok 
+    
+ 
   end
-
-
+  
+  
   
   private
   

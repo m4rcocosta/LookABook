@@ -35,8 +35,8 @@ Rails.application.routes.draw do
     namespace :v1 do 
       
       # Send books to controller to do Google Api analisis   
-      post '/users/:user_id/houses/:house_id/rooms/:room_id/walls/:wall_id/shelves/:shelf_id/books-send',
-      to: 'books#books_send', as: "books_send"
+      get '/users/:user_id/houses/:house_id/rooms/:room_id/walls/:wall_id/shelves/:shelf_id/books-google',
+      to: 'books#books_google', as: "books_google"
     end
   end
 

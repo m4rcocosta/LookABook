@@ -53,7 +53,9 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'firebase-ruby'
 
 # To introduce transactions used in Api::books controller 
-gem 'dry-transaction'
+#gem 'dry-transaction'
+
+gem 'async-http'
 
 
 #ruby '2.5.0'
