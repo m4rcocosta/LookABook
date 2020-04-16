@@ -10,6 +10,7 @@
     <string name="enter_your_name">Enter your name</string>
     <string name="enter_your_surname">Enter your surname</string>
     <string name="enter_your_phone_number">Enter your phone number</string>
+    <string name="remember_me">Remember me</string>
 
 
     <string name="home_navigation">Home</string>
@@ -48,5 +49,9 @@
 
     <string name="password_helper_text">Password must be at least 8 characters.</string>
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
+
+
+    <string name="Open">open drawer</string>
+    <string name="Close">close drawer</string>
 
 </resources>

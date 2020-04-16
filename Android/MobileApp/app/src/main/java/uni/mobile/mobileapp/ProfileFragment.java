@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,16 @@ import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 
 public class ProfileFragment extends Fragment {
@@ -63,9 +69,11 @@ public class ProfileFragment extends Fragment {
         storageReference = FirebaseStorage.getInstance().getReference();
 
         final FirebaseUser user = firebaseAuth.getCurrentUser();
-        Uri imageUrl = user.getPhotoUrl();
 
-        if (imageUrl != null) Picasso.get().load(imageUrl).fit().centerInside().into(profilePicImageView);
+        if (getUserProvider(user).equals("GOOGLE")) {
+            Uri imageUri = increaseUriImageSize(user.getPhotoUrl());
+            Picasso.get().load(imageUri).fit().centerInside().into(profilePicImageView);
+        }
         else {
             // Get the image stored on Firebase via "User id/Images/Profile Pic.jpg".
             storageReference.child(firebaseAuth.getUid()).child("Images").child("Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -78,5 +86,37 @@ public class ProfileFragment extends Fragment {
                 }
             });
         }
+    }
+
+    private Uri increaseUriImageSize(Uri uri) {
+
+        // Variable holding the original String portion of the url that will be replaced
+        String originalPieceOfUrl = "s96-c";
+
+        // Variable holding the new String portion of the url that does the replacing, to improve image quality
+        String newPieceOfUrlToAdd = "s400-c";
+
+        // Check if the Url path is null
+        if (uri != null) {
+
+            // Convert the Url to a String and store into a variable
+            String photoPath = uri.toString();
+
+            // Replace the original part of the Url with the new part
+            String newString = photoPath.replace(originalPieceOfUrl, newPieceOfUrlToAdd);
+            Uri newUri = Uri.parse(newString);
+            return newUri;
+        }
+        return null;
+    }
+
+    private String getUserProvider(FirebaseUser user) {
+        List<? extends UserInfo> infos = user.getProviderData();
+        String provider = "FIREBASE";
+        for (UserInfo ui : infos) {
+            if (ui.getProviderId().equals(GoogleAuthProvider.PROVIDER_ID)) provider = "GOOGLE";
+            else if (ui.getProviderId().equals(FacebookAuthProvider.PROVIDER_ID)) provider = "FACEBOOK";
+        }
+        return provider;
     }
 }

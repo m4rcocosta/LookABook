@@ -7,11 +7,15 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +44,9 @@ public class SignInActivity extends AppCompatActivity {
     private TextView notRegisteredButton, resetPasswordButton;
     private com.google.android.gms.common.SignInButton googleSignInButton;
     private GoogleSignInClient mGoogleSignInClient;
+    private CheckBox rememberMe;
+    private SharedPreferences preferenceManager;
+    private SharedPreferences.Editor editor;
     private static final int RC_SIGN_IN = 9001;
 
     private static final int STORAGE_PERMISSION_CODE = 101;
@@ -47,8 +54,6 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_signin);
 
         // Permission
@@ -63,6 +68,10 @@ public class SignInActivity extends AppCompatActivity {
         googleSignInButton = findViewById(R.id.googleSignInButton);
         notRegisteredButton = findViewById(R.id.notRegisteredButton);
         resetPasswordButton = findViewById(R.id.resetPasswordButton);
+        rememberMe = findViewById(R.id.rememberMeCheckBox);
+
+        preferenceManager = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        editor = preferenceManager.edit();
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -128,6 +137,20 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 navigateResetPassword();
+            }
+        });
+
+        rememberMe.setChecked(preferenceManager.getBoolean("RememberMe", false));
+        rememberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    editor.putBoolean("RememberMe", true);
+                    editor.apply();
+                }
+                else {
+                    editor.putBoolean("RememberMe", false);
+                    editor.apply();
+                }
             }
         });
     }
