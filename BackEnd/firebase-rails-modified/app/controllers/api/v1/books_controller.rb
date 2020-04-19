@@ -3,6 +3,8 @@
 require 'async'
 require 'async/http/internet'
 require 'uri'
+require 'httparty'
+
 
 class Api::V1::BooksController < ApiController
   
@@ -74,9 +76,29 @@ class Api::V1::BooksController < ApiController
     end
   end
   
+  #GET /search-on-google
+  def search_on_google
+    books = @shelf.books
+    puts "<<< Starting Async search"
+    my_threads = []
+    books.each do |b|
+      puts "Starting thread for #{b.title}"
+      my_threads << Thread.new{ google_search(b)} 
+    end
+    
+    puts "Async search started >>>"
+
+    render json: {status: 'SUCCESS', message: 'Search on Google request received', data: books}, status: :ok
+  end
+
+
+
   #GET /books-google
   def books_google
     books = @shelf.books
+    puts "Loaded books"
+    
+    url = "https://www.googleapis.com/books/v1/volumes?q=search+questo+è+un+uomo" 
     
     # Books::BooksSend.call(book_params) do |m|
     #   m.success do
@@ -87,8 +109,6 @@ class Api::V1::BooksController < ApiController
     
     #   end
     # end
-    
-    
     
     # Thread.new do
     #   puts "Google Api thread"
@@ -107,32 +127,61 @@ class Api::V1::BooksController < ApiController
     # end
     
     
-    Async do
-      puts " <<< Async job..."
-      # Make a new internet:
-      internet = Async::HTTP::Internet.new
-      
-      # Issues a GET request to Google:
-      url = "https://www.googleapis.com/books/v1/volumes?q=search+questo+è+un+uomo" 
-      url = URI::encode(url)
-      response = internet.get( url )
-      
-      # Save the response body to a local file:
-      #response.save("/tmp/search.html")
-      #puts response.body
-    ensure
-      # The internet is closed for business:
-      internet.close
-      puts "...Async ended >>>"
+    # Async do
+    #   puts " <<< Async job..."
+    #   # Make a new internet:
+    #   internet = Async::HTTP::Internet.new
+    
+    #   # Issues a GET request to Google:
+    #   url = "https://www.googleapis.com/books/v1/volumes?q=search+questo+è+un+uomo" 
+    #   url = URI::encode(url)
+    #   response = internet.get( url )
+    
+    #   # Save the response body to a local file:
+    #   #response.save("/tmp/search.html")
+    #   #puts response.body
+    # ensure
+    #   # The internet is closed for business:
+    #   internet.close
+    #   puts "...Async job ended >>>"
+    # end
+    
+    my_threads = []
+    books.each do |b|
+      puts "Starting thread for #{b.title}"
+      my_threads << Thread.new{ google_search(b)} 
     end
+    
+    puts "#{Thread.list.size} threads to join"
+    my_threads.each do |t|
+      t.join
+    end 
+    
     render json: {status: 'SUCCESS', message: 'ANALYZED all books', data: books}, status: :ok 
     
- 
+    
   end
   
   
   
   private
+  
+  def google_search(book)
+    puts "Analyzing #{book.title} from thread"
+    url = "https://www.googleapis.com/books/v1/volumes?q="  
+    url = url + book.title 
+    url = URI.encode(url)
+    response = HTTParty.get(url, format: :json)
+    response = JSON.parse(response.body)["items"][0]
+    #response.save("/tmp/search.html")
+    puts "Resonse:" + JSON.pretty_generate(response)
+    book.googleData = response
+    if book.save
+      puts ""
+    else
+      puts "ERROR"
+    end
+  end
   
   def get_user
     @user = User.find(params[:user_id])
