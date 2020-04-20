@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "422098734100-rknubghgnah290frc2se7bupodggbpoj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "uni.mobile.mobileapp",
+            "certificate_hash": "cbc09eeba0ed9301242742853151597e17901a6b"
+          }
+        },
+        {
           "client_id": "422098734100-hbd9ce85q2lovg0a94sfneco2q17jrhr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -10,13 +10,13 @@
     <ImageView
         android:id="@+id/nav_profile_pic"
         android:layout_width="match_parent"
-        android:layout_height="182dp"
+        android:layout_height="180dp"
         android:gravity="center_vertical"
         android:src="@drawable/defavatar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:foreground="@drawable/rounded_fg"/>
+        android:foreground="@drawable/rounded_fg_navbar"/>
 
     <TextView
         android:id="@+id/nav_header_textView"

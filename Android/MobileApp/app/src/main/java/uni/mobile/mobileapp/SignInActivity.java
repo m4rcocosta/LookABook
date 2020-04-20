@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,6 +21,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -29,6 +36,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -43,7 +51,9 @@ public class SignInActivity extends AppCompatActivity {
     private Button signInButton;
     private TextView notRegisteredButton, resetPasswordButton;
     private com.google.android.gms.common.SignInButton googleSignInButton;
+    private LoginButton facebookSignInButton;
     private GoogleSignInClient mGoogleSignInClient;
+    private CallbackManager mCallbackManager;
     private CheckBox rememberMe;
     private SharedPreferences preferenceManager;
     private SharedPreferences.Editor editor;
@@ -84,6 +94,29 @@ public class SignInActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        // Configure Facecbook Sign In
+        mCallbackManager = CallbackManager.Factory.create();
+        facebookSignInButton = findViewById(R.id.facebookSignInButton);
+        facebookSignInButton.setReadPermissions("email", "public_profile");
+        facebookSignInButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                facebookSignInButton.setVisibility(View.GONE);
+                handleAccessToken(loginResult.getAccessToken());
+            }
+            @Override
+            public void onCancel() {
+                Log.d("FBLogin", "facebook:onCancel");
+                // ...
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d("FBLogin", "facebook:onError", error);
+                // ...
+            }
+        });
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,6 +241,23 @@ public class SignInActivity extends AppCompatActivity {
             } catch (ApiException e) {
             }
         }
+
+        else mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void handleAccessToken(AccessToken accessToken) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
+        auth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = auth.getCurrentUser();
+                            databaseReference.child(user.getUid()).setValue(new Userinformation(user.getDisplayName().split(" ")[0], user.getDisplayName().split(" ")[1], user.getPhoneNumber()));
+                        } else {
+                            Toast.makeText(SignInActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     private void navigateSignUp() {
