@@ -44,6 +44,7 @@ class Api::V1::WallsController < ApiController
   # PATCH/PUT /walls/1
   # PATCH/PUT /walls/1.json
   def update
+    if @wall.update(wall_params)
     render json: {status: 'SUCCESS', message: 'Updated wall', data: @wall}, status: :ok
   else
     render error: { error: 'Error in update'}, status: 400
