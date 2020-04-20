@@ -6,7 +6,10 @@
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<<<<<<< HEAD
     <uses-permission android:name="android.permission.CAMERA" />
+=======
+>>>>>>> 3f221a6c5a8c41d5b3593f02b74d90415b75ab0d
 
     <uses-feature android:name="android.hardware.camera" />
 

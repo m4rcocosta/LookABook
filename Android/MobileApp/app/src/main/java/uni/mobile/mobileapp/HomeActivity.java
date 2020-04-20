@@ -166,7 +166,11 @@ public class HomeActivity extends AppCompatActivity {
         final FirebaseUser user = firebaseAuth.getCurrentUser();
 
         if (getUserProvider(user).equals("GOOGLE")) {
-            Uri imageUri = increaseUriImageSize(user.getPhotoUrl());
+            Uri imageUri = Uri.parse(user.getPhotoUrl().toString().replace("s96-c", "s400-c"));
+            Picasso.get().load(imageUri).fit().centerInside().into(profilePic);
+        }
+        else if (getUserProvider(user).equals("FACEBOOK")) {
+            Uri imageUri = Uri.parse(user.getPhotoUrl().toString() + "?height=500");
             Picasso.get().load(imageUri).fit().centerInside().into(profilePic);
         }
         else {
@@ -225,28 +229,6 @@ public class HomeActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragmentContainer, fragment);
         transaction.commit();
-    }
-
-    private Uri increaseUriImageSize(Uri uri) {
-
-        // Variable holding the original String portion of the url that will be replaced
-        String originalPieceOfUrl = "s96-c";
-
-        // Variable holding the new String portion of the url that does the replacing, to improve image quality
-        String newPieceOfUrlToAdd = "s400-c";
-
-        // Check if the Url path is null
-        if (uri != null) {
-
-            // Convert the Url to a String and store into a variable
-            String photoPath = uri.toString();
-
-            // Replace the original part of the Url with the new part
-            String newString = photoPath.replace(originalPieceOfUrl, newPieceOfUrlToAdd);
-            Uri newUri = Uri.parse(newString);
-            return newUri;
-        }
-        return null;
     }
 
     private String getUserProvider(FirebaseUser user) {

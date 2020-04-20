@@ -54,4 +54,7 @@
     <string name="Open">open drawer</string>
     <string name="Close">close drawer</string>
 
+    <string name="facebook_application_id">2913260648760848</string>
+    <string name="fb_login_protocol_scheme">cd992a14f02b172645ee02262b5a44a2</string>
+
 </resources>

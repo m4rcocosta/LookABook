@@ -71,7 +71,11 @@ public class ProfileFragment extends Fragment {
         final FirebaseUser user = firebaseAuth.getCurrentUser();
 
         if (getUserProvider(user).equals("GOOGLE")) {
-            Uri imageUri = increaseUriImageSize(user.getPhotoUrl());
+            Uri imageUri = Uri.parse(user.getPhotoUrl().toString().replace("s96-c", "s400-c"));
+            Picasso.get().load(imageUri).fit().centerInside().into(profilePicImageView);
+        }
+        else if (getUserProvider(user).equals("FACEBOOK")) {
+            Uri imageUri = Uri.parse(user.getPhotoUrl().toString() + "?height=500");
             Picasso.get().load(imageUri).fit().centerInside().into(profilePicImageView);
         }
         else {
@@ -79,37 +83,11 @@ public class ProfileFragment extends Fragment {
             storageReference.child(firebaseAuth.getUid()).child("Images").child("Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    // Using "Picasso" (http://square.github.io/picasso/) after adding the dependency in the Gradle.
-                    // ".fit().centerInside()" fits the entire image into the specified area.
-                    // Finally, add "READ" and "WRITE" external storage permissions in the Manifest.
                     Picasso.get().load(uri).fit().centerInside().into(profilePicImageView);
                 }
             });
         }
     }
-
-    private Uri increaseUriImageSize(Uri uri) {
-
-        // Variable holding the original String portion of the url that will be replaced
-        String originalPieceOfUrl = "s96-c";
-
-        // Variable holding the new String portion of the url that does the replacing, to improve image quality
-        String newPieceOfUrlToAdd = "s400-c";
-
-        // Check if the Url path is null
-        if (uri != null) {
-
-            // Convert the Url to a String and store into a variable
-            String photoPath = uri.toString();
-
-            // Replace the original part of the Url with the new part
-            String newString = photoPath.replace(originalPieceOfUrl, newPieceOfUrlToAdd);
-            Uri newUri = Uri.parse(newString);
-            return newUri;
-        }
-        return null;
-    }
-
     private String getUserProvider(FirebaseUser user) {
         List<? extends UserInfo> infos = user.getProviderData();
         String provider = "FIREBASE";
