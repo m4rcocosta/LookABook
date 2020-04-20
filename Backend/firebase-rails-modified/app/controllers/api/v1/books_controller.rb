@@ -29,7 +29,7 @@ class Api::V1::BooksController < ApiController
   # GET /books/1.json
   def show
     book=@book
-    render json: {status: 'SUCCESS', message: 'Loaded all book', data: book}, status: :ok
+    render json: {status: 'SUCCESS', message: 'Loaded all book', data: [book]}, status: :ok
   end
   
   # # GET /books/new
@@ -48,7 +48,7 @@ class Api::V1::BooksController < ApiController
     
     if @book.save
       
-      render json: {status: 'SUCCESS', message: 'Created book', data: @book}, status: :ok
+      render json: {status: 'SUCCESS', message: 'Created book', data: [@book]}, status: :ok
     else
       render error: { error: 'Error in creation'}, status: 400
     end
@@ -59,7 +59,7 @@ class Api::V1::BooksController < ApiController
   def update
     if @book.update(book_params)
       
-      render json: {status: 'SUCCESS', message: 'Updated book', data: @book}, status: :ok
+      render json: {status: 'SUCCESS', message: 'Updated book', data: [@book]}, status: :ok
     else
       render error: { error: 'Error in update'}, status: 400
     end
@@ -70,7 +70,7 @@ class Api::V1::BooksController < ApiController
   def destroy
     if @book.destroy
       
-      render json: {status: 'SUCCESS', message: 'Destroyed book', data: @book}, status: :ok
+      render json: {status: 'SUCCESS', message: 'Destroyed book', data: [@book] }, status: :ok
     else
       render error: { error: 'Error in destroy'}, status: 400
     end
@@ -92,76 +92,6 @@ class Api::V1::BooksController < ApiController
   end
 
 
-
-  #GET /books-google
-  def books_google
-    books = @shelf.books
-    puts "Loaded books"
-    
-    url = "https://www.googleapis.com/books/v1/volumes?q=search+questo+è+un+uomo" 
-    
-    # Books::BooksSend.call(book_params) do |m|
-    #   m.success do
-    #     render json: {status: 'API-SUCCESS', message: 'ANALYZED all books', data: books}, status: :ok
-    #   end
-    #   m.failure do |failure|
-    #     render json: {status: 'API-FAIL', message: 'ANALYZED all books', data: books}, status: :ok
-    
-    #   end
-    # end
-    
-    # Thread.new do
-    #   puts "Google Api thread"
-    
-    #   url = URI.parse('http://www.example.com/index.html')
-    #   req = Net::HTTP::Get.new(url.to_s)
-    #   res = Net::HTTP.start(url.host, url.port) {|http|
-    #     http.request(req)
-    #   }
-    #   puts res.body
-    #   books.each do |b|
-    #     puts "Analyzing #{b}"
-    #   end
-    #   render json: {status: 'SUCCESS', message: 'ANALYZED all books', data: books}, status: :ok
-    
-    # end
-    
-    
-    # Async do
-    #   puts " <<< Async job..."
-    #   # Make a new internet:
-    #   internet = Async::HTTP::Internet.new
-    
-    #   # Issues a GET request to Google:
-    #   url = "https://www.googleapis.com/books/v1/volumes?q=search+questo+è+un+uomo" 
-    #   url = URI::encode(url)
-    #   response = internet.get( url )
-    
-    #   # Save the response body to a local file:
-    #   #response.save("/tmp/search.html")
-    #   #puts response.body
-    # ensure
-    #   # The internet is closed for business:
-    #   internet.close
-    #   puts "...Async job ended >>>"
-    # end
-    
-    my_threads = []
-    books.each do |b|
-      puts "Starting thread for #{b.title}"
-      my_threads << Thread.new{ google_search(b)} 
-    end
-    
-    puts "#{Thread.list.size} threads to join"
-    my_threads.each do |t|
-      t.join
-    end 
-    
-    render json: {status: 'SUCCESS', message: 'ANALYZED all books', data: books}, status: :ok 
-    
-    
-  end
-  
   
   
   private

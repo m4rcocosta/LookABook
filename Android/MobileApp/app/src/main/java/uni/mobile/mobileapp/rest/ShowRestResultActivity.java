@@ -63,6 +63,9 @@ public class ShowRestResultActivity extends AppCompatActivity {
         getBooks();
     }
 
+    /*
+    * HOUSE
+     */
     private void getHouses(){
 
         Call<MyResponse<House>> call = jsonPlaceHolderApi.getHouses(1);
@@ -95,6 +98,9 @@ public class ShowRestResultActivity extends AppCompatActivity {
         });
     }
 
+    /*
+     * ROOM
+     */
     private void getRooms(){
 
         Call<MyResponse<Room>> call = jsonPlaceHolderApi.getRooms(1,1);
@@ -126,7 +132,9 @@ public class ShowRestResultActivity extends AppCompatActivity {
         });
     }
 
-
+    /*
+    * WALL
+     */
     private void getWalls(){
         Call<MyResponse<Wall>> call = jsonPlaceHolderApi.getWalls(1,1,1);
 
@@ -157,6 +165,9 @@ public class ShowRestResultActivity extends AppCompatActivity {
         });
     }
 
+    /*
+    * SHELF
+     */
     private void getShelves(){
         Call<MyResponse<Shelf>> call = jsonPlaceHolderApi.getShelves(1,1,1,1);
 
@@ -187,6 +198,9 @@ public class ShowRestResultActivity extends AppCompatActivity {
         });
     }
 
+    /*
+    * BOOK
+     */
     private void getBooks(){
         Call<MyResponse<Book>> call = jsonPlaceHolderApi.getBooks(1,1,1,1,1);
 

@@ -17,7 +17,7 @@ class Api::V1::WallsController < ApiController
   # GET /walls/1.json
   def show
     wall = @wall
-    render json: {status: 'SUCCESS', message: 'Loaded wall', data: wall}, status: :ok
+    render json: {status: 'SUCCESS', message: 'Loaded wall', data: [wall]}, status: :ok
   end
 
   # GET /walls/new
@@ -35,7 +35,7 @@ class Api::V1::WallsController < ApiController
     @wall = @room.walls.new(wall_params)
 
       if @wall.save
-        render json: {status: 'SUCCESS', message: 'Created wall', data: @wall}, status: :ok
+        render json: {status: 'SUCCESS', message: 'Created wall', data: [@wall]}, status: :ok
       else
         render error: { error: 'Error in creation'}, status: 400
    end
@@ -45,7 +45,7 @@ class Api::V1::WallsController < ApiController
   # PATCH/PUT /walls/1.json
   def update
     if @wall.update(wall_params)
-    render json: {status: 'SUCCESS', message: 'Updated wall', data: @wall}, status: :ok
+    render json: {status: 'SUCCESS', message: 'Updated wall', data: [@wall]}, status: :ok
   else
     render error: { error: 'Error in update'}, status: 400
   end
@@ -55,7 +55,7 @@ class Api::V1::WallsController < ApiController
   # DELETE /walls/1.json
   def destroy
     if @wall.destroy
-      render json: {status: 'SUCCESS', message: 'Destroyed wall', data: @wall}, status: :ok
+      render json: {status: 'SUCCESS', message: 'Destroyed wall', data: [@wall]}, status: :ok
     else
       render error: { error: 'Error in destroy'}, status: 400
 

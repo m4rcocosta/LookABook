@@ -23,7 +23,7 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
         <activity android:name=".rest.ShowRestResultActivity"></activity>
-        <activity android:name=".rest.ChooseShelfActivity" />
+        <activity android:name=".rest.RestPostActivity" />
         <activity android:name=".recognition.SelectTitlesActivity" />
         <activity android:name=".recognition.PhotoDecisionActivity" />
         <activity android:name=".recognition.TextRecognitionActivity" />

@@ -20,7 +20,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="100dp"
-        android:onClick="startRest"
-        android:text="rest" />
+        android:text="rest get" />
+
+    <Button
+        android:id="@+id/restPostButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="150dp"
+        android:text="rest post" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

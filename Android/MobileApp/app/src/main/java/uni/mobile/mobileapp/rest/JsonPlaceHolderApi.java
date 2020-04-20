@@ -5,25 +5,102 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.Field;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface JsonPlaceHolderApi {
 
-    @GET("users/{userId}}/houses")
+    /*
+     * HOUSE
+     * */
+    @GET("users/{userId}/houses")
     Call<MyResponse<House>> getHouses(@Path("userId") int userId);
 
-    @GET("users/{userId}/houses/{houseId}}/rooms")
+    @POST("users/{userId}/houses")
+    Call<MyResponse<House>> createHouse(@Path("userId") int userId, @Body House house);
+
+    @PATCH("users/{userId}/houses/{houseId}")
+    Call<MyResponse<House>> patchHouse(@Path("userId") int userId, @Path("houseId") int houseId, @Body House house);
+
+    @DELETE("users/{userId}/houses/{houseId}")
+    Call<MyResponse<House>> deleteHouse(@Path("userId") int userId, @Path("houseId") int houseId);
+
+    /*
+     * ROOM
+     * */
+    @GET("users/{userId}/houses/{houseId}/rooms")
     Call<MyResponse<Room>> getRooms(@Path("userId") int userId,@Path("houseId") int houseId);
 
-    @GET("users/{userId}/houses/{houseId}}/rooms/{roomId}/walls")
+    @POST("users/{userId}/houses/{houseId}/rooms/{roomId}")
+    Call<MyResponse<Room>> createRoom(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId, @Body Room room);
+
+    @PATCH("users/{userId}/houses/{houseId}/rooms/{roomId}")
+    Call<MyResponse<Room>> patchRoom(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Body Room room);
+
+    @DELETE("users/{userId}/houses/{houseId}/rooms/{roomId}")
+    Call<MyResponse<Room>> deleteRoom(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId);
+
+
+    /*
+     * WALL
+     * */
+    @GET("users/{userId}/houses/{houseId}/rooms/{roomId}/walls")
     Call<MyResponse<Wall>> getWalls(@Path("userId") int userId,@Path("houseId") int houseId,@Path("roomId") int roomId);
 
-    @GET("users/{userId}/houses/{houseId}}/rooms/{roomId}/walls/{wallId}/shelves")
+    @POST("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}")
+    Call<MyResponse<Wall>> createWall(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Path("wallId") int wallId, @Body House house);
+
+    @PATCH("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}")
+    Call<MyResponse<Wall>> patchWall(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Path("wallId") int wallId, @Body House house);
+
+    @DELETE("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}")
+    Call<MyResponse<Wall>> deleteWall(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Path("wallId") int wallId );
+
+
+
+    /*
+     * SHELF
+     * */
+    @GET("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}/shelves")
     Call<MyResponse<Shelf>> getShelves(@Path("userId") int userId,@Path("houseId") int houseId,@Path("roomId") int roomId, @Path("wallId") int wallId);
 
-    @GET("users/{userId}/houses/{houseId}}/rooms/{roomId}/walls/{wallId}/shelves/{shelfId}/books")
+    @POST("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}/shelves")
+    Call<MyResponse<Shelf>> createShelf(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Path("wallId") int wallId , @Body Shelf shelf);
+
+    @PATCH("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}/shelves/{shelfId}")
+    Call<MyResponse<Shelf>> patchShelf(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Path("wallId") int wallId, @Body Shelf shelf);
+
+    @DELETE("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}/shelves/{shelfId}")
+    Call<MyResponse<Shelf>> deleteShelf(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Path("wallId") int wallId);
+
+
+    /*
+     * BOOK
+     * */
+    @GET("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}/shelves/{shelfId}/books")
     Call<MyResponse<Book>> getBooks(@Path("userId") int userId,@Path("houseId") int houseId,@Path("roomId") int roomId,@Path("wallId") int wallId,@Path("shelfId") int shelfId);
+
+    @POST("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}/shelves/{shelfId}/books")
+    Call<MyResponse<Shelf>> createBook(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Path("wallId") int wallId , @Path("shelfId") int shelfId, @Body Book book);
+
+    @PATCH("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}/shelves/{shelfId}/books/{bookId}")
+    Call<MyResponse<Shelf>> patchBook(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Path("wallId") int wallId, @Path("shelfId") int shelfId, @Body Book book);
+
+    @DELETE("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}/shelves/{shelfId}/books/{bookId}")
+    Call<MyResponse<Shelf>> deleteBook(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Path("wallId") int wallId, @Path("shelfId") int shelfId);
+
+
+    /*
+     * GOOGLE Books API methods
+     *
+     */
+    @GET("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}/shelves/{shelfId}/search-on-google")
+    Call<MyResponse<Book>> getSearchOnGoogle(@Path("userId") int userId,@Path("houseId") int houseId,@Path("roomId") int roomId,@Path("wallId") int wallId,@Path("shelfId") int shelfId);
 
 
 }

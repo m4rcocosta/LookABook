@@ -2,7 +2,7 @@ package uni.mobile.mobileapp.rest;
 
 public class Wall {
 
-    private int id;
+    private Integer id;
     private String name;
     private String createdAt;
     private String updatedAt;

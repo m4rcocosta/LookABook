@@ -18,7 +18,7 @@ class Api::V1::ShelvesController < ApiController
   # GET /shelves/1.json
   def show
     shelf = @shelf
-    render json: {status: 'SUCCESS', message: 'Loaded shelf', data: shelf}, status: :ok
+    render json: {status: 'SUCCESS', message: 'Loaded shelf', data: [shelf]}, status: :ok
   end
   
   # # GET /shelves/new
@@ -37,7 +37,7 @@ class Api::V1::ShelvesController < ApiController
     
     if @shelf.save
       
-      render json: {status: 'SUCCESS', message: 'Created shelf', data: @shelf}, status: :ok
+      render json: {status: 'SUCCESS', message: 'Created shelf', data: [@shelf]}, status: :ok
     else
       render error: { error: 'Error in creation'}, status: 400
       
@@ -50,7 +50,7 @@ class Api::V1::ShelvesController < ApiController
     
     if @shelf.update(shelf_params)
       
-      render json: {status: 'SUCCESS', message: 'Updated shelf', data: @shelf}, status: :ok
+      render json: {status: 'SUCCESS', message: 'Updated shelf', data: [@shelf]}, status: :ok
     else
       render error: { error: 'Error in update'}, status: 400  
     end
@@ -61,7 +61,7 @@ class Api::V1::ShelvesController < ApiController
   def destroy
     if @shelf.destroy
       
-      render json: {status: 'SUCCESS', message: 'Destroyed shelf', data: @shelf}, status: :ok
+      render json: {status: 'SUCCESS', message: 'Destroyed shelf', data: [@shelf]}, status: :ok
     else
       render error: { error: 'Error in destroy'}, status: 400
     end

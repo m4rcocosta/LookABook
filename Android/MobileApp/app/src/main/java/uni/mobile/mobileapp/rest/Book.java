@@ -1,7 +1,7 @@
 package uni.mobile.mobileapp.rest;
 
 public class Book {
-    private int id;
+    private Integer id;
     private String title;
     private String createdAt;
     private String updatedAt;

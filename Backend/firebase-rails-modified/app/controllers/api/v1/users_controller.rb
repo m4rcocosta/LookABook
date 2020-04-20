@@ -11,7 +11,7 @@ end
   # GET /users/1
   # GET /users/1.json
   def show
-    render json: {status: 'SUCCESS', message: 'Loaded user', data: @user}, status: :ok
+    render json: {status: 'SUCCESS', message: 'Loaded user', data: [@user]}, status: :ok
   end
 
   # GET /users/new
@@ -31,7 +31,7 @@ end
     respond_to do |format|
       if @user.save
         format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render :show, status: :created, location: @user }
+        format.json { render :show, status: :created, location: [@user] }
       else
         format.html { render :new }
         format.json { render json: @user.errors, status: :unprocessable_entity }
@@ -45,7 +45,7 @@ end
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
-        format.json { render :show, status: :ok, location: @user }
+        format.json { render :show, status: :ok, location: [@user] }
       else
         format.html { render :edit }
         format.json { render json: @user.errors, status: :unprocessable_entity }

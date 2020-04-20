@@ -16,7 +16,7 @@ class Api::V1::RoomsController < ApiController
   # GET /rooms/1.json
   def show
     room = @room
-    render json: {status: 'SUCCESS', message: 'Loaded room', data: room}, status: :ok
+    render json: {status: 'SUCCESS', message: 'Loaded room', data:  [room]}, status: :ok
   end
   
   # GET /rooms/new
@@ -36,7 +36,7 @@ class Api::V1::RoomsController < ApiController
     respond_to do |format|
       if @room.save
         
-        render json: {status: 'SUCCESS', message: 'Created room', data: @room}, status: :ok
+        render json: {status: 'SUCCESS', message: 'Created room', data: [@room]}, status: :ok
       else
         render error: { error: 'Error in creation'}, status: 400
       end
@@ -48,7 +48,7 @@ class Api::V1::RoomsController < ApiController
   def updated
     
     if @room.update(room_params)
-      render json: {status: 'SUCCESS', message: 'Updated room', data: @room}, status: :ok
+      render json: {status: 'SUCCESS', message: 'Updated room', data: [@room]}, status: :ok
     else
       render error: { error: 'Error in update'}, status: 400
     end
@@ -59,7 +59,7 @@ class Api::V1::RoomsController < ApiController
   # DELETE /rooms/1.json
   def destroy
     if @room.destroy
-      render json: {status: 'SUCCESS', message: 'Destroyed room', data: @room}, status: :ok
+      render json: {status: 'SUCCESS', message: 'Destroyed room', data: [@room]}, status: :ok
     else
       render error: { error: 'Error in destroy'}, status: 400
     end

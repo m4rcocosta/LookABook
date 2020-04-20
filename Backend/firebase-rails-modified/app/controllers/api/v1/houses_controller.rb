@@ -39,7 +39,7 @@ class Api::V1::HousesController < ApiController
     
     if @house.save
       
-      render json: {status: 'SUCCESS', message: 'Created house', data: @house}, status: :ok
+      render json: {status: 'SUCCESS', message: 'Created house', data: [@house]}, status: :ok
     else
       render error: { error: 'Error in creation'}, status: 400
     end
@@ -51,7 +51,7 @@ class Api::V1::HousesController < ApiController
   def update
     
     if @house.update(house_params)
-      render json: {status: 'SUCCESS', message: 'Updated house', data: @house}, status: :ok
+      render json: {status: 'SUCCESS', message: 'Updated house', data: [@house]}, status: :ok
     else
       render error: { error: 'Error in update'}, status: 400
     end
@@ -61,7 +61,7 @@ class Api::V1::HousesController < ApiController
   def destroy
     
     if @house.destroy
-      render json: {status: 'SUCCESS', message: 'Destroyed house', data: @house}, status: :ok
+      render json: {status: 'SUCCESS', message: 'Destroyed house', data: [@house]}, status: :ok
     else
       render error: { error: 'Error in destroy'}, status: 400
     end

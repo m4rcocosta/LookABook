@@ -7,16 +7,22 @@ import java.util.HashMap;
 import java.util.Map;
 public class House {
 
-    private int id;
+    private Integer id;
     private String name;
-    private float lat;
+    private Float lat;
     @SerializedName("long")
-    private float longt;
+    private Float longt;
     private Boolean isMainHouse;
     private String createdAt;
     private String updatedAt;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
+    public House(String name, Float lat, Float longt, Boolean isMainHouse) {
+        this.name = name;
+        this.lat = lat;
+        this.longt = longt;
+        this.isMainHouse = isMainHouse;
+    }
 
     public int getId() {
         return id;
@@ -26,7 +32,7 @@ public class House {
         return name;
     }
 
-    public float getLat() {
+    public Float getLat() {
         return lat;
     }
 
@@ -34,7 +40,7 @@ public class House {
         return isMainHouse;
     }
 
-    public float getLongt() {
+    public Float getLongt() {
         return longt;
     }
 
