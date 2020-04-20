@@ -27,8 +27,9 @@
     <string name="reset_password">Reset Password</string>
     <string name="already_registered">Already registered</string>
     <string name="start_text_recognition">Start Text\nRecognition</string>
-    <string name="on_off_camera">ON/OFF Camera</string>
-    <string name="snap">Snap</string>
+    <string name="capture_image">Capture Image</string>
+    <string name="detect_text">Detect Text</string>
+    <string name="load_image">Load Image</string>
     <string name="elements_recognized">Elements recognized: </string>
     <string name="start_counter">0</string>
     <string name="no_text_recognized">No text recognized</string>

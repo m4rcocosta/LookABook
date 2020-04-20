@@ -1,108 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".recognition.TextRecognitionActivity">
-
-    <SurfaceView
-        android:id="@+id/surfaceView"
+    
+    <ImageView
+        android:id="@+id/image_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="300dp"/>
+        android:layout_height="400dp" />
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/text_recognition_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-300dp">
-        <LinearLayout
-            android:layout_width="match_parent"
+        android:layout_below="@+id/image_view"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/capture_image"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_horizontal">
+            android:text="@string/capture_image"
+            android:textColor="@color/colorAccent"
+            android:layout_gravity="center_horizontal"
+            android:textAllCaps="false"
+            android:layout_marginEnd="5dp"/>
 
-                <Button
-                    android:id="@+id/onOffCameraButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginEnd="5dp"
-                    android:textColor="@color/colorAccent"
-                    android:text="@string/on_off_camera" />
+        <Button
+            android:id="@+id/load_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/load_image"
+            android:textColor="@color/colorAccent"
+            android:layout_gravity="center_horizontal"
+            android:textAllCaps="false"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"/>
 
-                <Button
-                    android:id="@+id/snapButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginStart="5dp"
-                    android:textColor="@color/colorAccent"
-                    android:text="@string/snap" />
-            </LinearLayout>
+        <Button
+            android:id="@+id/detect_text_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/detect_text"
+            android:textColor="@color/colorAccent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="5dp"
+            android:textAllCaps="false" />
+    </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center_horizontal">
-                <TextView
-                    android:id="@+id/numberTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:fontFamily="@font/bungee_inline"
-                    android:gravity="center"
-                    android:text="@string/elements_recognized"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="20sp"
-                    android:visibility="visible"
-                    tools:targetApi="o" />
+    <TextView
+        android:id="@+id/text_display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars = "vertical"
+        android:text=""
+        android:textColor=""
+        android:layout_below="@+id/text_recognition_buttons"
+        android:textSize="26dp"
+        android:layout_margin="10dp" />
 
-                <TextView
-                    android:id="@+id/numberView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:fontFamily="@font/bungee_inline"
-                    android:gravity="center"
-                    android:text="@string/start_counter"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:textSize="@dimen/options_size"
-                    android:textStyle="bold"
-                    android:visibility="visible"
-                    tools:targetApi="o" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/text_view"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_margin="8dp"
-                android:layout_weight="2"
-                android:autoSizeMaxTextSize="50sp"
-                android:autoSizeMinTextSize="12sp"
-                android:autoSizeStepGranularity="2sp"
-                android:autoSizeTextType="uniform"
-                android:fontFamily="@font/julius_sans_one"
-                android:text="@string/no_text_recognized"
-                android:textAlignment="viewStart"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="@dimen/options_size"
-                android:textStyle="bold"
-                android:visibility="visible"
-                tools:targetApi="o" />
-            <ListView
-                android:id="@+id/listview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
-        </LinearLayout>
-    </ScrollView>
-
-</LinearLayout>
+</RelativeLayout>

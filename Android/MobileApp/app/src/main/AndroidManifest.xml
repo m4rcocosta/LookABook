@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature android:name="android.hardware.camera" android:required="true" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:allowBackup="true"
@@ -18,11 +17,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme">
         <activity android:name=".rest.ShowRestResultActivity" />
         <activity android:name=".rest.RestPostActivity" />
-        <activity android:name=".recognition.SelectTitlesActivity" />
-        <activity android:name=".recognition.PhotoDecisionActivity" />
         <activity android:name=".recognition.TextRecognitionActivity" />
         <activity android:name=".EditProfileActivity" />
         <activity android:name=".ResetPasswordActivity" />
@@ -52,8 +50,17 @@
             </intent-filter>
         </activity>
         <meta-data
-            android:name="com.google.android.gms.vision.DEPENDENCIES"
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="ocr" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="uni.mobile.mobileapp.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
     </application>
 
 </manifest>
