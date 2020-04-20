@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import uni.mobile.mobileapp.recognition.TextRecognitionActivity;
+import uni.mobile.mobileapp.rest.ShowRestResultActivity;
 
 public class HomeFragment extends Fragment {
 
@@ -45,7 +46,19 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-    }
+
+        //Todo check on internet connection
+        Button restButton = view.findViewById(R.id.restButton);
+        restButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getActivity(), ShowRestResultActivity.class);
+                startActivity(intent);
+
+            }
+        });
+        }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -62,4 +75,8 @@ public class HomeFragment extends Fragment {
             }
         }
     }
+
+
+
+
 }

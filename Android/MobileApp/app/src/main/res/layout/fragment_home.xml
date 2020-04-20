@@ -14,4 +14,13 @@
         android:layout_gravity="center"
         android:textSize="@dimen/button_size"/>
 
+    <Button
+        android:id="@+id/restButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"
+        android:onClick="startRest"
+        android:text="rest" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
