@@ -141,16 +141,19 @@ public class HomeActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
                         if (item.getItemId() == bottomNavigationSelectedItem) break;
+                        navigationSelectedItem = -1;
                         bottomNavigationSelectedItem = R.id.navigation_home;
                         openFragment(new HomeFragment());
                         return true;
                     case R.id.navigation_house:
                         if (item.getItemId() == bottomNavigationSelectedItem) break;
+                        navigationSelectedItem = -1;
                         bottomNavigationSelectedItem = R.id.navigation_house;
                         openFragment(new HouseFragment());
                         return true;
                     case R.id.navigation_book:
                         if (item.getItemId() == bottomNavigationSelectedItem) break;
+                        navigationSelectedItem = -1;
                         bottomNavigationSelectedItem = R.id.navigation_book;
                         openFragment(new BookFragment());
                         return true;
