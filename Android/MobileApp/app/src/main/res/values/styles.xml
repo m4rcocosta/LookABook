@@ -13,4 +13,8 @@
         <item name="color">@color/colorAccent</item>
     </style>
 
+    <style name="TreeNodeStyle">
+        <item name="android:paddingLeft">20dp</item>
+    </style>
+
 </resources>

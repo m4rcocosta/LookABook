@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import uni.mobile.mobileapp.recognition.TextRecognitionActivity;
 import uni.mobile.mobileapp.rest.RestPostActivity;
+import uni.mobile.mobileapp.rest.ShelfChooserActivity;
 import uni.mobile.mobileapp.rest.ShowRestResultActivity;
 
 public class HomeFragment extends Fragment {
@@ -65,6 +66,17 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
 
                 Intent intent = new Intent(getActivity(), RestPostActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+        //Todo check on internet connection
+        Button chooseShelfButton = view.findViewById(R.id.chooseShelfButton);
+        chooseShelfButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getActivity(), ShelfChooserActivity.class);
                 startActivity(intent);
 
             }
