@@ -16,6 +16,8 @@
     <string name="home_navigation">Home</string>
     <string name="profile_navigation">Profile</string>
     <string name="settings_navigation">Settings</string>
+    <string name="house_navigation">Houses</string>
+    <string name="book_navigation">Books</string>
 
 
     <string name="login">Login</string>

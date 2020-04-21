@@ -57,9 +57,9 @@
         android:layout_height="wrap_content"
         android:scrollbars = "vertical"
         android:text=""
-        android:textColor=""
         android:layout_below="@+id/text_recognition_buttons"
         android:textSize="26dp"
+        android:textColor="?android:attr/textColorPrimary"
         android:layout_margin="10dp" />
 
 </RelativeLayout>

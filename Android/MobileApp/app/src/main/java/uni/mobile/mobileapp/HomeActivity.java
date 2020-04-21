@@ -98,6 +98,8 @@ public class HomeActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         nv = findViewById(R.id.navigation);
+        bottomNavigationView = findViewById(R.id.bottomNavigation);
+
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -105,21 +107,23 @@ public class HomeActivity extends AppCompatActivity {
                 switch (id) {
                     case R.id.nav_profile:
                         if (item.getItemId() == navigationSelectedItem) {
+                            bottomNavigationSelectedItem = -1;
                             dl.closeDrawers();
                             break;
                         }
                         navigationSelectedItem = R.id.nav_profile;
-                        bottomNavigationSelectedItem = R.id.navigation_profile;
+                        bottomNavigationSelectedItem = -1;
                         openFragment(new ProfileFragment());
                         dl.closeDrawers();
                         return true;
                     case R.id.nav_settings:
                         if (item.getItemId() == navigationSelectedItem) {
+                            bottomNavigationSelectedItem = -1;
                             dl.closeDrawers();
                             break;
                         }
                         navigationSelectedItem = R.id.nav_settings;
-                        bottomNavigationSelectedItem = R.id.navigation_settings;
+                        bottomNavigationSelectedItem = -1;
                         openFragment(new SettingsFragment(bottomNavigationView));
                         dl.closeDrawers();
                         return true;
@@ -132,26 +136,23 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        bottomNavigationView = findViewById(R.id.bottomNavigation);
-
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
                         if (item.getItemId() == bottomNavigationSelectedItem) break;
                         bottomNavigationSelectedItem = R.id.navigation_home;
-                        navigationSelectedItem = R.id.navigation_home;
                         openFragment(new HomeFragment());
                         return true;
-                    case R.id.navigation_profile:
+                    case R.id.navigation_house:
                         if (item.getItemId() == bottomNavigationSelectedItem) break;
-                        bottomNavigationSelectedItem = R.id.navigation_profile;
-                        openFragment(new ProfileFragment());
+                        bottomNavigationSelectedItem = R.id.navigation_house;
+                        openFragment(new HouseFragment());
                         return true;
-                    case R.id.navigation_settings:
+                    case R.id.navigation_book:
                         if (item.getItemId() == bottomNavigationSelectedItem) break;
-                        bottomNavigationSelectedItem = R.id.navigation_settings;
-                        openFragment(new SettingsFragment(bottomNavigationView));
+                        bottomNavigationSelectedItem = R.id.navigation_book;
+                        openFragment(new BookFragment());
                         return true;
                 }
                 return false;
@@ -183,6 +184,7 @@ public class HomeActivity extends AppCompatActivity {
             });
         }
         navTitle.setText(user.getDisplayName());
+        Toast.makeText(HomeActivity.this, "Welcome, " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
 
 
         //loading the default fragment
@@ -246,6 +248,9 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+                editor.putBoolean("UseBiometrics", false);
+                editor.apply();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 finishAffinity();
