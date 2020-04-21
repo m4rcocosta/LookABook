@@ -30,7 +30,6 @@
                     android:layout_height="@dimen/edit_info_button_size"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="5dp"
-                    android:backgroundTint="@color/colorPrimary"
                     android:drawableEnd="@drawable/ic_create_black_24dp"
                     android:drawableTint="@color/colorAccent" />
                 <com.google.android.material.textfield.TextInputLayout
@@ -66,7 +65,6 @@
                     android:layout_height="@dimen/edit_info_button_size"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="5dp"
-                    android:backgroundTint="@color/colorPrimary"
                     android:drawableEnd="@drawable/ic_create_black_24dp"
                     android:drawableTint="@color/colorAccent" />
                 <com.google.android.material.textfield.TextInputLayout
@@ -102,7 +100,6 @@
                     android:layout_height="@dimen/edit_info_button_size"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="5dp"
-                    android:backgroundTint="@color/colorPrimary"
                     android:drawableEnd="@drawable/ic_dialpad_black_24dp"
                     android:drawableTint="@color/colorAccent" />
                 <com.google.android.material.textfield.TextInputLayout

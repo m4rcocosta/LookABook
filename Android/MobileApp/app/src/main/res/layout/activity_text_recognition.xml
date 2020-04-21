@@ -13,6 +13,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:orientation="vertical">
     
             <ImageView
@@ -55,7 +56,7 @@
                 android:id="@+id/text_recognition_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_margin="10dp"
                 android:orientation="horizontal"
                 android:gravity="center_horizontal">
 
@@ -67,6 +68,8 @@
                     android:textColor="@color/colorAccent"
                     android:layout_gravity="center_horizontal"
                     android:textAllCaps="false"
+                    android:drawableLeft="@drawable/ic_photo_camera_white_24dp"
+                    android:drawableTint="@color/colorAccent"
                     android:layout_marginEnd="5dp"/>
 
                 <Button
@@ -77,26 +80,29 @@
                     android:textColor="@color/colorAccent"
                     android:layout_gravity="center_horizontal"
                     android:textAllCaps="false"
+                    android:drawableLeft="@drawable/ic_load_white_24dp"
+                    android:drawableTint="@color/colorAccent"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"/>
-
-                <Button
-                    android:id="@+id/detect_text_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/detect_text"
-                    android:textColor="@color/colorAccent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginStart="5dp"
-                    android:textAllCaps="false" />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/detect_text_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/detect_text"
+                android:textColor="@color/colorAccent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="5dp"
+                android:drawableLeft="@drawable/ic_search_white_24dp"
+                android:drawableTint="@color/colorAccent"
+                android:textAllCaps="false" />
 
             <EditText
                 android:id="@+id/text_display"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:scrollbars = "vertical"
                 android:text=""
                 android:textSize="26dp"
                 android:textColor="?android:attr/textColorPrimary"
