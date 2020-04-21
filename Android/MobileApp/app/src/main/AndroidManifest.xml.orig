@@ -6,16 +6,11 @@
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<<<<<<< HEAD
     <uses-permission android:name="android.permission.CAMERA" />
-=======
->>>>>>> 3f221a6c5a8c41d5b3593f02b74d90415b75ab0d
 
-    <uses-feature android:name="android.hardware.camera" />
-
-    <meta-data
-        android:name="com.google.android.gms.vision.DEPENDENCIES"
-        android:value="ocr" />
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.camera.flash" />
 
     <application
         android:allowBackup="true"
@@ -23,19 +18,28 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+<<<<<<< HEAD
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".rest.ShelfChooserActivity"></activity>
+=======
         android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".rest.ShowRestResultActivity"></activity>
-        <activity android:name=".rest.ChooseShelfActivity" />
-        <activity android:name=".recognition.SelectTitlesActivity" />
-        <activity android:name=".recognition.PhotoDecisionActivity" />
+>>>>>>> c90b3795883d9e3f8353877143dc9c115642b9c0
+        <activity android:name=".rest.ShowRestResultActivity" />
+        <activity android:name=".rest.RestPostActivity" />
         <activity android:name=".recognition.TextRecognitionActivity" />
         <activity android:name=".EditProfileActivity" />
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".SignInActivity" />
-        <meta-data android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_application_id"/>
-        <activity android:name="com.facebook.FacebookActivity"
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_application_id" />
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
         <activity
@@ -43,8 +47,10 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
@@ -57,6 +63,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="ocr" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="uni.mobile.mobileapp.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
     </application>
 
 </manifest>

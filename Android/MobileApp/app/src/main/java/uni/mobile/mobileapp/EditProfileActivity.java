@@ -23,10 +23,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -42,7 +45,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     private FirebaseAuth firebaseAuth;
     private TextView emailTextView;
     private DatabaseReference databaseReference;
-    private EditText nameEditText, surnameEditText, phoneNumberEditText;
+    private EditText nameEditText, phoneNumberEditText;
     private ImageView profileImageView;
     private FirebaseStorage firebaseStorage;
     private static int PICK_IMAGE = 123;
@@ -62,7 +65,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         }
         databaseReference = FirebaseDatabase.getInstance().getReference();
         nameEditText = findViewById(R.id.nameEditProfileEditText);
-        surnameEditText = findViewById(R.id.surnameEditProfileEditText);
         phoneNumberEditText = findViewById(R.id.phoneNumberEditProfileEditText);
         saveButton = findViewById(R.id.saveEditProfileButton);
         saveButton.setOnClickListener(this);
@@ -99,10 +101,19 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
     private void userInformation(){
         String name = nameEditText.getText().toString().trim();
-        String surname = surnameEditText.getText().toString().trim();
         String phoneNumber = phoneNumberEditText.getText().toString().trim();
-        Userinformation userinformation = new Userinformation(name,surname,phoneNumber);
+        Userinformation userinformation = new Userinformation(phoneNumber);
         FirebaseUser user = firebaseAuth.getCurrentUser();
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(name).build();
+        user.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            //Success
+                        }
+                    }
+                });
         databaseReference.child(user.getUid()).setValue(userinformation);
         Toast.makeText(getApplicationContext(),"User information updated",Toast.LENGTH_LONG).show();
     }

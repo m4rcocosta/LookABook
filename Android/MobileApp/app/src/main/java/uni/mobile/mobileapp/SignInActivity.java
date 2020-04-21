@@ -40,8 +40,11 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -215,8 +218,20 @@ public class SignInActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = auth.getCurrentUser();
-                            databaseReference.child(user.getUid()).setValue(new Userinformation(acct.getGivenName(), acct.getFamilyName(), ""));
+                            final FirebaseUser user = auth.getCurrentUser();
+                            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot snapshot) {
+                                    if (snapshot.hasChild(user.getUid())) {
+                                        // run some code
+                                    }
+                                    else databaseReference.child(user.getUid()).setValue(new Userinformation(""));
+                                }
+                                @Override
+                                public void onCancelled( DatabaseError databaseError) {
+
+                                }
+                            });
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -252,7 +267,7 @@ public class SignInActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = auth.getCurrentUser();
-                            databaseReference.child(user.getUid()).setValue(new Userinformation(user.getDisplayName().split(" ")[0], user.getDisplayName().split(" ")[1], user.getPhoneNumber()));
+                            databaseReference.child(user.getUid()).setValue(new Userinformation(""));
                         } else {
                             Toast.makeText(SignInActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }

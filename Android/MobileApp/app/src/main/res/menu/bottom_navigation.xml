@@ -6,13 +6,13 @@
         android:title="@string/home_navigation"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/navigation_profile"
-        android:icon="@drawable/ic_person_white_24dp"
-        android:title="@string/profile_navigation"
+        android:id="@+id/navigation_house"
+        android:icon="@drawable/ic_house_white_24dp"
+        android:title="@string/house_navigation"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/navigation_settings"
-        android:icon="@drawable/ic_settings_white_24dp"
-        android:title="@string/settings_navigation"
+        android:id="@+id/navigation_book"
+        android:icon="@drawable/ic_book_white_24dp"
+        android:title="@string/book_navigation"
         app:showAsAction="ifRoom" />
 </menu>

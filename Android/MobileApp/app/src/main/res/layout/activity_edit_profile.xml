@@ -78,23 +78,6 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:startIconDrawable="@drawable/ic_account_box_primarycolor_24dp"
-                    app:startIconTint="@color/colorPrimary">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/surnameEditProfileEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/surname"
-                        android:inputType="textPersonName|textCapSentences"
-                        android:textSize="@dimen/text_input_size"
-                        android:maxLines="1" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     app:startIconDrawable="@drawable/ic_phone_primarycolor_24dp"
                     app:startIconTint="@color/colorPrimary">
 
