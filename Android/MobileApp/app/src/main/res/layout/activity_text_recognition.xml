@@ -4,62 +4,114 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".recognition.TextRecognitionActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
     
-    <ImageView
-        android:id="@+id/image_view"
-        android:layout_width="match_parent"
-        android:layout_height="400dp" />
+            <ImageView
+                android:id="@+id/image_view"
+                android:layout_width="match_parent"
+                android:src="@drawable/text_recognition"
+                android:layout_height="400dp" />
 
-    <LinearLayout
-        android:id="@+id/text_recognition_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/image_view"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal">
+            <LinearLayout
+                android:id="@+id/rotate_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal">
 
-        <Button
-            android:id="@+id/capture_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/capture_image"
-            android:textColor="@color/colorAccent"
-            android:layout_gravity="center_horizontal"
-            android:textAllCaps="false"
-            android:layout_marginEnd="5dp"/>
+                <ImageButton
+                    android:id="@+id/rotate_left"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/colorPrimary"
+                    android:src="@drawable/ic_rotate_left_white_24dp"
+                    android:tint="@color/colorAccent"
+                    android:layout_marginEnd="5dp"/>
 
-        <Button
-            android:id="@+id/load_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/load_image"
-            android:textColor="@color/colorAccent"
-            android:layout_gravity="center_horizontal"
-            android:textAllCaps="false"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"/>
+                <ImageButton
+                    android:id="@+id/rotate_right"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/colorPrimary"
+                    android:src="@drawable/ic_rotate_right_white_24dp"
+                    android:tint="@color/colorAccent"
+                    android:layout_marginStart="5dp"/>
+            </LinearLayout>
 
-        <Button
-            android:id="@+id/detect_text_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:text="@string/detect_text"
-            android:textColor="@color/colorAccent"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="5dp"
-            android:textAllCaps="false" />
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/text_recognition_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal">
 
-    <TextView
-        android:id="@+id/text_display"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars = "vertical"
-        android:text=""
-        android:layout_below="@+id/text_recognition_buttons"
-        android:textSize="26dp"
-        android:textColor="?android:attr/textColorPrimary"
-        android:layout_margin="10dp" />
+                <Button
+                    android:id="@+id/capture_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/capture_image"
+                    android:textColor="@color/colorAccent"
+                    android:layout_gravity="center_horizontal"
+                    android:textAllCaps="false"
+                    android:layout_marginEnd="5dp"/>
+
+                <Button
+                    android:id="@+id/load_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/load_image"
+                    android:textColor="@color/colorAccent"
+                    android:layout_gravity="center_horizontal"
+                    android:textAllCaps="false"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"/>
+
+                <Button
+                    android:id="@+id/detect_text_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detect_text"
+                    android:textColor="@color/colorAccent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="5dp"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/text_display"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:scrollbars = "vertical"
+                android:text=""
+                android:textSize="26dp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:layout_margin="10dp" />
+
+            <Button
+                android:id="@+id/copy_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/copy_text"
+                android:textColor="@color/colorAccent"
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone"
+                android:textAllCaps="false" />
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

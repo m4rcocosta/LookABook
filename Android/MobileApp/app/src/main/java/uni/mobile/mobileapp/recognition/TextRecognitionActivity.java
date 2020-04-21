@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -16,8 +18,10 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -37,9 +41,11 @@ import uni.mobile.mobileapp.R;
 
 public class TextRecognitionActivity extends AppCompatActivity {
 
-    private Button captureImageButton, loadImageButton, detectTextButton;
+    private Button captureImageButton, loadImageButton, detectTextButton, copyTextButton;
     private ImageView imageView;
-    private TextView textView;
+    private EditText textView;
+    private ImageButton rotateLeftButton, rotateRightButton;
+    private LinearLayout rotateButtons;
 
     private Bitmap imageBitmap;
     private Uri photoURI;
@@ -47,6 +53,9 @@ public class TextRecognitionActivity extends AppCompatActivity {
 
     static final int REQUEST_TAKE_PHOTO = 1;
     private static int RESULT_LOAD_IMAGE = 2;
+
+    private ClipboardManager myClipboard;
+    private ClipData myClip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +65,18 @@ public class TextRecognitionActivity extends AppCompatActivity {
         captureImageButton = findViewById(R.id.capture_image);
         loadImageButton = findViewById(R.id.load_image);
         detectTextButton = findViewById(R.id.detect_text_image);
+        copyTextButton = findViewById(R.id.copy_text);
         imageView = findViewById(R.id.image_view);
         textView = findViewById(R.id.text_display);
+        rotateLeftButton = findViewById(R.id.rotate_left);
+        rotateRightButton = findViewById(R.id.rotate_right);
+        rotateButtons = findViewById(R.id.rotate_buttons);
 
         captureImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 textView.setText("");
+                copyTextButton.setVisibility(View.GONE);
                 dispatchTakePictureIntent();
             }
         });
@@ -70,6 +84,7 @@ public class TextRecognitionActivity extends AppCompatActivity {
         loadImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                copyTextButton.setVisibility(View.GONE);
                 textView.setText("");
                 loadImageFromGallery();
             }
@@ -78,8 +93,40 @@ public class TextRecognitionActivity extends AppCompatActivity {
         detectTextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (imageBitmap != null) detectTextFromImage();
+                if (imageBitmap != null) {
+                    detectTextFromImage();
+                }
                 else Toast.makeText(TextRecognitionActivity.this, "Image missing. Load an image or take a photo!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        copyTextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                String text;
+                text = textView.getText().toString();
+
+                myClip = ClipData.newPlainText("text", text);
+                myClipboard.setPrimaryClip(myClip);
+
+                Toast.makeText(getApplicationContext(), "Text Copied", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        rotateLeftButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageBitmap = rotateImage(imageBitmap, -90);
+                imageView.setImageBitmap(imageBitmap);
+            }
+        });
+
+        rotateRightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageBitmap = rotateImage(imageBitmap, 90);
+                imageView.setImageBitmap(imageBitmap);
             }
         });
 
@@ -131,6 +178,7 @@ public class TextRecognitionActivity extends AppCompatActivity {
                 imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoURI);
                 imageBitmap = rotateImage(imageBitmap, 90);
                 imageView.setImageBitmap(imageBitmap);
+                rotateButtons.setVisibility(View.VISIBLE);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -150,6 +198,7 @@ public class TextRecognitionActivity extends AppCompatActivity {
 
             imageBitmap = BitmapFactory.decodeFile(picturePath);
             imageView.setImageBitmap(imageBitmap);
+            rotateButtons.setVisibility(View.VISIBLE);
 
         }
     }
@@ -188,6 +237,7 @@ public class TextRecognitionActivity extends AppCompatActivity {
                 String text = block.getText();
                 textView.setText(text);
             }
+            copyTextButton.setVisibility(View.VISIBLE);
         }
     }
 
