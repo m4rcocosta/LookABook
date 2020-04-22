@@ -26,6 +26,7 @@
         <activity android:name=".recognition.TextRecognitionActivity" />
         <activity android:name=".EditProfileActivity" />
         <activity android:name=".ResetPasswordActivity" />
+        <activity android:name=".rest.ShelfChooserActivity" />
         <activity android:name=".SignInActivity" />
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id"/>

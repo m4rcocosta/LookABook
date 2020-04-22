@@ -26,15 +26,8 @@ public class ShelfChooserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shelf_chooser);
 
-        //Root
-        TreeNode root = TreeNode.root();
 
-        //Parent
-        MyHolder.IconTreeItem nodeItem = new MyHolder.IconTreeItem(R.drawable.ic_arrow_drop_down, "Choose a shelf");
-        TreeNode parent = new TreeNode(nodeItem).setViewHolder(new MyHolder(getApplicationContext(), true, MyHolder.DEFAULT, MyHolder.DEFAULT));
-        root.addChild(parent);
-
-
+        /* Init REST client*/
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
             @Override
@@ -42,7 +35,7 @@ public class ShelfChooserActivity extends AppCompatActivity {
                 Request original = chain.request();
 
                 Request request = original.newBuilder()
-                        .header("TOKEN", "Ropw93ZqJZQYVRnmi5BQxiZQ")
+                        .header("TOKEN", "fooToken")
                         .header("Accept", "application/json")
                         .method(original.method(), original.body())
                         .build();
@@ -62,9 +55,18 @@ public class ShelfChooserActivity extends AppCompatActivity {
                 .build();
 
 
+        /* Building the tree*/
+        //Root
+        TreeNode root = TreeNode.root();
+
+        //Parent
+        MyHolder.IconTreeItem nodeItem = new MyHolder.IconTreeItem(R.drawable.ic_arrow_drop_down, "Choose a shelf");
+        TreeNode parent = new TreeNode(nodeItem).setViewHolder(new MyHolder(getApplicationContext(), true, MyHolder.DEFAULT, MyHolder.DEFAULT));
+        root.addChild(parent);
+
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-        RestTreeLocalMethods.getAllObjectsFromUser(parent,getApplicationContext(),null,jsonPlaceHolderApi);
+        RestTreeLocalMethods.printAllObjectsFromUser(parent,getApplicationContext(),null,jsonPlaceHolderApi);
 
 
         //Add AndroidTreeView into view.

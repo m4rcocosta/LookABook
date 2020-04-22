@@ -31,6 +31,18 @@ class Api::V1::BooksController < ApiController
     book=@book
     render json: {status: 'SUCCESS', message: 'Loaded all book', data: [book]}, status: :ok
   end
+
+  # GET all books for a user
+  def allBooks
+    houses=@user.houses
+    rooms= houses.map(&:rooms).flatten() 
+    walls=rooms.map(&:walls).flatten()
+    shelves=walls.map(&:shelves).flatten()
+    books=shelves.map(&:books).flatten()
+    render json: {status: 'SUCCESS', message: 'Loaded all books', data: books}, status: :ok
+  end
+  
+
   
   # # GET /books/new
   # def new
@@ -58,7 +70,6 @@ class Api::V1::BooksController < ApiController
   # PATCH/PUT /books/1.json
   def update
     if @book.update(book_params)
-      
       render json: {status: 'SUCCESS', message: 'Updated book', data: [@book]}, status: :ok
     else
       render error: { error: 'Error in update'}, status: 400
@@ -87,7 +98,6 @@ class Api::V1::BooksController < ApiController
     end
     
     puts "Async search started >>>"
-
     render json: {status: 'SUCCESS', message: 'Search on Google request received', data: books}, status: :ok
   end
 
@@ -114,31 +124,43 @@ class Api::V1::BooksController < ApiController
   end
   
   def get_user
+    if(params[:user_id])
     @user = User.find(params[:user_id])
+    end
   end
   
   
   def get_house
+    if(params[:house_id])
     @house = House.find(params[:house_id])
+    end
   end
   
   
   def get_room
+    if(params[:room_id])
     @room = Room.find(params[:room_id])
+    end
   end
   
   def get_wall
+    if(params[:wall_id])
     @wall = Wall.find(params[:wall_id])
+    end
   end
   
   
   def get_shelf
+    if(params[:shelf_id])
     @shelf = Shelf.find(params[:shelf_id])
+    end
   end
   
   # Use callbacks to share common setup or constraints between actions.
   def set_book
+    if(params[:id])
     @book = Book.find(params[:id])
+    end
   end
   
   # Never trust parameters from the scary internet, only allow the white list through.

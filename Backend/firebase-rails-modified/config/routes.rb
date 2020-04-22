@@ -40,6 +40,13 @@ Rails.application.routes.draw do
       
       get '/get-user-by-token',
       to: 'users#get_user_by_token', as: "get_user_by_token"
+
+      get '/get-user-by-email',
+      to: 'users#get_user_by_email', as: "get_user_by_email"
+
+      get '/allBooks',
+      to: 'books#allBooks', as: "allBooks"
+      
     end
   end
 

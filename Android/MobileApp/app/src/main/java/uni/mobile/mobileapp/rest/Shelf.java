@@ -6,6 +6,13 @@ public class Shelf {
     private String createdAt;
     private String updatedAt;
 
+    public Shelf(Integer id, String name, String createdAt, String updatedAt) {
+        this.id = id;
+        this.name = name;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
     public int getId() {
         return id;
     }

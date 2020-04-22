@@ -23,18 +23,17 @@ class ApiController < ApplicationController
             puts "validating user"
             @user = User.find_by(auth_token: user_token )
             #Unauthorize if a user object is not returned
-            if @user.nil? 
+            if @user.nil? && !params[:email]
                 return unauthorize_wrong_token
             else
                 #Unathorize if user id not matching with user token
-                @req_user=User.find(params[:id])
-                if user_token.to_s != @req_user.auth_token.to_s  
-                    return unauthorize_wrong_token
+                puts request.fullpath
+                if params[:id]
+                    @req_user=User.find_by(params[:id])
+                    if user_token.to_s != @req_user.auth_token.to_s  
+                        return unauthorize_wrong_token
+                    end
                 end
-            end
-        else
-            if request.fullpath!="/api/v1/users"
-                return unauthorize_no_token
             end
         end
     end
@@ -48,5 +47,10 @@ class ApiController < ApplicationController
         render json: {error:"Unauthorized access, you need to pass your token"}, status: 401
         return false
     end
+
+    def person_params
+        params.require(:user).permit(:name)
+    end
+
 end
 

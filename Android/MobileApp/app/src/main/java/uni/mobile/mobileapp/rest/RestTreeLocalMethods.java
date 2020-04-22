@@ -25,7 +25,7 @@ public class RestTreeLocalMethods {
     /*
      * ALL
      */
-    public static void getAllObjectsFromUser(final TreeNode root,final Context ctx,final TextView textViewResult , JsonPlaceHolderApi jsonPlaceHolderApi){
+    public static void printAllObjectsFromUser(final TreeNode root,final Context ctx,final TextView textViewResult , JsonPlaceHolderApi jsonPlaceHolderApi){
             getHouses(root, ctx, textViewResult, jsonPlaceHolderApi, true);
 
     }
@@ -63,6 +63,7 @@ public class RestTreeLocalMethods {
                     MyHolder.IconTreeItem childItem = new MyHolder.IconTreeItem(R.drawable.ic_houseicon, house.getName() );
                     TreeNode child = new TreeNode(childItem).setViewHolder(new MyHolder(ctx, false, R.layout.child, 25));
                     //Add child.
+                    parent.addChildren(child);
 
                     content += "Name: " + house.getName() + "\n";
                     if(textViewResult!=null) textViewResult.append(content);
@@ -70,7 +71,6 @@ public class RestTreeLocalMethods {
                     if(recursiveSearch){
                         getRooms(child,ctx,textViewResult,jsonPlaceHolderApi,house.getId(),true);
                     }
-                    parent.addChildren(child);
 
 
 
@@ -115,6 +115,8 @@ public class RestTreeLocalMethods {
                     MyHolder.IconTreeItem childItem = new MyHolder.IconTreeItem(R.drawable.ic_roomicon, room.getName() );
                     TreeNode child = new TreeNode(childItem).setViewHolder(new MyHolder(ctx, false, R.layout.child, 45));
                     //Add child.
+                    child.setSelected(false);
+                    parent.addChildren(child);
 
                     content += "";
                     content += "ID: " + room.getId() + "\n";
@@ -124,7 +126,6 @@ public class RestTreeLocalMethods {
                     if(recursiveSearch){
                         getWalls(parent,ctx,textViewResult,jsonPlaceHolderApi,houseId,room.getId(),true);
                     }
-                    parent.addChildren(child);
 
 
                 }
@@ -161,6 +162,7 @@ public class RestTreeLocalMethods {
                     MyHolder.IconTreeItem childItem = new MyHolder.IconTreeItem(R.drawable.ic_wallicon2, wall.getName() );
                     TreeNode child = new TreeNode(childItem).setViewHolder(new MyHolder(ctx, false, R.layout.child, 65));
                     //Add child.
+                    parent.addChildren(child);
 
                     content="";
                     content += "ID: " + wall.getId() + "\n";
@@ -171,7 +173,6 @@ public class RestTreeLocalMethods {
                         getShelves(parent,ctx,textViewResult,jsonPlaceHolderApi,houseId,roomId,wall.getId(),true);
 
                     }
-                    parent.addChildren(child);
 
 
                 }
@@ -209,6 +210,7 @@ public class RestTreeLocalMethods {
                     MyHolder.IconTreeItem childItem = new MyHolder.IconTreeItem(R.drawable.ic_shelficon, shelf.getName() );
                     TreeNode child = new TreeNode(childItem).setViewHolder(new MyHolder(ctx, false, R.layout.child, 85));
                     //Add child.
+                    parent.addChildren(child);
 
                     content="";
                     content += "ID: " + shelf.getId() + "\n";
@@ -216,7 +218,6 @@ public class RestTreeLocalMethods {
                     if(textViewResult!=null) textViewResult.append(content);
                     //if(recursiveSearch)
                     // getBooks(textViewResult,jsonPlaceHolderApi,houseId,roomId,wallId,shelf.getId(),true);
-                    parent.addChildren(child);
 
                 }
 
@@ -255,6 +256,7 @@ public class RestTreeLocalMethods {
                     TreeNode child = new TreeNode(childItem).setViewHolder(new MyHolder(ctx, false, R.layout.child, 105));
                     //Add child.
                     parent.addChildren(child);
+
                     content="";
                     content += "ID: " + book.getId() + "\n";
                     content += "Name: " + book.getTitle() + "\n";

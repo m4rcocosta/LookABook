@@ -7,6 +7,13 @@ public class Wall {
     private String createdAt;
     private String updatedAt;
 
+    public Wall(Integer id, String name, String createdAt, String updatedAt) {
+        this.id = id;
+        this.name = name;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
     public int getId() {
         return id;
     }

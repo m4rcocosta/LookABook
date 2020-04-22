@@ -16,6 +16,23 @@ public class Book {
     private String country;
     private Float price;
 
+    public Book(Integer id, String title, String createdAt, String updatedAt, String authors, String publisher, String publishedDate, String description, Integer isbn, Integer pageCount, String categories, String imageLinks, String country, Float price) {
+        this.id = id;
+        this.title = title;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.authors = authors;
+        this.publisher = publisher;
+        this.publishedDate = publishedDate;
+        this.description = description;
+        this.isbn = isbn;
+        this.pageCount = pageCount;
+        this.categories = categories;
+        this.imageLinks = imageLinks;
+        this.country = country;
+        this.price = price;
+    }
+
     public String getAuthors() {
         return authors;
     }

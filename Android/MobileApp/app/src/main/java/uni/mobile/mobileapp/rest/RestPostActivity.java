@@ -37,7 +37,7 @@
                     Request original = chain.request();
 
                     Request request = original.newBuilder()
-                            .header("TOKEN", "Ropw93ZqJZQYVRnmi5BQxiZQ")
+                            .header("TOKEN", "fooToken")
                             .header("Accept", "application/json")
                             .method(original.method(), original.body())
                             .build();
@@ -52,7 +52,7 @@
                     .addInterceptor(loggingInterceptor)
                     .build();
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.1.173:3000/api/v1/")
+                    .baseUrl("http://192.168.1.157:3000/api/v1/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();

@@ -39,7 +39,7 @@ public class ShowRestResultActivity extends AppCompatActivity {
                                           Request original = chain.request();
 
                                           Request request = original.newBuilder()
-                                                  .header("TOKEN", "Ropw93ZqJZQYVRnmi5BQxiZQ")
+                                                  .header("TOKEN", "fooToken")
                                                   .header("Accept", "application/json")
                                                   .method(original.method(), original.body())
                                                   .build();
@@ -53,7 +53,7 @@ public class ShowRestResultActivity extends AppCompatActivity {
                         .addInterceptor(loggingInterceptor)
                         .build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.173:3000/api/v1/")
+                .baseUrl("http://192.168.1.157:3000/api/v1/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
@@ -61,7 +61,7 @@ public class ShowRestResultActivity extends AppCompatActivity {
 
         jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-        RestLocalMethods.getAllObjectsFromUser(textViewResult,jsonPlaceHolderApi);
+        RestLocalMethods.getAllObjectsFromUser(textViewResult,jsonPlaceHolderApi,1);
         //RestLocalMethods.getHouses(textViewResult,jsonPlaceHolderApi);
         Log.i("ids",  RestLocalMethods.objectsIds.get("rooms").toString() );
         //RestLocalMethods.getRooms(textViewResult,jsonPlaceHolderApi, RestLocalMethods.objectsIds.get("rooms"));

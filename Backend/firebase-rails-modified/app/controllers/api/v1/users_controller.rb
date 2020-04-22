@@ -12,7 +12,7 @@
     # GET /users/1
     # GET /users/1.json
     def show
-      render json: {status: 'SUCCESS', message: 'Loaded user', data: [@user]}, status: :ok
+      render json: {status: 'SUCCESS', message: 'Loaded user', data: [@user] }, status: :ok
     end
 
     # GET /users/new
@@ -32,7 +32,7 @@
         if @user.save
           render json: {status: 'SUCCESS', message: 'Created user', data: [@user]}, status: :ok
         else
-          render error: { error: 'Error in creation of user'}, status: 400
+          render json: { json: 'Error in creation of user'}, status: 400
         end
       
     end
@@ -43,7 +43,7 @@
         if @user.update(user_params)
           render json: {status: 'SUCCESS', message: 'Patched user', data: [@user]}, status: :ok
         else
-          render error: { error: 'Error in creation of user'}, status: 400
+          render json: { json: 'Error in creation of user'}, status: 400
 
       end
     end
@@ -55,15 +55,28 @@
         render json: {status: 'SUCCESS', message: 'Destroyed user', data: [@user]}, status: :ok
       end
     end
+    
 
+    # GET /get_users_by_mail?email=foo@foo.com
+    def get_user_by_email
+      user=User.find_by(email: params[:email])
+      if user
+        render json: {status: 'SUCCESS', message: 'User exists', data: [user]}, status: :ok
+      else
+        render json: { json: "No user with the mail: #{params[:email] }"}, status: 404
+      end
+    end
+
+
+    # GET /get_users_by_token
     def get_user_by_token
       user=User.find_by(auth_token:request.headers['TOKEN'])
       if user
-        render json: {status: 'SUCCESS', message: 'Loaded user', data: [user]}, status: :ok
+        render json: {status: 'SUCCESS', message: 'User exists', data: [user]}, status: :ok
       else
-        render error: { error: 'Error in creation'}, status: 404
+        render json: { json: 'Error in creation of user'}, status: 400
       end
-    end 
+    end
 
     private
       # Use callbacks to share common setup or constraints between actions.
@@ -73,6 +86,6 @@
 
       # Never trust parameters from the scary internet, only allow the white list through.
       def user_params
-        params.permit(:name,:auth_token )
+        params.permit(:name,:auth_token,:id )
       end
   end

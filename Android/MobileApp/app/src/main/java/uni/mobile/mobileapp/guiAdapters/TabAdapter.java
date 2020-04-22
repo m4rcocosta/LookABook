@@ -1,8 +1,11 @@
-package uni.mobile.mobileapp;
+package uni.mobile.mobileapp.guiAdapters;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+
+import uni.mobile.mobileapp.AdvancedProfileFragment;
+import uni.mobile.mobileapp.InfoProfileFragment;
 
 public class TabAdapter extends FragmentPagerAdapter {
     int totalTabs;
