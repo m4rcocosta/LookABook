@@ -39,6 +39,7 @@
                     android:background="@color/colorPrimary"
                     android:src="@drawable/ic_rotate_left_white_24dp"
                     android:tint="@color/colorAccent"
+                    android:foreground="?android:attr/selectableItemBackground"
                     android:layout_marginEnd="5dp"/>
 
                 <ImageButton
@@ -49,6 +50,7 @@
                     android:background="@color/colorPrimary"
                     android:src="@drawable/ic_rotate_right_white_24dp"
                     android:tint="@color/colorAccent"
+                    android:foreground="?android:attr/selectableItemBackground"
                     android:layout_marginStart="5dp"/>
             </LinearLayout>
 

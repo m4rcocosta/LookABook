@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,10 +21,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText emailSignUp, passwordSignUp, confirmPasswordSignUp;
+    private EditText emailSignUp, confirmEmailSignUp, passwordSignUp, confirmPasswordSignUp;
     private Button signUpButton;
     private TextView alreadyRegisteredButton;
     private FirebaseAuth auth;
@@ -42,6 +46,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         emailSignUp = findViewById(R.id.emailSignUpEditText);
+        confirmEmailSignUp = findViewById(R.id.confirmEmailSignUpEditText);
         passwordSignUp = findViewById(R.id.passwordSignUpEditText);
         confirmPasswordSignUp = findViewById(R.id.confirmPasswordSignUpEditText);
         auth = FirebaseAuth.getInstance();
@@ -52,11 +57,20 @@ public class SignUpActivity extends AppCompatActivity {
 
             public void onClick(View v) {
                 String email = emailSignUp.getText().toString();
+                String confirmEmail = confirmEmailSignUp.getText().toString();
                 String pass = passwordSignUp.getText().toString();
                 String confirmPass = confirmPasswordSignUp.getText().toString();
 
                 if(TextUtils.isEmpty(email)){
                     Toast.makeText(getApplicationContext(),"Please enter your E-mail address",Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if(TextUtils.isEmpty(confirmEmail)){
+                    Toast.makeText(getApplicationContext(),"Please confirm your E-mail address",Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (!email.equals(confirmEmail)) {
+                    Toast.makeText(getApplicationContext(),"Emails must be equals",Toast.LENGTH_LONG).show();
                     return;
                 }
                 if(TextUtils.isEmpty(pass)){
@@ -87,7 +101,23 @@ public class SignUpActivity extends AppCompatActivity {
                     auth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (!task.isSuccessful()) {
-                                        Toast.makeText(SignUpActivity.this, "ERROR",Toast.LENGTH_LONG).show();
+                                        try {
+                                            throw task.getException();
+                                        }
+                                        // if user enters wrong password.
+                                        catch (FirebaseAuthWeakPasswordException weakPassword) {
+                                            Toast.makeText(SignUpActivity.this, "Wrong password.",Toast.LENGTH_LONG).show();
+                                        }
+                                        // if user enters wrong email.
+                                        catch (FirebaseAuthInvalidCredentialsException malformedEmail) {
+                                            Toast.makeText(SignUpActivity.this, "Wrong email.",Toast.LENGTH_LONG).show();
+                                        }
+                                        catch (FirebaseAuthUserCollisionException existEmail) {
+                                            Toast.makeText(SignUpActivity.this, "An account with this email already exists! If you don't remember your password, reset it.",Toast.LENGTH_LONG).show();
+                                        }
+                                        catch (Exception e) {
+                                            Log.d("SIGN UP", "onComplete: " + e.getMessage());
+                                        }
                                     }
                                     else {
                                         startActivity(new Intent(SignUpActivity.this, EditProfileActivity.class));

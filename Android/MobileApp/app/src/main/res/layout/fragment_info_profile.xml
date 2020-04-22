@@ -24,14 +24,17 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp">
 
-                <Button
+                <ImageButton
                     android:id="@+id/editNameProfileButton"
                     android:layout_width="@dimen/edit_info_button_size"
                     android:layout_height="@dimen/edit_info_button_size"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="5dp"
-                    android:drawableEnd="@drawable/ic_create_black_24dp"
-                    android:drawableTint="@color/colorAccent" />
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorPrimary"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:src="@drawable/ic_create_black_24dp"
+                    android:tint="@color/colorAccent" />
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -59,14 +62,17 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp">
 
-                <Button
+                <ImageButton
                     android:id="@+id/editPhoneNumberProfileButton"
                     android:layout_width="@dimen/edit_info_button_size"
                     android:layout_height="@dimen/edit_info_button_size"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="5dp"
-                    android:drawableEnd="@drawable/ic_dialpad_black_24dp"
-                    android:drawableTint="@color/colorAccent" />
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorPrimary"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:src="@drawable/ic_dialpad_black_24dp"
+                    android:tint="@color/colorAccent"  />
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"

@@ -88,6 +88,7 @@ public class ProfileFragment extends Fragment {
             });
         }
     }
+
     private String getUserProvider(FirebaseUser user) {
         List<? extends UserInfo> infos = user.getProviderData();
         String provider = "FIREBASE";
