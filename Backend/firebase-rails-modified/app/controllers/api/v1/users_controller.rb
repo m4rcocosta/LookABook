@@ -53,6 +53,8 @@
     def destroy
       if @user.destroy
         render json: {status: 'SUCCESS', message: 'Destroyed user', data: [@user]}, status: :ok
+      else
+        render json: { json: 'Error in destroy of user'}, status: 400
       end
     end
     
@@ -74,7 +76,7 @@
       if user
         render json: {status: 'SUCCESS', message: 'User exists', data: [user]}, status: :ok
       else
-        render json: { json: 'Error in creation of user'}, status: 400
+        render json: { json: 'Error in creation of user'}, status: 404
       end
     end
 

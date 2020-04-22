@@ -25,7 +25,7 @@ import retrofit2.http.Query;
 public class RestLocalMethods {
 
     public  static Multimap<String, Integer> objectsIds = HashMultimap.create();
-
+    private static List<User> users;
 
     /*
      * ALL
@@ -40,8 +40,7 @@ public class RestLocalMethods {
      */
 
 
-    public static void getUserByEmail(final JsonPlaceHolderApi jsonPlaceHolderApi,  String email){
-
+    public static User getUserByEmail(final JsonPlaceHolderApi jsonPlaceHolderApi,  String email){
         Call<MyResponse<User>> call = jsonPlaceHolderApi.getUserByEmail(email);
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
@@ -50,15 +49,17 @@ public class RestLocalMethods {
                     return;
                 }
 
-                List<User> users = response.body().getData();
+                users = response.body().getData();
             }
 
             @Override
             public void onFailure(Call<MyResponse<User>> call, Throwable t) {}
         });
+        return users.get(0);
+
     }
 
-    public static void getUserByToken(final JsonPlaceHolderApi jsonPlaceHolderApi){
+    public static User getUserByToken(final JsonPlaceHolderApi jsonPlaceHolderApi){
         Call<MyResponse<User>> call = jsonPlaceHolderApi.getUserByToken();
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
@@ -67,16 +68,17 @@ public class RestLocalMethods {
                     return;
                 }
 
-                List<User> users = response.body().getData();
+                users = response.body().getData();
             }
 
             @Override
             public void onFailure(Call<MyResponse<User>> call, Throwable t) {}
         });
+        return users.get(0);
 
     }
 
-    public static void createUser( final JsonPlaceHolderApi jsonPlaceHolderApi,  User user){
+    public static User createUser( final JsonPlaceHolderApi jsonPlaceHolderApi,  User user){
 
         Call<MyResponse<User>> call = jsonPlaceHolderApi.createUser(user);
         call.enqueue(new Callback<MyResponse<User>>() {
@@ -86,16 +88,18 @@ public class RestLocalMethods {
                     return;
                 }
 
-                List<User> users = response.body().getData();
+                users = response.body().getData();
             }
 
             @Override
             public void onFailure(Call<MyResponse<User>> call, Throwable t) {}
         });
+        return users.get(0);
     }
 
-    public static void patchUser(final JsonPlaceHolderApi jsonPlaceHolderApi,  int userId,  User user){
+    public static User patchUser(final JsonPlaceHolderApi jsonPlaceHolderApi,  int userId,  User user){
         Call<MyResponse<User>> call = jsonPlaceHolderApi.patchUser(userId,user);
+
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
             public void onResponse(Call<MyResponse<User>> call, Response<MyResponse<User>> response) {
@@ -103,15 +107,16 @@ public class RestLocalMethods {
                     return;
                 }
 
-                List<User> users = response.body().getData();
+                 users = response.body().getData();
             }
 
             @Override
             public void onFailure(Call<MyResponse<User>> call, Throwable t) {}
         });
+        return users.get(0);
     }
 
-    public static void deleteUser(final JsonPlaceHolderApi jsonPlaceHolderApi,  int userId){
+    public static User deleteUser(final JsonPlaceHolderApi jsonPlaceHolderApi,  int userId){
         Call<MyResponse<User>> call = jsonPlaceHolderApi.deleteUser(userId);
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
@@ -120,13 +125,13 @@ public class RestLocalMethods {
                     return;
                 }
 
-                List<User> users = response.body().getData();
+                users = response.body().getData();
             }
 
             @Override
             public void onFailure(Call<MyResponse<User>> call, Throwable t) {}
         });
-
+        return users.get(0);
     }
 
     /*
