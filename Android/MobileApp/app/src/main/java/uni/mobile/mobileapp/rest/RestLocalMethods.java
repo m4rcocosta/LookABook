@@ -623,6 +623,37 @@ public class RestLocalMethods {
                         });
                     }
 
+                    //GET
+                    public  static void getAllBooks( final TextView textViewResult,final  JsonPlaceHolderApi jsonPlaceHolderApi ,
+                                                  final Integer userId){
+
+                        Call<MyResponse<Book>> call = jsonPlaceHolderApi.getAllBooks(userId, houseId,  roomId,  wallId, shelfId );
+
+                        call.enqueue(new Callback<MyResponse<Book>>() {
+                            @Override
+                            public void onResponse(Call<MyResponse<Book>> call, Response<MyResponse<Book>> response) {
+                                if(!response.isSuccessful()){
+                                    Log.d("myrest", "book Code: " + response.code());
+                                    return;
+                                }
+                                List<Book> books = response.body().getData();
+
+                                for(Book book: books){
+                                    objectsIds.put("books",book.getId());
+                                    Log.d("myrest", "book : " + book.getTitle() );
+
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<MyResponse<Book>> call, Throwable t) {
+                                Log.d("myrest", "book Code: " + t.getMessage());
+                            }
+                        });
+                    }
+
                     //POST
                     private void createBook( final JsonPlaceHolderApi jsonPlaceHolderApi,  final Integer userId ,final Integer houseId,
                     final Integer roomId, final Integer wallId,  final Integer shelfId ,Book book){

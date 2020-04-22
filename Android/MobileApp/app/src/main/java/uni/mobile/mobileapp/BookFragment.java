@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import uni.mobile.mobileapp.guiAdapters.ListAdapter;
+import uni.mobile.mobileapp.rest.RestLocalMethods;
 
 
 public class BookFragment extends Fragment {
@@ -27,11 +28,11 @@ public class BookFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-
+        books= RestLocalMethods
 
         ListView lView = (ListView) view.findViewById(R.id.androidList);
 
-        ListAdapter lAdapter = new ListAdapter(this, titles, authors, null,R.drawable.ic_book_red);
+        ListAdapter lAdapter = new ListAdapter(this, books, authors, null,R.drawable.ic_book_red);
 
         lView.setAdapter(lAdapter);
 
@@ -39,7 +40,7 @@ public class BookFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Toast.makeText(this, titles[i], Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, books[i], Toast.LENGTH_SHORT).show();
 
             }
         });
