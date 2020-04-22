@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +35,7 @@ public class InfoProfileFragment extends Fragment {
     private TextView nameProfileTextView, phoneNumberProfileTextView, emailProfileTextView;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
-    private Button editNameButton, editPhoneNumberButton;
+    private ImageButton editNameButton, editPhoneNumberButton;
     private FirebaseUser user;
 
     @Override

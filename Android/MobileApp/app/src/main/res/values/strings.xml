@@ -2,6 +2,7 @@
     <string name="app_name">MobileApp</string>
 
     <string name="email">Email</string>
+    <string name="confirm_email">Confirm Email</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="name">Name</string>
@@ -24,6 +25,7 @@
     <string name="log_out">Logout</string>
     <string name="register">Register</string>
     <string name="change_email">Change Email</string>
+    <string name="change_password">Change Password</string>
     <string name="delete_account">Delete Account</string>
     <string name="save">Save</string>
     <string name="reset_password">Reset Password</string>

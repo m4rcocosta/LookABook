@@ -13,6 +13,39 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <Button
+                android:id="@+id/changeEmailButton"
+                android:textSize="@dimen/button_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:text="@string/change_email"
+                android:clickable="true"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@color/colorAccent"
+                android:drawableLeft="@drawable/ic_create_black_24dp"
+                android:drawableTint="@color/colorAccent"/>
+
+            <Button
+                android:id="@+id/changePasswordButton"
+                android:textSize="@dimen/button_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:text="@string/change_password"
+                android:clickable="true"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@color/colorAccent"
+                android:drawableLeft="@drawable/ic_create_black_24dp"
+                android:drawableTint="@color/colorAccent"/>
+
             <Button
                 android:id="@+id/deleteUserButton"
                 android:textSize="@dimen/button_size"
@@ -23,8 +56,11 @@
                 android:text="@string/delete_account"
                 android:clickable="true"
                 android:gravity="center"
+                android:textAllCaps="false"
                 android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorAccent"/>
+                android:textColor="@color/colorAccent"
+                android:drawableLeft="@drawable/ic_logout_white_24dp"
+                android:drawableTint="@color/colorAccent"/>
         </LinearLayout>
     </ScrollView>
 

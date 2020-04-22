@@ -38,7 +38,10 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -134,18 +137,43 @@ public class SignInActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Enter your password", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (password.length() < 8) {
+                    Toast.makeText(getApplicationContext(),"Password must be more than 8 digit",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 //authenticate user
                 auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (!task.isSuccessful()) {
                                     // there was an error
-                                    if (password.length() < 8) {
-                                        Toast.makeText(getApplicationContext(),"Password must be more than 8 digit",Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(getApplicationContext(),"Error", Toast.LENGTH_SHORT).show();
+                                    try {
+                                        throw task.getException();
+                                    }
+                                    // if user enters wrong email.
+                                    catch (FirebaseAuthInvalidUserException invalidEmail) {
+                                        Toast.makeText(getApplicationContext(),"Wrong email.",Toast.LENGTH_SHORT).show();
+                                    }
+                                    // if user enters wrong password.
+                                    catch (FirebaseAuthInvalidCredentialsException wrongPassword) {
+                                        Toast.makeText(getApplicationContext(),"Wrong password.",Toast.LENGTH_SHORT).show();
+                                    }
+                                    catch (Exception e) {
+                                        Log.d("SIGN IN", "onComplete: " + e.getMessage());
                                     }
                                 } else {
+                                    FirebaseUser user = auth.getCurrentUser();
+                                    user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                                        public void onComplete(@NonNull Task<GetTokenResult> task) {
+                                            if (task.isSuccessful()) {
+                                                String idToken = task.getResult().getToken();
+                                                // Send token to your backend via HTTPS
+                                                Log.i("User Token: ", idToken);
+                                            } else {
+                                                // Handle error -> task.getException();
+                                            }
+                                        }
+                                    });
                                     Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
                                     startActivity(intent);
                                     finish();
@@ -219,6 +247,17 @@ public class SignInActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             final FirebaseUser user = auth.getCurrentUser();
+                            user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                                public void onComplete(@NonNull Task<GetTokenResult> task) {
+                                    if (task.isSuccessful()) {
+                                        String idToken = task.getResult().getToken();
+                                        // Send token to your backend via HTTPS
+                                        Log.i("User Token: ", idToken);
+                                    } else {
+                                        // Handle error -> task.getException();
+                                    }
+                                }
+                            });
                             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot snapshot) {
@@ -267,6 +306,17 @@ public class SignInActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = auth.getCurrentUser();
+                            user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                                public void onComplete(@NonNull Task<GetTokenResult> task) {
+                                    if (task.isSuccessful()) {
+                                        String idToken = task.getResult().getToken();
+                                        // Send token to your backend via HTTPS
+                                        Log.i("User Token: ", idToken);
+                                    } else {
+                                        // Handle error -> task.getException();
+                                    }
+                                }
+                            });
                             databaseReference.child(user.getUid()).setValue(new Userinformation(""));
                         } else {
                             Toast.makeText(SignInActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
