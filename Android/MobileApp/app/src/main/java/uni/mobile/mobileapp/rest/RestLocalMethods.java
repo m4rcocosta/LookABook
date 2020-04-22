@@ -2,18 +2,26 @@ package uni.mobile.mobileapp.rest;
 
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -27,6 +35,38 @@ public class RestLocalMethods {
     public  static Multimap<String, Integer> objectsIds = HashMultimap.create();
     private static List<User> users;
 
+    public static JsonPlaceHolderApi initRetrofit() {
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+
+                Request request = original.newBuilder()
+                        .header("TOKEN", "fooToken")
+                        .header("Accept", "application/json")
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = httpClient
+                .addInterceptor(loggingInterceptor)
+                .build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.1.174:3000/api/v1/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+
+        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+        return jsonPlaceHolderApi;
+    }
     /*
      * ALL
      */
@@ -41,6 +81,7 @@ public class RestLocalMethods {
 
 
     public static User getUserByEmail(final JsonPlaceHolderApi jsonPlaceHolderApi,  String email){
+        users = null;
         Call<MyResponse<User>> call = jsonPlaceHolderApi.getUserByEmail(email);
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
@@ -55,7 +96,8 @@ public class RestLocalMethods {
             @Override
             public void onFailure(Call<MyResponse<User>> call, Throwable t) {}
         });
-        return users.get(0);
+        if (users != null) return users.get(0);
+        else return null;
 
     }
 
@@ -79,7 +121,7 @@ public class RestLocalMethods {
     }
 
     public static User createUser( final JsonPlaceHolderApi jsonPlaceHolderApi,  User user){
-
+        users = null;
         Call<MyResponse<User>> call = jsonPlaceHolderApi.createUser(user);
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
@@ -92,9 +134,10 @@ public class RestLocalMethods {
             }
 
             @Override
-            public void onFailure(Call<MyResponse<User>> call, Throwable t) {}
+            public void onFailure(Call<MyResponse<User>> call, Throwable t) {            }
         });
-        return users.get(0);
+        if (users != null) return users.get(0);
+        else return null;
     }
 
     public static User patchUser(final JsonPlaceHolderApi jsonPlaceHolderApi,  int userId,  User user){

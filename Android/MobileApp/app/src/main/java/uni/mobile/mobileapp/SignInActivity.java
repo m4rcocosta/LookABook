@@ -49,6 +49,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import uni.mobile.mobileapp.rest.JsonPlaceHolderApi;
+import uni.mobile.mobileapp.rest.RestLocalMethods;
+import uni.mobile.mobileapp.rest.User;
+
 public class SignInActivity extends AppCompatActivity {
 
     private EditText emailSignIn, passwordSignIn;
@@ -64,6 +68,7 @@ public class SignInActivity extends AppCompatActivity {
     private SharedPreferences preferenceManager;
     private SharedPreferences.Editor editor;
     private static final int RC_SIGN_IN = 9001;
+    private JsonPlaceHolderApi jsonPlaceHolderApi;
 
     private static final int STORAGE_PERMISSION_CODE = 101;
 
@@ -93,6 +98,9 @@ public class SignInActivity extends AppCompatActivity {
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
+
+        //
+        jsonPlaceHolderApi = RestLocalMethods.initRetrofit();
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -163,17 +171,13 @@ public class SignInActivity extends AppCompatActivity {
                                     }
                                 } else {
                                     FirebaseUser user = auth.getCurrentUser();
-                                    user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                                        public void onComplete(@NonNull Task<GetTokenResult> task) {
-                                            if (task.isSuccessful()) {
-                                                String idToken = task.getResult().getToken();
-                                                // Send token to your backend via HTTPS
-                                                Log.i("User Token: ", idToken);
-                                            } else {
-                                                // Handle error -> task.getException();
-                                            }
-                                        }
-                                    });
+                                    User railsUser = RestLocalMethods.getUserByEmail(jsonPlaceHolderApi, user.getEmail());
+                                    if (railsUser != null) Toast.makeText(getApplicationContext(),"User with email address " + railsUser.getEmail() + " exists!" ,Toast.LENGTH_SHORT).show();
+                                    else{
+                                        Toast.makeText(getApplicationContext(),"User with email address " + user.getEmail() + " doesn't exists!" ,Toast.LENGTH_SHORT).show();
+                                        User newRailsUser = RestLocalMethods.createUser(jsonPlaceHolderApi, new User(user.getDisplayName(), "regreg", "123456789", user.getEmail(), "thstsh"));
+                                        Toast.makeText(getApplicationContext(),"User with email address " + newRailsUser.getEmail() + " created on backend!" ,Toast.LENGTH_SHORT).show();
+                                    }
                                     Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
                                     startActivity(intent);
                                     finish();
