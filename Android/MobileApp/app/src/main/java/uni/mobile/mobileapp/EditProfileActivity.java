@@ -7,13 +7,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,7 +42,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 
-public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditProfileActivity extends AppCompatActivity {
 
     private static final String TAG = EditProfileActivity.class.getSimpleName();
     private Button saveButton;
@@ -67,7 +71,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         nameEditText = findViewById(R.id.nameEditProfileEditText);
         phoneNumberEditText = findViewById(R.id.phoneNumberEditProfileEditText);
         saveButton = findViewById(R.id.saveEditProfileButton);
-        saveButton.setOnClickListener(this);
         emailTextView = findViewById(R.id.userEmailEditProfileTextView);
         emailTextView.setText(user.getEmail());
         profileImageView = findViewById(R.id.editProfileImageView);
@@ -81,6 +84,40 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 profileIntent.setType("image/*");
                 profileIntent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(profileIntent, "Select Image."), PICK_IMAGE);
+            }
+        });
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = nameEditText.getText().toString().trim();
+                String phoneNumber = phoneNumberEditText.getText().toString().trim();
+                if (TextUtils.isEmpty(name)) {
+                    Toast.makeText(getApplicationContext(), "Enter your name", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(phoneNumber)) {
+                    Toast.makeText(getApplicationContext(), "Enter your phone number", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Userinformation userinformation = new Userinformation(phoneNumber);
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(name).build();
+                user.updateProfile(profileUpdates)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    //Success
+                                }
+                            }
+                        });
+                databaseReference.child(user.getUid()).setValue(userinformation);
+                Toast.makeText(getApplicationContext(),"User information updated",Toast.LENGTH_LONG).show();
+                if (imagePath != null) sendUserImage();
+                user.sendEmailVerification();
+                Toast.makeText(getApplicationContext(),"Activate your account by clicking on the link sent at the email " + user.getEmail(),Toast.LENGTH_LONG).show();
+                userLogout();
             }
         });
     }
@@ -99,38 +136,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void userInformation(){
-        String name = nameEditText.getText().toString().trim();
-        String phoneNumber = phoneNumberEditText.getText().toString().trim();
-        Userinformation userinformation = new Userinformation(phoneNumber);
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(name).build();
-        user.updateProfile(profileUpdates)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            //Success
-                        }
-                    }
-                });
-        databaseReference.child(user.getUid()).setValue(userinformation);
-        Toast.makeText(getApplicationContext(),"User information updated",Toast.LENGTH_LONG).show();
-    }
-    @Override
-    public void onClick(View view) {
-        if (view == saveButton){
-            userInformation();
-            if (imagePath != null) sendUserData();
-            FirebaseUser user = firebaseAuth.getCurrentUser();
-            user.sendEmailVerification();
-            Toast.makeText(getApplicationContext(),"Activate your account by clicking on the link sent at the email " + user.getEmail(),Toast.LENGTH_LONG).show();
-            startActivity(new Intent(EditProfileActivity.this, SignInActivity.class));
-            finish();
-        }
-    }
-
-    private void sendUserData() {
+    private void sendUserImage() {
         // Get "User UID" from Firebase > Authentification > Users.
         StorageReference imageReference = storageReference.child(firebaseAuth.getUid()).child("Images").child("Profile Pic"); //User id/Images/Profile Pic.jpg
         UploadTask uploadTask = imageReference.putFile(imagePath);
@@ -143,6 +149,21 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Toast.makeText(EditProfileActivity.this, "Profile picture uploaded", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void userLogout() {
+        AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>(){
+
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+                editor.putBoolean("UseBiometrics", false);
+                editor.apply();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finishAffinity();
             }
         });
     }

@@ -170,7 +170,7 @@ public class SignInActivity extends AppCompatActivity {
                                     catch (Exception e) {
                                         Log.d("SIGN IN", "onComplete: " + e.getMessage());
                                     }
-                                } else {
+                                } else {/*
                                     final FirebaseUser user = auth.getCurrentUser();
                                     User railsUser = RestLocalMethods.getUserByEmail(jsonPlaceHolderApi, user.getEmail());
                                     if (railsUser != null) Toast.makeText(getApplicationContext(),"User with email address " + railsUser.getEmail() + " exists!" ,Toast.LENGTH_SHORT).show();
@@ -178,7 +178,7 @@ public class SignInActivity extends AppCompatActivity {
                                         Toast.makeText(getApplicationContext(),"User with email address " + user.getEmail() + " doesn't exists!" ,Toast.LENGTH_SHORT).show();
                                         User newRailsUser = RestLocalMethods.createUser(jsonPlaceHolderApi, new User(user.getDisplayName(), "regreg", "123456789", user.getEmail(), "thstsh"));
                                         Toast.makeText(getApplicationContext(),"User with email address " + newRailsUser.getEmail() + " created on backend!" ,Toast.LENGTH_SHORT).show();
-                                    }
+                                    }*/
                                 }
                             }
                         });
