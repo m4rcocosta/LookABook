@@ -3,6 +3,7 @@ package uni.mobile.mobileapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -194,6 +196,28 @@ public class HomeActivity extends AppCompatActivity {
         bottomNavigationSelectedItem = R.id.navigation_home;
         navigationSelectedItem = R.id.navigation_home;
         openFragment(new HomeFragment());
+
+        if (!user.isEmailVerified()) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Email verification")
+                    .setMessage("Your account is not activated since your email address is not verified. Activate your account clicking on the activation link sent at " + user.getEmail() + ". If you didn't receive the email click on 'Send' button to send another email.")
+                    .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                    .setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            user.sendEmailVerification();
+                            Toast.makeText(getApplicationContext(),"Email verification sent!" ,Toast.LENGTH_SHORT).show();
+                            userLogout();
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            userLogout();
+                        }
+                    })
+                    .show();
+        }
     }
 
     @Override

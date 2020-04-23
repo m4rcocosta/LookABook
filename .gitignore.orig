@@ -11,7 +11,11 @@
 *.class
 
 # Generated files
-bin/
+<<<<<<< HEAD
+#bin/
+=======
+
+>>>>>>> 1883c3c36c2feca449c87853680050883a583a32
 gen/
 out/
 #  Uncomment the following line in case you need and you don't have the release build type files in your app
@@ -83,4 +87,3 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
-
