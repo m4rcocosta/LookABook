@@ -1,6 +1,7 @@
 package uni.mobile.mobileapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -170,7 +171,7 @@ public class SignInActivity extends AppCompatActivity {
                                         Log.d("SIGN IN", "onComplete: " + e.getMessage());
                                     }
                                 } else {
-                                    FirebaseUser user = auth.getCurrentUser();
+                                    final FirebaseUser user = auth.getCurrentUser();
                                     User railsUser = RestLocalMethods.getUserByEmail(jsonPlaceHolderApi, user.getEmail());
                                     if (railsUser != null) Toast.makeText(getApplicationContext(),"User with email address " + railsUser.getEmail() + " exists!" ,Toast.LENGTH_SHORT).show();
                                     else{
@@ -178,9 +179,6 @@ public class SignInActivity extends AppCompatActivity {
                                         User newRailsUser = RestLocalMethods.createUser(jsonPlaceHolderApi, new User(user.getDisplayName(), "regreg", "123456789", user.getEmail(), "thstsh"));
                                         Toast.makeText(getApplicationContext(),"User with email address " + newRailsUser.getEmail() + " created on backend!" ,Toast.LENGTH_SHORT).show();
                                     }
-                                    Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
-                                    startActivity(intent);
-                                    finish();
                                 }
                             }
                         });

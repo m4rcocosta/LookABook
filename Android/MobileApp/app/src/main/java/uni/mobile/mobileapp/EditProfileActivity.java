@@ -120,17 +120,13 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View view) {
         if (view == saveButton){
-            if (imagePath == null) {
-                userInformation();
-                startActivity(new Intent(EditProfileActivity.this, HomeActivity.class));
-                finish();
-            }
-            else {
-                userInformation();
-                sendUserData();
-                startActivity(new Intent(EditProfileActivity.this, HomeActivity.class));
-                finish();
-            }
+            userInformation();
+            if (imagePath != null) sendUserData();
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            user.sendEmailVerification();
+            Toast.makeText(getApplicationContext(),"Activate your account by clicking on the link sent at the email " + user.getEmail(),Toast.LENGTH_LONG).show();
+            startActivity(new Intent(EditProfileActivity.this, SignInActivity.class));
+            finish();
         }
     }
 
