@@ -46,7 +46,8 @@ Rails.application.routes.draw do
 
       get '/allBooks',
       to: 'books#allBooks', as: "allBooks"
-      
+
+
     end
   end
 

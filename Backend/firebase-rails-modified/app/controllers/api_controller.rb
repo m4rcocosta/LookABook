@@ -6,7 +6,8 @@ class ApiController < ApplicationController
     
     
     skip_before_action :verify_authenticity_token
-    
+    wrap_parameters false 
+
 
 
 
@@ -34,7 +35,8 @@ class ApiController < ApplicationController
                         return unauthorize_wrong_token
                     end
                 end
-            end
+            end    wrap_parameters false 
+
         end
     end
     

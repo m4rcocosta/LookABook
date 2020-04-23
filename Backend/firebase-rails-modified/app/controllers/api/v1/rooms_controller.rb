@@ -38,7 +38,7 @@ class Api::V1::RoomsController < ApiController
         
         render json: {status: 'SUCCESS', message: 'Created room', data: [@room]}, status: :ok
       else
-        render error: { error: 'Error in creation'}, status: 400
+        render json: { json: 'Error in creation'}, status: 400
       end
     end
   end
@@ -50,7 +50,7 @@ class Api::V1::RoomsController < ApiController
     if @room.update(room_params)
       render json: {status: 'SUCCESS', message: 'Updated room', data: [@room]}, status: :ok
     else
-      render error: { error: 'Error in update'}, status: 400
+      render json: { json: 'Error in update'}, status: 400
     end
     
   end
@@ -61,7 +61,7 @@ class Api::V1::RoomsController < ApiController
     if @room.destroy
       render json: {status: 'SUCCESS', message: 'Destroyed room', data: [@room]}, status: :ok
     else
-      render error: { error: 'Error in destroy'}, status: 400
+      render json: { json: 'Error in destroy'}, status: 400
     end
   end
   

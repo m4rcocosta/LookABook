@@ -4,10 +4,12 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -25,8 +27,14 @@ public interface JsonPlaceHolderApi {
     @GET("get-user-by-token")
     Call<MyResponse<User>> getUserByToken();
 
-    @POST("users/")
+
+    @POST("users")
     Call<MyResponse<User>> createUser( @Body User user);
+
+    @POST("users")
+    Call<MyResponse<User>> createUser2( @Body RequestBody rb);
+
+
 
     @PATCH("users/{userId}")
     Call<MyResponse<User>> patchUser(@Path("userId") int userId,  @Body User user);
@@ -56,7 +64,7 @@ public interface JsonPlaceHolderApi {
     @GET("users/{userId}/houses/{houseId}/rooms")
     Call<MyResponse<Room>> getRooms(@Path("userId") int userId,@Path("houseId") int houseId);
 
-    @POST("users/{userId}/houses/{houseId}/rooms/{roomId}")
+    @POST("users/{userId}/houses/{houseId}/rooms")
     Call<MyResponse<Room>> createRoom(@Path("userId") int userId, @Path("houseId") int houseId, @Body Room room);
 
     @PATCH("users/{userId}/houses/{houseId}/rooms/{roomId}")
@@ -72,7 +80,7 @@ public interface JsonPlaceHolderApi {
     @GET("users/{userId}/houses/{houseId}/rooms/{roomId}/walls")
     Call<MyResponse<Wall>> getWalls(@Path("userId") int userId,@Path("houseId") int houseId,@Path("roomId") int roomId);
 
-    @POST("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}")
+    @POST("users/{userId}/houses/{houseId}/rooms/{roomId}/walls")
     Call<MyResponse<Wall>> createWall(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Body Wall wall);
 
     @PATCH("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}")

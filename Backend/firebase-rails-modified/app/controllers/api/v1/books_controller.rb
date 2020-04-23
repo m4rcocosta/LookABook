@@ -62,7 +62,7 @@ class Api::V1::BooksController < ApiController
       
       render json: {status: 'SUCCESS', message: 'Created book', data: [@book]}, status: :ok
     else
-      render error: { error: 'Error in creation'}, status: 400
+      render json: { json: 'Error in creation'}, status: 400
     end
   end
   
@@ -72,7 +72,7 @@ class Api::V1::BooksController < ApiController
     if @book.update(book_params)
       render json: {status: 'SUCCESS', message: 'Updated book', data: [@book]}, status: :ok
     else
-      render error: { error: 'Error in update'}, status: 400
+      render json: { json: 'Error in update'}, status: 400
     end
   end
   
@@ -83,7 +83,7 @@ class Api::V1::BooksController < ApiController
       
       render json: {status: 'SUCCESS', message: 'Destroyed book', data: [@book] }, status: :ok
     else
-      render error: { error: 'Error in destroy'}, status: 400
+      render json: { json: 'Error in destroy'}, status: 400
     end
   end
   

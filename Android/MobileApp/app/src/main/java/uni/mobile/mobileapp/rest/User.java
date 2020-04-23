@@ -8,6 +8,7 @@ public class User {
     String email;
     String auth_token;
 
+
     public User(String name, String provider_token, String phone, String email, String auth_token) {
         this.name = name;
         this.provider_token = provider_token;

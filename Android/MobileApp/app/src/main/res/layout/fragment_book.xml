@@ -5,21 +5,15 @@
     android:layout_height="match_parent"
     tools:context=".BookFragment">
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textColor="?android:attr/textColorPrimary"
             android:text="All of your books:" />
 
-            <ListView
-                android:id="@+id/androidList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-
-    </androidx.core.widget.NestedScrollView>
+    <ListView
+        android:id="@+id/androidList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

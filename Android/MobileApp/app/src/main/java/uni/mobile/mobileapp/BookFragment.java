@@ -11,8 +11,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import uni.mobile.mobileapp.guiAdapters.ListAdapter;
+import uni.mobile.mobileapp.rest.JsonPlaceHolderApi;
 import uni.mobile.mobileapp.rest.RestLocalMethods;
+import uni.mobile.mobileapp.rest.User;
 
 
 public class BookFragment extends Fragment {
@@ -24,10 +28,14 @@ public class BookFragment extends Fragment {
 
 
     }
-/*
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
+        JsonPlaceHolderApi js = RestLocalMethods.initRetrofit();
+        User back=RestLocalMethods.createUser(js,new User("mardfaio","","","asdsad@asasdd.com","zzxz<x<zx"));
+
+        /*
         books= RestLocalMethods
 
         ListView lView = (ListView) view.findViewById(R.id.androidList);
@@ -44,6 +52,7 @@ public class BookFragment extends Fragment {
 
             }
         });
+*/
 
-    }*/
+    }
 }

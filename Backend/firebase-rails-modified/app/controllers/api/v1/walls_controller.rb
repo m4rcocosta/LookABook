@@ -37,7 +37,7 @@ class Api::V1::WallsController < ApiController
       if @wall.save
         render json: {status: 'SUCCESS', message: 'Created wall', data: [@wall]}, status: :ok
       else
-        render error: { error: 'Error in creation'}, status: 400
+        render json: { json: 'Error in creation'}, status: 400
    end
   end
 
@@ -47,7 +47,7 @@ class Api::V1::WallsController < ApiController
     if @wall.update(wall_params)
     render json: {status: 'SUCCESS', message: 'Updated wall', data: [@wall]}, status: :ok
   else
-    render error: { error: 'Error in update'}, status: 400
+    render json: { json: 'Error in update'}, status: 400
   end
   end
 
@@ -57,7 +57,7 @@ class Api::V1::WallsController < ApiController
     if @wall.destroy
       render json: {status: 'SUCCESS', message: 'Destroyed wall', data: [@wall]}, status: :ok
     else
-      render error: { error: 'Error in destroy'}, status: 400
+      render json: { json: 'Error in destroy'}, status: 400
 
     end
   end

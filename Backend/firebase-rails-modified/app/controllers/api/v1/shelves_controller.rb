@@ -39,7 +39,7 @@ class Api::V1::ShelvesController < ApiController
       
       render json: {status: 'SUCCESS', message: 'Created shelf', data: [@shelf]}, status: :ok
     else
-      render error: { error: 'Error in creation'}, status: 400
+      render json: { json: 'Error in creation'}, status: 400
       
     end
   end
@@ -52,7 +52,7 @@ class Api::V1::ShelvesController < ApiController
       
       render json: {status: 'SUCCESS', message: 'Updated shelf', data: [@shelf]}, status: :ok
     else
-      render error: { error: 'Error in update'}, status: 400  
+      render json: { json: 'Error in update'}, status: 400  
     end
   end
   
@@ -63,7 +63,7 @@ class Api::V1::ShelvesController < ApiController
       
       render json: {status: 'SUCCESS', message: 'Destroyed shelf', data: [@shelf]}, status: :ok
     else
-      render error: { error: 'Error in destroy'}, status: 400
+      render json: { json: 'Error in destroy'}, status: 400
     end
   end
   
