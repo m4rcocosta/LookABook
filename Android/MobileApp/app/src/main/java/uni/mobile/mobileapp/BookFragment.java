@@ -9,14 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
 import uni.mobile.mobileapp.guiAdapters.ListAdapter;
+import uni.mobile.mobileapp.rest.House;
 import uni.mobile.mobileapp.rest.JsonPlaceHolderApi;
 import uni.mobile.mobileapp.rest.RestLocalMethods;
 import uni.mobile.mobileapp.rest.User;
+import uni.mobile.mobileapp.rest.Wall;
 
 
 public class BookFragment extends Fragment {
@@ -32,9 +35,13 @@ public class BookFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        JsonPlaceHolderApi js = RestLocalMethods.initRetrofit();
-        User back=RestLocalMethods.createUser(js,new User("mardfaio","","","asdsad@asasdd.com","zzxz<x<zx"));
+        TextView t= view.findViewById(R.id.bookTxt);
+        RestLocalMethods.initRetrofit(this.getContext());
 
+        Wall w = RestLocalMethods.createWall(1,6,1,new Wall("stranaHouse") );
+        //t.setText(h.getName());
+        User back=RestLocalMethods.createUser(new User("mardzxcfaio","","","asdxzcsad@asasdd.com","zzxczxz<x<zx"));
+        //t.setText( back.getEmail() );
         /*
         books= RestLocalMethods
 

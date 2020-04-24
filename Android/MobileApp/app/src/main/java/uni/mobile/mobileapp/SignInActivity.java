@@ -70,7 +70,7 @@ public class SignInActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
     private static final int RC_SIGN_IN = 9001;
     private JsonPlaceHolderApi jsonPlaceHolderApi;
-
+    private String idToken;
     private static final int STORAGE_PERMISSION_CODE = 101;
 
     @Override
@@ -101,7 +101,7 @@ public class SignInActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         //
-        jsonPlaceHolderApi = RestLocalMethods.initRetrofit();
+         RestLocalMethods.initRetrofit(this);
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -170,15 +170,19 @@ public class SignInActivity extends AppCompatActivity {
                                     catch (Exception e) {
                                         Log.d("SIGN IN", "onComplete: " + e.getMessage());
                                     }
-                                } else {/*
+                                } else {
                                     final FirebaseUser user = auth.getCurrentUser();
-                                    User railsUser = RestLocalMethods.getUserByEmail(jsonPlaceHolderApi, user.getEmail());
+                                    User railsUser = RestLocalMethods.getUserByEmail( user.getEmail());
                                     if (railsUser != null) Toast.makeText(getApplicationContext(),"User with email address " + railsUser.getEmail() + " exists!" ,Toast.LENGTH_SHORT).show();
                                     else{
                                         Toast.makeText(getApplicationContext(),"User with email address " + user.getEmail() + " doesn't exists!" ,Toast.LENGTH_SHORT).show();
-                                        User newRailsUser = RestLocalMethods.createUser(jsonPlaceHolderApi, new User(user.getDisplayName(), "regreg", "123456789", user.getEmail(), "thstsh"));
-                                        Toast.makeText(getApplicationContext(),"User with email address " + newRailsUser.getEmail() + " created on backend!" ,Toast.LENGTH_SHORT).show();
-                                    }*/
+                                        User newRailsUser = RestLocalMethods.createUser( new User(user.getDisplayName(), "", user.getPhoneNumber(), user.getEmail(), idToken));
+                                        if(newRailsUser!=null)
+                                            Toast.makeText(getApplicationContext(),"User with email address " + newRailsUser.getEmail() + " created on backend!" ,Toast.LENGTH_SHORT).show();
+                                        else
+                                            Toast.makeText(getApplicationContext(),"Problem with api result in creation of user" ,Toast.LENGTH_SHORT).show();
+
+                                    }
                                 }
                             }
                         });
@@ -252,7 +256,7 @@ public class SignInActivity extends AppCompatActivity {
                             user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                                 public void onComplete(@NonNull Task<GetTokenResult> task) {
                                     if (task.isSuccessful()) {
-                                        String idToken = task.getResult().getToken();
+                                        idToken = task.getResult().getToken();
                                         // Send token to your backend via HTTPS
                                         Log.i("User Token: ", idToken);
                                     } else {

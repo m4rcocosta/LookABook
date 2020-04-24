@@ -1,5 +1,6 @@
 package uni.mobile.mobileapp.rest;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,9 +48,14 @@ public class RestLocalMethods {
     private static List<Shelf> shelves;
     private static List<Book> books;
     private static Gson gson= new Gson();
+    private static JsonPlaceHolderApi jsonPlaceHolderApi;
+    private static Context context;
 
-
-    public static JsonPlaceHolderApi initRetrofit() {
+    //To build jsonPlaceHolderApi object handling REST API
+    public static Boolean initRetrofit(Context ctx) {
+        return initRetrofit(ctx,"");
+    }
+    public static Boolean initRetrofit(Context ctx,final String token) {
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -58,7 +64,7 @@ public class RestLocalMethods {
                 Request original = chain.request();
 
                 Request request = original.newBuilder()
-                        .header("TOKEN", "")
+                        .header("TOKEN", token)
                         .header("Accept", "application/json")
                         .method(original.method(), original.body())
                         .build();
@@ -91,14 +97,21 @@ public class RestLocalMethods {
                 .build();
 
 
-        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        return jsonPlaceHolderApi;
+        jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+        context=ctx;
+        return true;
+    }
+
+
+    public static void changeToken(){
+
     }
 
 
     /*
-    * Stringifier
+    * HELPERS
      */
+    // To stringify from object to json
     public static String jsonize(Object obj){
         return gson.toJson(obj);
     }
@@ -108,7 +121,7 @@ public class RestLocalMethods {
      */
     public static void getAllObjectsFromUser(final TextView textViewResult ,final JsonPlaceHolderApi jsonPlaceHolderApi,Integer userId){
         //Todo remove this
-        getHouses(textViewResult, jsonPlaceHolderApi, userId,true);
+        getHouses(textViewResult, userId,true);
     }
 
     /*
@@ -116,15 +129,13 @@ public class RestLocalMethods {
      */
 
 
-    public static User getUserByEmail(final JsonPlaceHolderApi jsonPlaceHolderApi,  String email){
+    public static User getUserByEmail( String email){
         users = null;
         Call<MyResponse<User>> call = jsonPlaceHolderApi.getUserByEmail(email);
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
             public void onResponse(Call<MyResponse<User>> call, Response<MyResponse<User>> response) {
-                if(!response.isSuccessful()){
-                    return;
-                }
+                checkResponse(response);
 
                 users = response.body().getData();
             }
@@ -141,9 +152,8 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
             public void onResponse(Call<MyResponse<User>> call, Response<MyResponse<User>> response) {
-                if(!response.isSuccessful()){
-                    return;
-                }
+                checkResponse(response);
+
                 users = response.body().getData();
             }
 
@@ -154,7 +164,7 @@ public class RestLocalMethods {
 
     }
 
-    public static User createUser( final JsonPlaceHolderApi jsonPlaceHolderApi,  User user){
+    public static User createUser( User user){
         users = null;
 //        RequestBody rb= RequestBody.create(MediaType.parse("application/json"),jsonize(user));
 //        Log.d("rb",jsonize(user));
@@ -163,9 +173,8 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
             public void onResponse(Call<MyResponse<User>> call, Response<MyResponse<User>> response) {
-                if(!response.isSuccessful()){
-                    return;
-                }
+                checkResponse(response);
+
                 users = response.body().getData();
             }
 
@@ -176,15 +185,14 @@ public class RestLocalMethods {
         else return null;
     }
 
-    public static User patchUser(final JsonPlaceHolderApi jsonPlaceHolderApi,  int userId,  User user){
+    public static User patchUser(  int userId,  User user){
         Call<MyResponse<User>> call = jsonPlaceHolderApi.patchUser(userId,user);
 
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
             public void onResponse(Call<MyResponse<User>> call, Response<MyResponse<User>> response) {
-                if(!response.isSuccessful()){
-                    return;
-                }
+                checkResponse(response);
+
 
                 users = response.body().getData();
             }
@@ -195,14 +203,13 @@ public class RestLocalMethods {
         return users.get(0);
     }
 
-    public static User deleteUser(final JsonPlaceHolderApi jsonPlaceHolderApi,  int userId){
+    public static User deleteUser(  int userId){
         Call<MyResponse<User>> call = jsonPlaceHolderApi.deleteUser(userId);
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
             public void onResponse(Call<MyResponse<User>> call, Response<MyResponse<User>> response) {
-                if(!response.isSuccessful()){
-                    return;
-                }
+                checkResponse(response);
+
 
                 users = response.body().getData();
             }
@@ -219,22 +226,21 @@ public class RestLocalMethods {
 
 
     // GET (index)
-    public  static List<House> getHouses(final TextView textViewResult, final JsonPlaceHolderApi jsonPlaceHolderApi, final Integer userId, final Boolean recursiveSearch  ){
+    public  static List<House> getHouses(final TextView textViewResult,  final Integer userId, final Boolean recursiveSearch  ){
         houses=null;
         Call<MyResponse<House>> call = jsonPlaceHolderApi.getHouses(userId);
         call.enqueue(new Callback<MyResponse<House>>() {
             @Override
             public void onResponse(Call<MyResponse<House>> call, Response<MyResponse<House>> response) {
-                if(!response.isSuccessful()){
-                    return;
-                }
+                checkResponse(response);
+
 
                 houses = response.body().getData();
 
                 for(House house: houses){
                     objectsIds.put("houses",house.getId());
                     if(recursiveSearch){
-                        getRooms(textViewResult,jsonPlaceHolderApi,userId,house.getId(),true);
+                        getRooms(textViewResult,userId,house.getId(),true);
                     }
 
                 }
@@ -252,62 +258,64 @@ public class RestLocalMethods {
     }
 
     //POST
-    private void createHouse( final JsonPlaceHolderApi jsonPlaceHolderApi, final Integer userId, House house){
-
+    public static House createHouse(  final Integer userId, House house){
+        houses=null;
         Call<MyResponse<House>> call = jsonPlaceHolderApi.createHouse(userId,house);
 
         call.enqueue(new Callback<MyResponse<House>>() {
             @Override
             public void onResponse(Call<MyResponse<House>> call, Response<MyResponse<House>> response) {
-                if(! response.isSuccessful()){
-                    return;
-                }
-                List<House> hres = response.body().getData();
+                checkResponse(response);
+
+                houses = response.body().getData();
                 //TODO print changes
             }
 
             @Override
             public void onFailure(Call<MyResponse<House>> call, Throwable t) {
-                //TODO print error
+                Toast.makeText(context,"API response failed: "+t.getMessage() ,Toast.LENGTH_LONG).show();
+
             }
         });
+        if(houses!=null) return houses.get(0);
+        else return null;
     }
     //PATCH
-    private void patchHouse( final JsonPlaceHolderApi jsonPlaceHolderApi, final Integer userId,final Integer houseId,House patchedHouse){
+    public static void patchHouse(  final Integer userId,final Integer houseId,House patchedHouse){
 
         Call<MyResponse<House>> call = jsonPlaceHolderApi.patchHouse(userId,houseId,patchedHouse);
 
         call.enqueue(new Callback<MyResponse<House>>() {
             @Override
             public void onResponse(Call<MyResponse<House>> call, Response<MyResponse<House>> response) {
-                if(! response.isSuccessful()){
-                    return;
-                }
+                checkResponse(response);
+
                 List<House> hres = response.body().getData();
                 //TODO print changes
             }
 
             @Override
             public void onFailure(Call<MyResponse<House>> call, Throwable t) {
-                //TODO print error
+                Toast.makeText(context,"API response failed: "+t.getMessage() ,Toast.LENGTH_LONG).show();
+
             }
         });
     }
     //DELETE
-    private void deleteHouse( final JsonPlaceHolderApi jsonPlaceHolderApi, final Integer userId,final Integer houseId){
+    public static void deleteHouse(  final Integer userId,final Integer houseId){
         Call<MyResponse<House>> call = jsonPlaceHolderApi.deleteHouse(userId,houseId);
         call.enqueue(new Callback<MyResponse<House>>() {
             @Override
             public void onResponse(Call<MyResponse<House>> call, Response<MyResponse<House>> response) {
-                if (!response.isSuccessful()) {
-                    return;
-                }
+                checkResponse(response);
+
                 List<House> hres = response.body().getData();
                 //TODO print changes
             }
             @Override
             public void onFailure(Call<MyResponse<House>> call, Throwable t) {
-                //TODO print error
+                Toast.makeText(context,"API response failed: "+t.getMessage() ,Toast.LENGTH_LONG).show();
+
             }
         });
     }
@@ -319,23 +327,21 @@ public class RestLocalMethods {
 
 
     //GET
-    public static List<Room> getRooms(final TextView textViewResult, final JsonPlaceHolderApi jsonPlaceHolderApi, final Integer userId  ,final Integer houseId   , final Boolean recursiveSearch ){
+    public static List<Room> getRooms(final TextView textViewResult,  final Integer userId  ,final Integer houseId   , final Boolean recursiveSearch ){
 
         rooms=null;
         Call<MyResponse<Room>> call = jsonPlaceHolderApi.getRooms(userId,houseId);
         call.enqueue(new Callback<MyResponse<Room>>() {
             @Override
             public void onResponse(Call<MyResponse<Room>> call, Response<MyResponse<Room>> response) {
-                if (!response.isSuccessful()) {
-                    Log.d("myrest" , "room Code:"+String.valueOf(response.code()));
-                    return;
-                }
+                checkResponse(response);
+
                 rooms = response.body().getData();
 
                 for (Room room : rooms) {
                     Log.d("myrest", "room:"+room.getId() );
                     if(recursiveSearch){
-                        getWalls(textViewResult,jsonPlaceHolderApi,userId,houseId,room.getId(),true);
+                        getWalls(textViewResult,userId,houseId,room.getId(),true);
                     }
 
 
@@ -354,62 +360,64 @@ public class RestLocalMethods {
     }
 
     //POST
-    private void createRoom( final JsonPlaceHolderApi jsonPlaceHolderApi,  final Integer userId ,final Integer houseId, Room room){
-
+    public static Room createRoom(   final Integer userId ,final Integer houseId, Room room){
+        rooms=null;
         Call<MyResponse<Room>> call = jsonPlaceHolderApi.createRoom(userId,houseId,room);
 
         call.enqueue(new Callback<MyResponse<Room>>() {
             @Override
             public void onResponse(Call<MyResponse<Room>> call, Response<MyResponse<Room>> response) {
-                if(! response.isSuccessful()){
-                    return;
-                }
-                List<Room> hres = response.body().getData();
+                checkResponse(response);
+
+                rooms = response.body().getData();
                 //TODO print changes
             }
 
             @Override
             public void onFailure(Call<MyResponse<Room>> call, Throwable t) {
-                //TODO print error
+                Toast.makeText(context,"API response failed: "+t.getMessage() ,Toast.LENGTH_LONG).show();
+
             }
         });
+        if(rooms!=null) return rooms.get(0);
+        else return null;
     }
     //PATCH
-    private void patchRoom( final JsonPlaceHolderApi jsonPlaceHolderApi, final Integer userId,final Integer houseId,final Integer roomId,Room patchedRoom){
+    public static void patchRoom(  final Integer userId,final Integer houseId,final Integer roomId,Room patchedRoom){
 
         Call<MyResponse<Room>> call = jsonPlaceHolderApi.patchRoom(userId,houseId,roomId,patchedRoom);
 
         call.enqueue(new Callback<MyResponse<Room>>() {
             @Override
             public void onResponse(Call<MyResponse<Room>> call, Response<MyResponse<Room>> response) {
-                if(! response.isSuccessful()){
-                    return;
-                }
+                checkResponse(response);
+
                 List<Room> hres = response.body().getData();
                 //TODO print changes
             }
 
             @Override
             public void onFailure(Call<MyResponse<Room>> call, Throwable t) {
-                //TODO print error
+                Toast.makeText(context,"API response failed: "+t.getMessage() ,Toast.LENGTH_LONG).show();
+
             }
         });
     }
     //DELETE
-    private void deleteRoom( final JsonPlaceHolderApi jsonPlaceHolderApi, final Integer userId, final Integer houseId, final Integer roomId){
+    public static void deleteRoom(  final Integer userId, final Integer houseId, final Integer roomId){
         Call<MyResponse<Room>> call = jsonPlaceHolderApi.deleteRoom(userId,houseId,roomId);
         call.enqueue(new Callback<MyResponse<Room>>() {
             @Override
             public void onResponse(Call<MyResponse<Room>> call, Response<MyResponse<Room>> response) {
-                if (!response.isSuccessful()) {
-                    return;
-                }
+                checkResponse(response);
+
                 List<Room> hres = response.body().getData();
                 //TODO print changes
             }
             @Override
             public void onFailure(Call<MyResponse<Room>> call, Throwable t) {
-                //TODO print error
+                Toast.makeText(context,"API response failed: "+t.getMessage() ,Toast.LENGTH_LONG).show();
+
             }
         });
     }
@@ -419,7 +427,7 @@ public class RestLocalMethods {
      */
 
     //GET
-    public  static List<Wall> getWalls(final TextView textViewResult, final JsonPlaceHolderApi jsonPlaceHolderApi,
+    public  static List<Wall> getWalls(final TextView textViewResult,
                                        final Integer userId,final Integer houseId,final Integer roomId ,final Boolean recursiveSearch ){
         Call<MyResponse<Wall>> call = jsonPlaceHolderApi.getWalls(userId,houseId,  roomId);
 
@@ -427,10 +435,8 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Wall>>() {
             @Override
             public void onResponse(Call<MyResponse<Wall>> call, Response<MyResponse<Wall>> response) {
-                if(!response.isSuccessful()){
-                    Log.d("myrest" , "wall Code:"+ response.code() );
-                    return;
-                }
+                checkResponse(response);
+
                 walls = response.body().getData();
                 String content = "\n WALLS" + "\n";
 
@@ -440,7 +446,7 @@ public class RestLocalMethods {
                     Log.d("myrest" , "wall "+ wall.getName() );
 
                     if(recursiveSearch){
-                        getShelves(textViewResult,jsonPlaceHolderApi,userId,houseId,roomId,wall.getId(),true);
+                        getShelves(textViewResult,userId,houseId,roomId,wall.getId(),true);
 
                     }
 
@@ -458,31 +464,32 @@ public class RestLocalMethods {
         return walls;
     }
 
-    //POST
-    private void createWall( final JsonPlaceHolderApi jsonPlaceHolderApi,  final Integer userId ,final Integer houseId,
-                             Integer roomId, Wall wall){
-
+    //POST  (not Trump one)
+    public static Wall createWall(final Integer userId , final Integer houseId,
+                                  Integer roomId, Wall wall){
+        walls=null;
         Call<MyResponse<Wall>> call = jsonPlaceHolderApi.createWall(userId,houseId,roomId,wall);
 
         call.enqueue(new Callback<MyResponse<Wall>>() {
             @Override
             public void onResponse(Call<MyResponse<Wall>> call, Response<MyResponse<Wall>> response) {
-                if(! response.isSuccessful()){
-                    return;
-                }
-                List<Wall> hres = response.body().getData();
+                checkResponse(response);
+
+                walls = response.body().getData();
                 //TODO print changes
             }
 
             @Override
             public void onFailure(Call<MyResponse<Wall>> call, Throwable t) {
-                //TODO print error
+                Toast.makeText(context,"API response failed: "+t.getMessage() ,Toast.LENGTH_LONG).show();
             }
         });
+        if(walls!= null) return walls.get(0);
+        else return null;
     }
 
     //PATCH
-    private void patchWall( final JsonPlaceHolderApi jsonPlaceHolderApi, final Integer userId,final Integer houseId,
+    public static void patchWall(  final Integer userId,final Integer houseId,
                             Integer wallId, Integer roomId,Wall patchedWall){
 
         Call<MyResponse<Wall>> call = jsonPlaceHolderApi.patchWall(userId,houseId,roomId,wallId,patchedWall);
@@ -490,34 +497,34 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Wall>>() {
             @Override
             public void onResponse(Call<MyResponse<Wall>> call, Response<MyResponse<Wall>> response) {
-                if(! response.isSuccessful()){
-                    return;
-                }
+                checkResponse(response);
+
                 List<Wall> hres = response.body().getData();
                 //TODO print changes
             }
 
             @Override
             public void onFailure(Call<MyResponse<Wall>> call, Throwable t) {
-                //TODO print error
+                Toast.makeText(context,"API response failed: "+t.getMessage() ,Toast.LENGTH_LONG).show();
+
             }
         });
     }
     //DELETE
-    private void deleteWall( final JsonPlaceHolderApi jsonPlaceHolderApi, final Integer userId, final Integer houseId, final Integer roomId, final Integer wallId){
+    public static void deleteWall(  final Integer userId, final Integer houseId, final Integer roomId, final Integer wallId){
         Call<MyResponse<Wall>> call = jsonPlaceHolderApi.deleteWall(userId,houseId,roomId,wallId);
         call.enqueue(new Callback<MyResponse<Wall>>() {
             @Override
             public void onResponse(Call<MyResponse<Wall>> call, Response<MyResponse<Wall>> response) {
-                if (!response.isSuccessful()) {
-                    return;
-                }
+                checkResponse(response);
+
                 List<Wall> hres = response.body().getData();
                 //TODO print changes
             }
             @Override
             public void onFailure(Call<MyResponse<Wall>> call, Throwable t) {
-                //TODO print error
+                Toast.makeText(context,"API response failed: "+t.getMessage() ,Toast.LENGTH_LONG).show();
+
             }
         });
     }
@@ -529,7 +536,7 @@ public class RestLocalMethods {
 
     //GET
 
-    public  static List<Shelf> getShelves(final TextView textViewResult, final JsonPlaceHolderApi jsonPlaceHolderApi,
+    public  static List<Shelf> getShelves(final TextView textViewResult,
                                           Integer userId, final Integer houseId, final Integer roomId , final Integer wallId   , final Boolean recursiveSearch ){
         shelves=null;
         Call<MyResponse<Shelf>> call = jsonPlaceHolderApi.getShelves(userId,houseId, roomId, wallId);
@@ -537,10 +544,8 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Shelf>>() {
             @Override
             public void onResponse(Call<MyResponse<Shelf>> call, Response<MyResponse<Shelf>> response) {
-                if(!response.isSuccessful()){
-                    Log.d("myrest", "shelf Code: " + response.code() );
-                    return;
-                }
+                checkResponse(response);
+
                 shelves = response.body().getData();
 
                 for(Shelf shelf: shelves){
@@ -549,7 +554,7 @@ public class RestLocalMethods {
                     Log.d("myrest", "shelf Code: " + shelf.getName());
 
                     if(recursiveSearch){
-                        getShelves(textViewResult,jsonPlaceHolderApi,houseId,roomId,wallId,shelf.getId(),true);
+                        getShelves(textViewResult,houseId,roomId,wallId,shelf.getId(),true);
 
                     }
 
@@ -568,7 +573,7 @@ public class RestLocalMethods {
     }
 
     //POST
-    private void createShelf( final JsonPlaceHolderApi jsonPlaceHolderApi,  final Integer userId ,Integer houseId,
+    public static Shelf createShelf(   final Integer userId ,Integer houseId,
                               Integer roomId, Integer wallId, Shelf shelf){
 
         Call<MyResponse<Shelf>> call = jsonPlaceHolderApi.createShelf(userId,houseId, roomId, wallId, shelf);
@@ -576,22 +581,24 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Shelf>>() {
             @Override
             public void onResponse(Call<MyResponse<Shelf>> call, Response<MyResponse<Shelf>> response) {
-                if(! response.isSuccessful()){
-                    return;
-                }
-                List<Shelf> hres = response.body().getData();
+                checkResponse(response);
+
+                shelves = response.body().getData();
                 //TODO print changes
             }
 
             @Override
             public void onFailure(Call<MyResponse<Shelf>> call, Throwable t) {
-                //TODO print error
+                Toast.makeText(context,"API response failed: "+t.getMessage() ,Toast.LENGTH_LONG).show();
+
             }
         });
+        if (shelves!=null) return shelves.get(0);
+        else return null;
     }
 
     //PATCH
-    private void patchShelf( final JsonPlaceHolderApi jsonPlaceHolderApi, final Integer userId,final Integer houseId,
+    public static void patchShelf(  final Integer userId,final Integer houseId,
                              Integer roomId,Integer wallId,Integer shelfId, Shelf patchedShelf){
 
         Call<MyResponse<Shelf>> call = jsonPlaceHolderApi.patchShelf(userId, houseId, roomId, shelfId, wallId, patchedShelf);
@@ -599,34 +606,34 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Shelf>>() {
             @Override
             public void onResponse(Call<MyResponse<Shelf>> call, Response<MyResponse<Shelf>> response) {
-                if(! response.isSuccessful()){
-                    return;
-                }
+                checkResponse(response);
+
                 List<Shelf> hres = response.body().getData();
                 //TODO print changes
             }
 
             @Override
             public void onFailure(Call<MyResponse<Shelf>> call, Throwable t) {
-                //TODO print error
+                Toast.makeText(context,"API response failed: "+t.getMessage() ,Toast.LENGTH_LONG).show();
+
             }
         });
     }
     //DELETE
-    private void deleteShelf( final JsonPlaceHolderApi jsonPlaceHolderApi, Integer userId, final Integer houseId, Integer roomId, Integer wallId ,Integer shelfId){
+    public static void deleteShelf(  Integer userId, final Integer houseId, Integer roomId, Integer wallId ,Integer shelfId){
         Call<MyResponse<Shelf>> call = jsonPlaceHolderApi.deleteShelf(userId,houseId,roomId, wallId, shelfId);
         call.enqueue(new Callback<MyResponse<Shelf>>() {
             @Override
             public void onResponse(Call<MyResponse<Shelf>> call, Response<MyResponse<Shelf>> response) {
-                if (!response.isSuccessful()) {
-                    return;
-                }
+                checkResponse(response);
+
                 List<Shelf> hres = response.body().getData();
                 //TODO print changes
             }
             @Override
             public void onFailure(Call<MyResponse<Shelf>> call, Throwable t) {
-                //TODO print error
+                Toast.makeText(context,"API response failed: "+t.getMessage() ,Toast.LENGTH_LONG).show();
+
             }
         });
     }
@@ -646,10 +653,8 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Book>>() {
             @Override
             public void onResponse(Call<MyResponse<Book>> call, Response<MyResponse<Book>> response) {
-                if(!response.isSuccessful()){
-                    Log.d("myrest", "book Code: " + response.code());
-                    return;
-                }
+                checkResponse(response);
+
                 books = response.body().getData();
 
                 for(Book book: books){
@@ -679,10 +684,8 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Book>>() {
             @Override
             public void onResponse(Call<MyResponse<Book>> call, Response<MyResponse<Book>> response) {
-                if(!response.isSuccessful()){
-                    Log.d("myrest", "book Code: " + response.code());
-                    return;
-                }
+                checkResponse(response);
+
                 books = response.body().getData();
 
                 for(Book book: books){
@@ -704,30 +707,33 @@ public class RestLocalMethods {
     }
 
     //POST
-    private void createBook( final JsonPlaceHolderApi jsonPlaceHolderApi,  final Integer userId ,final Integer houseId,
+    public static Book createBook(   final Integer userId ,final Integer houseId,
                              final Integer roomId, final Integer wallId,  final Integer shelfId ,Book book){
 
+        books=null;
         Call<MyResponse<Book>> call = jsonPlaceHolderApi.createBook(userId,houseId, roomId, wallId, shelfId,book);
 
         call.enqueue(new Callback<MyResponse<Book>>() {
             @Override
             public void onResponse(Call<MyResponse<Book>> call, Response<MyResponse<Book>> response) {
-                if(! response.isSuccessful()){
-                    return;
-                }
-                List<Book> hres = response.body().getData();
+                checkResponse(response);
+
+                books = response.body().getData();
                 //TODO print changes
             }
 
             @Override
             public void onFailure(Call<MyResponse<Book>> call, Throwable t) {
-                //TODO print error
+                Toast.makeText(context,"API response failed: "+t.getMessage() ,Toast.LENGTH_LONG).show();
+
             }
         });
+        if(books!=null) return books.get(0);
+        else return null;
     }
 
     //PATCH
-    private void patchBook( final JsonPlaceHolderApi jsonPlaceHolderApi, final Integer userId,final Integer houseId,
+    public static void patchBook(  final Integer userId,final Integer houseId,
                             final Integer roomId,final Integer wallId, final Integer shelfId,final Integer bookId, Book patchedBook){
 
         Call<MyResponse<Book>> call = jsonPlaceHolderApi.patchBook(userId, houseId, roomId, wallId, shelfId,bookId, patchedBook);
@@ -735,41 +741,46 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Book>>() {
             @Override
             public void onResponse(Call<MyResponse<Book>> call, Response<MyResponse<Book>> response) {
-                if(! response.isSuccessful()){
-                    return;
-                }
+                checkResponse(response);
+
                 List<Book> hres = response.body().getData();
                 //TODO print changes
             }
 
             @Override
             public void onFailure(Call<MyResponse<Book>> call, Throwable t) {
-                //TODO print error
+                Toast.makeText(context,"API response failed: "+t.getMessage() ,Toast.LENGTH_LONG).show();
+
             }
         });
     }
 
     //DELETE
-    private void deleteBook( final JsonPlaceHolderApi jsonPlaceHolderApi, final Integer userId, final Integer houseId, final Integer roomId,
+    public static void deleteBook(  final Integer userId, final Integer houseId, final Integer roomId,
                              final Integer wallId ,final Integer shelfId, final Integer bookId){
         Call<MyResponse<Book>> call = jsonPlaceHolderApi.deleteBook(userId,houseId,roomId, wallId,shelfId ,bookId);
         call.enqueue(new Callback<MyResponse<Book>>() {
             @Override
             public void onResponse(Call<MyResponse<Book>> call, Response<MyResponse<Book>> response) {
-                if (!response.isSuccessful()) {
-                    return;
-                }
+                checkResponse(response);
+
                 List<Book> hres = response.body().getData();
                 //TODO print changes
             }
             @Override
-            public void onFailure(Call<MyResponse<Book>> call, Throwable t) {
-                //TODO print error
+            public  void onFailure(Call<MyResponse<Book>> call, Throwable t) {
+                Toast.makeText(context,"API response failed: "+t.getMessage() ,Toast.LENGTH_LONG).show();
+
             }
         });
     }
 
-
+private static void checkResponse(Response response){
+    if(! response.isSuccessful()){
+        Toast.makeText(context,"API response unsuccessful" ,Toast.LENGTH_SHORT).show();
+        return;
+    }
+}
 
 
 }

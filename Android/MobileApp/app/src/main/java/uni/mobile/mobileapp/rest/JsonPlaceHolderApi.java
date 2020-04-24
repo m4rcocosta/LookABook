@@ -31,10 +31,6 @@ public interface JsonPlaceHolderApi {
     @POST("users")
     Call<MyResponse<User>> createUser( @Body User user);
 
-    @POST("users")
-    Call<MyResponse<User>> createUser2( @Body RequestBody rb);
-
-
 
     @PATCH("users/{userId}")
     Call<MyResponse<User>> patchUser(@Path("userId") int userId,  @Body User user);
