@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,6 @@ public class BookFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        TextView t= view.findViewById(R.id.bookTxt);
         RestLocalMethods.initRetrofit(this.getContext());
 
        /* Wall w = RestLocalMethods.createWall(1,6,1,new Wall("stranaHouse") );
@@ -50,12 +50,9 @@ public class BookFragment extends Fragment {
         User back=RestLocalMethods.createUser(new User("mardzxcfaio","","","asdxzcsad@asasdd.com","zzxczxz<x<zx"));
         //t.setText( back.getEmail() );*/
 
-        RestLocalMethods.changeToken("fooToken");
-
-        List<Book> books;
+        RestLocalMethods.changeToken("fooToken");   //TODO pass correct token (user)
 
         Call<MyResponse<Book>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getAllBooks(1); //TODO correct userID
-
         callAsync.enqueue(new Callback<MyResponse<Book>>()
         {
 
@@ -64,49 +61,47 @@ public class BookFragment extends Fragment {
             {
                 if (response.isSuccessful())
                 {
-                    books = response.body().getData();
 
-                    //API response
-                    System.out.println(apiResponse);
+                    List<Book> books = response.body().getData();
+
+                    ArrayList<String> titles = new ArrayList<String>();
+                    ArrayList<String> authors = new ArrayList<String>();
+                    for(Book b: books){
+                        titles.add( b.getTitle() ) ;
+                        authors.add(b.getAuthors());
+                    }
+
+                    ListView lView = (ListView) view.findViewById(R.id.androidList);
+
+                    ListAdapter lAdapter = new ListAdapter(getContext(), titles, authors, null,R.drawable.ic_book_red);
+
+                    lView.setAdapter(lAdapter);
+                    Toast.makeText(getContext(), "Found " + books.size() +" books", Toast.LENGTH_SHORT).show();
+                    Log.d("BBBB",titles.toString());
+                    lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                            Toast.makeText(getContext(), titles.get(i), Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+
+
                 }
                 else
                 {
-                    System.out.println("Request Error :: " + response.errorBody());
+                    Log.d("BBBB","Request Error :: " + response.errorBody());
                 }
             }
 
             @Override
-            public void onFailure(Call<UserApiResponse> call, Throwable t)
+            public void onFailure(Call<MyResponse<Book>> call, Throwable t)
             {
-                System.out.println("Network Error :: " + t.getLocalizedMessage());
+                Log.d("BBBB","Request Error :: " + t.getMessage() );
             }
         });
 
-
-
-        if(books==null) {
-            Log.d("BBBB","NO BOOKS!");
-            return;
-        }
-
-        String titles[] = (String []) books.stream().map(b -> b.getTitle()).toArray();
-        String authors[] = (String []) books.stream().map( b -> b.getAuthors()).toArray();
-
-        ListView lView = (ListView) view.findViewById(R.id.androidList);
-
-        ListAdapter lAdapter = new ListAdapter(this.getContext(), titles, authors, null,R.drawable.ic_book_red);
-
-        lView.setAdapter(lAdapter);
-        Toast.makeText(getContext(), "Found " + books.size() +" books", Toast.LENGTH_SHORT).show();
-        Log.d("BBBB",titles.toString());
-        lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                Toast.makeText(getContext(), titles[i], Toast.LENGTH_SHORT).show();
-
-            }
-        });
 
 
     }

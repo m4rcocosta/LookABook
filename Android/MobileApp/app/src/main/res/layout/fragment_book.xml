@@ -5,13 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".BookFragment">
 
-    <TextView
-        android:id="@+id/bookTxt"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="All of your books:"
-        android:textColor="?android:attr/textColorPrimary" />
-
     <ListView
         android:id="@+id/androidList"
         android:layout_width="match_parent"

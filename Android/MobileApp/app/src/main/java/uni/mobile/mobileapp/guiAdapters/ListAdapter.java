@@ -20,16 +20,16 @@ import uni.mobile.mobileapp.R;
 public class ListAdapter extends BaseAdapter {
 
     Context context;
-    private final String[] values;
-    private final String[] numbers;
+    private final ArrayList<String> titles;
+    private final ArrayList<String> authors;
     private final Integer[] images;
     private final int defaultImage;
 
-    public ListAdapter(Context context, String[] values, String[] numbers, Integer[] images,int defaultImage) {
+    public ListAdapter(Context context, ArrayList<String> titles, ArrayList<String> authors, Integer[] images,int defaultImage) {
         //super(context, R.layout.single_list_app_item, utilsArrayList);
         this.context = context;
-        this.values = values;
-        this.numbers = numbers;
+        this.titles = titles;
+        this.authors = authors;
         if (images != null){
             this.images = images;
     }
@@ -41,7 +41,7 @@ public class ListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return values.length;
+        return titles.size();
     }
 
     @Override
@@ -80,8 +80,9 @@ public class ListAdapter extends BaseAdapter {
             result = convertView;
         }
 
-        viewHolder.txtName.setText(values[position]);
-        viewHolder.txtVersion.setText("Version: " + numbers[position]);
+        viewHolder.txtName.setText(titles.get(position) );
+
+        viewHolder.txtVersion.setText("Authors: " + authors==null?authors.get(position):"none" );
         if(images!=null)
         viewHolder.icon.setImageResource(images[position]);
         else
