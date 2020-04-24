@@ -177,11 +177,13 @@ public class SignInActivity extends AppCompatActivity {
                                     else{
                                         Toast.makeText(getApplicationContext(),"User with email address " + user.getEmail() + " doesn't exists!" ,Toast.LENGTH_SHORT).show();
                                         User newRailsUser = RestLocalMethods.createUser( new User(user.getDisplayName(), "", user.getPhoneNumber(), user.getEmail(), idToken));
-                                        if(newRailsUser!=null)
-                                            Toast.makeText(getApplicationContext(),"User with email address " + newRailsUser.getEmail() + " created on backend!" ,Toast.LENGTH_SHORT).show();
-                                        else
-                                            Toast.makeText(getApplicationContext(),"Problem with api result in creation of user" ,Toast.LENGTH_SHORT).show();
-
+                                        if(newRailsUser!=null) {
+                                            Toast.makeText(getApplicationContext(), "User with email address " + newRailsUser.getEmail() + " created on backend!", Toast.LENGTH_SHORT).show();
+                                            RestLocalMethods.setMyUserId(newRailsUser.getId());
+                                        }
+                                            else {
+                                            Toast.makeText(getApplicationContext(), "Problem with api result in creation of user", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 }
                             }

@@ -107,9 +107,9 @@ public interface JsonPlaceHolderApi {
      * BOOK
      * */
     @GET("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}/shelves/{shelfId}/books")
-    Call<MyResponse<Book>> getBooks(@Path("userId") int userId,@Path("houseId") int houseId,@Path("roomId") int roomId,@Path("wallId") int wallId,@Path("shelfId") int shelfId);
+    Call<MyResponse<Book>> getBooks(@Path("userId") Integer userId,@Path("houseId") int houseId,@Path("roomId") int roomId,@Path("wallId") int wallId,@Path("shelfId") int shelfId);
 
-    @GET("allBooks")
+    @GET("allBooks/{userId}")
     Call<MyResponse<Book>> getAllBooks(@Path("userId") int userId);
 
     @POST("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}/shelves/{shelfId}/books")

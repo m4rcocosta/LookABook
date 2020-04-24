@@ -50,6 +50,17 @@ public class RestLocalMethods {
     private static Gson gson= new Gson();
     private static JsonPlaceHolderApi jsonPlaceHolderApi;
     private static Context context;
+    private static Integer userId;
+
+
+
+    public static Integer getMyUserId() {
+        return userId;
+    }
+
+    public static void setMyUserId(Integer myUserId) {
+        RestLocalMethods.userId = myUserId;
+    }
 
     //To build jsonPlaceHolderApi object handling REST API
     public static Boolean initRetrofit(Context ctx) {
@@ -103,8 +114,8 @@ public class RestLocalMethods {
     }
 
 
-    public static void changeToken(){
-
+    public static void changeToken(String token){
+        initRetrofit(context,token);
     }
 
 
@@ -135,7 +146,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
             public void onResponse(Call<MyResponse<User>> call, Response<MyResponse<User>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 users = response.body().getData();
             }
@@ -152,7 +163,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
             public void onResponse(Call<MyResponse<User>> call, Response<MyResponse<User>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 users = response.body().getData();
             }
@@ -173,7 +184,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
             public void onResponse(Call<MyResponse<User>> call, Response<MyResponse<User>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 users = response.body().getData();
             }
@@ -191,7 +202,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
             public void onResponse(Call<MyResponse<User>> call, Response<MyResponse<User>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
 
                 users = response.body().getData();
@@ -208,7 +219,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
             public void onResponse(Call<MyResponse<User>> call, Response<MyResponse<User>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
 
                 users = response.body().getData();
@@ -232,7 +243,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<House>>() {
             @Override
             public void onResponse(Call<MyResponse<House>> call, Response<MyResponse<House>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
 
                 houses = response.body().getData();
@@ -265,7 +276,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<House>>() {
             @Override
             public void onResponse(Call<MyResponse<House>> call, Response<MyResponse<House>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 houses = response.body().getData();
                 //TODO print changes
@@ -288,7 +299,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<House>>() {
             @Override
             public void onResponse(Call<MyResponse<House>> call, Response<MyResponse<House>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 List<House> hres = response.body().getData();
                 //TODO print changes
@@ -307,7 +318,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<House>>() {
             @Override
             public void onResponse(Call<MyResponse<House>> call, Response<MyResponse<House>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 List<House> hres = response.body().getData();
                 //TODO print changes
@@ -334,7 +345,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Room>>() {
             @Override
             public void onResponse(Call<MyResponse<Room>> call, Response<MyResponse<Room>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 rooms = response.body().getData();
 
@@ -367,7 +378,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Room>>() {
             @Override
             public void onResponse(Call<MyResponse<Room>> call, Response<MyResponse<Room>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 rooms = response.body().getData();
                 //TODO print changes
@@ -390,7 +401,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Room>>() {
             @Override
             public void onResponse(Call<MyResponse<Room>> call, Response<MyResponse<Room>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 List<Room> hres = response.body().getData();
                 //TODO print changes
@@ -409,7 +420,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Room>>() {
             @Override
             public void onResponse(Call<MyResponse<Room>> call, Response<MyResponse<Room>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 List<Room> hres = response.body().getData();
                 //TODO print changes
@@ -435,7 +446,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Wall>>() {
             @Override
             public void onResponse(Call<MyResponse<Wall>> call, Response<MyResponse<Wall>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 walls = response.body().getData();
                 String content = "\n WALLS" + "\n";
@@ -473,7 +484,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Wall>>() {
             @Override
             public void onResponse(Call<MyResponse<Wall>> call, Response<MyResponse<Wall>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 walls = response.body().getData();
                 //TODO print changes
@@ -497,7 +508,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Wall>>() {
             @Override
             public void onResponse(Call<MyResponse<Wall>> call, Response<MyResponse<Wall>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 List<Wall> hres = response.body().getData();
                 //TODO print changes
@@ -516,7 +527,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Wall>>() {
             @Override
             public void onResponse(Call<MyResponse<Wall>> call, Response<MyResponse<Wall>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 List<Wall> hres = response.body().getData();
                 //TODO print changes
@@ -544,7 +555,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Shelf>>() {
             @Override
             public void onResponse(Call<MyResponse<Shelf>> call, Response<MyResponse<Shelf>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 shelves = response.body().getData();
 
@@ -581,7 +592,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Shelf>>() {
             @Override
             public void onResponse(Call<MyResponse<Shelf>> call, Response<MyResponse<Shelf>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 shelves = response.body().getData();
                 //TODO print changes
@@ -606,7 +617,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Shelf>>() {
             @Override
             public void onResponse(Call<MyResponse<Shelf>> call, Response<MyResponse<Shelf>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 List<Shelf> hres = response.body().getData();
                 //TODO print changes
@@ -625,7 +636,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Shelf>>() {
             @Override
             public void onResponse(Call<MyResponse<Shelf>> call, Response<MyResponse<Shelf>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 List<Shelf> hres = response.body().getData();
                 //TODO print changes
@@ -653,7 +664,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Book>>() {
             @Override
             public void onResponse(Call<MyResponse<Book>> call, Response<MyResponse<Book>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 books = response.body().getData();
 
@@ -676,25 +687,26 @@ public class RestLocalMethods {
     }
 
     //GET
-    public  static List<Book> getAllBooks(final TextView textViewResult, final  JsonPlaceHolderApi jsonPlaceHolderApi ,
-                                          final Integer userId){
+    public  static List<Book> getAllBooks(){
         books=null;
+        if(userId==null) {
+            Toast.makeText(context, "UserId not found", Toast.LENGTH_SHORT);
+            userId=1; //TODO remove
+        }
+
         Call<MyResponse<Book>> call = jsonPlaceHolderApi.getAllBooks(userId );
 
         call.enqueue(new Callback<MyResponse<Book>>() {
             @Override
             public void onResponse(Call<MyResponse<Book>> call, Response<MyResponse<Book>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 books = response.body().getData();
 
                 for(Book book: books){
                     objectsIds.put("books",book.getId());
                     Log.d("myrest", "book : " + book.getTitle() );
-
-
                 }
-
             }
 
             @Override
@@ -716,7 +728,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Book>>() {
             @Override
             public void onResponse(Call<MyResponse<Book>> call, Response<MyResponse<Book>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 books = response.body().getData();
                 //TODO print changes
@@ -741,7 +753,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Book>>() {
             @Override
             public void onResponse(Call<MyResponse<Book>> call, Response<MyResponse<Book>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;;
 
                 List<Book> hres = response.body().getData();
                 //TODO print changes
@@ -762,7 +774,7 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<Book>>() {
             @Override
             public void onResponse(Call<MyResponse<Book>> call, Response<MyResponse<Book>> response) {
-                checkResponse(response);
+                if(!isResponseSuccessfull(response)) return;
 
                 List<Book> hres = response.body().getData();
                 //TODO print changes
@@ -775,14 +787,17 @@ public class RestLocalMethods {
         });
     }
 
-private static void checkResponse(Response response){
+private static Boolean isResponseSuccessfull(Response response){
     if(! response.isSuccessful()){
         Toast.makeText(context,"API response unsuccessful" ,Toast.LENGTH_SHORT).show();
-        return;
+        return false;
     }
+    return true;
 }
 
-
+    public static JsonPlaceHolderApi getJsonPlaceHolderApi() {
+        return jsonPlaceHolderApi;
+    }
 }
 
 

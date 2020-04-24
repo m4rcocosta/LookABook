@@ -1,13 +1,16 @@
 package uni.mobile.mobileapp.rest;
 
 public class User {
-
+    Integer id;
     String name;
     String provider_token;
     String phone;
     String email;
     String auth_token;
 
+    public Integer getId() {
+        return id;
+    }
 
     public User(String name, String provider_token, String phone, String email, String auth_token) {
         this.name = name;

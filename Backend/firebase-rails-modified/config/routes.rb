@@ -44,7 +44,7 @@ Rails.application.routes.draw do
       get '/get-user-by-email',
       to: 'users#get_user_by_email', as: "get_user_by_email"
 
-      get '/allBooks',
+      get '/allBooks/:user_id',
       to: 'books#allBooks', as: "allBooks"
 
 
