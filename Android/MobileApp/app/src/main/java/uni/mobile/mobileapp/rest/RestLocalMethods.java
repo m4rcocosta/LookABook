@@ -51,8 +51,17 @@ public class RestLocalMethods {
     private static JsonPlaceHolderApi jsonPlaceHolderApi;
     private static Context context;
     private static Integer userId;
+    private static String userToken;
 
 
+    public static String getUserToken() {
+        return userToken;
+    }
+
+    public static void setUserToken(String userToken) {
+        RestLocalMethods.userToken = userToken;
+        initRetrofit(context);
+    }
 
     public static Integer getMyUserId() {
         return userId;
@@ -64,9 +73,15 @@ public class RestLocalMethods {
 
     //To build jsonPlaceHolderApi object handling REST API
     public static Boolean initRetrofit(Context ctx) {
-        return initRetrofit(ctx,"");
-    }
-    public static Boolean initRetrofit(Context ctx,final String token) {
+
+        if(userId==null){
+            Toast.makeText(ctx,"UserId not found",Toast.LENGTH_SHORT).show();
+            userId=1; //Todo remove after login also ensured
+        }
+        if(userToken==null){
+            Toast.makeText(ctx,"Token not found",Toast.LENGTH_SHORT).show();
+            userToken="";
+        }
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -75,7 +90,7 @@ public class RestLocalMethods {
                 Request original = chain.request();
 
                 Request request = original.newBuilder()
-                        .header("TOKEN", token)
+                        .header("TOKEN", userToken)
                         .header("Accept", "application/json")
                         .method(original.method(), original.body())
                         .build();
@@ -114,9 +129,6 @@ public class RestLocalMethods {
     }
 
 
-    public static void changeToken(String token){
-        initRetrofit(context,token);
-    }
 
 
     /*

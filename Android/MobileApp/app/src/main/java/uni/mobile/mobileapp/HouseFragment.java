@@ -35,7 +35,7 @@ public class HouseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         RestLocalMethods.initRetrofit(this.getContext());
-        RestLocalMethods.changeToken("fooToken"); //TODO put user token
+        RestLocalMethods.setUserToken("fooToken"); //TODO put user token
 
         Call<MyResponse<House>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getHouses(1); //TODO correct userID
         callAsync.enqueue(new Callback<MyResponse<House>>()

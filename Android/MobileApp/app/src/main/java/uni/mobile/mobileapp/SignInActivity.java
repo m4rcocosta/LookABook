@@ -180,6 +180,8 @@ public class SignInActivity extends AppCompatActivity {
                                         if(newRailsUser!=null) {
                                             Toast.makeText(getApplicationContext(), "User with email address " + newRailsUser.getEmail() + " created on backend!", Toast.LENGTH_SHORT).show();
                                             RestLocalMethods.setMyUserId(newRailsUser.getId());
+                                            RestLocalMethods.setUserToken(newRailsUser.getAuth_token());
+
                                         }
                                             else {
                                             Toast.makeText(getApplicationContext(), "Problem with api result in creation of user", Toast.LENGTH_SHORT).show();

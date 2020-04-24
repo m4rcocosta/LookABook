@@ -50,9 +50,9 @@ public class BookFragment extends Fragment {
         User back=RestLocalMethods.createUser(new User("mardzxcfaio","","","asdxzcsad@asasdd.com","zzxczxz<x<zx"));
         //t.setText( back.getEmail() );*/
 
-        RestLocalMethods.changeToken("fooToken");   //TODO pass correct token (user)
+        RestLocalMethods.setUserToken(RestLocalMethods.getUserToken());
 
-        Call<MyResponse<Book>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getAllBooks(1); //TODO correct userID
+        Call<MyResponse<Book>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getAllBooks(RestLocalMethods.getMyUserId());
         callAsync.enqueue(new Callback<MyResponse<Book>>()
         {
 
