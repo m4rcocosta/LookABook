@@ -43,7 +43,7 @@ public class RestTreeLocalMethods {
 
     public  static void getHouses(final TreeNode parent,final Context ctx, final TextView textViewResult, final JsonPlaceHolderApi jsonPlaceHolderApi, final Boolean recursiveSearch  ){
 
-        Call<MyResponse<House>> call = jsonPlaceHolderApi.getHouses(1);
+        Call<MyResponse<House>> call = jsonPlaceHolderApi.getHouses(RestLocalMethods.getMyUserId());
 
         call.enqueue(new Callback<MyResponse<House>>() {
             @Override
@@ -64,6 +64,7 @@ public class RestTreeLocalMethods {
                     TreeNode child = new TreeNode(childItem).setViewHolder(new MyHolder(ctx, false, R.layout.child, 25));
                     //Add child.
                     parent.addChildren(child);
+
 
                     content += "Name: " + house.getName() + "\n";
                     if(textViewResult!=null) textViewResult.append(content);

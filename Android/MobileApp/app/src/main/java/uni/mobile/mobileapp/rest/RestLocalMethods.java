@@ -71,6 +71,11 @@ public class RestLocalMethods {
         RestLocalMethods.userId = myUserId;
     }
 
+    public static Boolean initRetrofit(Context ctx,String token){
+        if(userToken==null)
+            userToken=token;
+        return initRetrofit(ctx);
+    }
     //To build jsonPlaceHolderApi object handling REST API
     public static Boolean initRetrofit(Context ctx) {
 

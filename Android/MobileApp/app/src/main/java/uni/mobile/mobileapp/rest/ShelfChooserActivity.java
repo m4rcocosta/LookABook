@@ -3,8 +3,12 @@ package uni.mobile.mobileapp.rest;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 
@@ -26,34 +30,16 @@ public class ShelfChooserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shelf_chooser);
 
-
-        /* Init REST client*/
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
+        FloatingActionButton fab = findViewById(R.id.floating_action_button);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
-
-                Request request = original.newBuilder()
-                        .header("TOKEN", "fooToken")
-                        .header("Accept", "application/json")
-                        .method(original.method(), original.body())
-                        .build();
-
-                return chain.proceed(request);
+            public void onClick(View view) {
+                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = httpClient
-                .addInterceptor(loggingInterceptor)
-                .build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.157:3000/api/v1/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
 
+        RestLocalMethods.initRetrofit(getApplicationContext(),"fooToken"); //Todo remove it for user one
 
         /* Building the tree*/
         //Root
@@ -64,7 +50,7 @@ public class ShelfChooserActivity extends AppCompatActivity {
         TreeNode parent = new TreeNode(nodeItem).setViewHolder(new MyHolder(getApplicationContext(), true, MyHolder.DEFAULT, MyHolder.DEFAULT));
         root.addChild(parent);
 
-        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+        JsonPlaceHolderApi jsonPlaceHolderApi = RestLocalMethods.getJsonPlaceHolderApi();
 
         RestTreeLocalMethods.printAllObjectsFromUser(parent,getApplicationContext(),null,jsonPlaceHolderApi);
 
