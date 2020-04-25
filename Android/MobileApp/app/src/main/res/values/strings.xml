@@ -35,6 +35,7 @@
     <string name="detect_text">Detect Text</string>
     <string name="load_image">Load Image</string>
     <string name="copy_text">Copy Text</string>
+    <string name="info">Info</string>
 
 
     <string name="sign_in">Sign In</string>

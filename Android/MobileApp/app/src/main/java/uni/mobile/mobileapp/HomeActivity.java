@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -60,11 +61,14 @@ public class HomeActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private ImageView profilePic;
     private TextView navTitle;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        context = this;
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -128,6 +132,19 @@ public class HomeActivity extends AppCompatActivity {
                         bottomNavigationSelectedItem = -1;
                         openFragment(new SettingsFragment(bottomNavigationView));
                         dl.closeDrawers();
+                        return true;
+                    case R.id.nav_info:
+                        new AlertDialog.Builder(context)
+                                .setTitle("App information")
+                                .setMessage("This app is created by Giuseppe Capaldi and Marco Costa")
+                                .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                })
+                                .show();
                         return true;
                     case R.id.nav_logout:
                         userLogout();
@@ -197,8 +214,8 @@ public class HomeActivity extends AppCompatActivity {
         navigationSelectedItem = R.id.navigation_home;
         openFragment(new HomeFragment());
 
-        if (!user.isEmailVerified()) {
-            new AlertDialog.Builder(this)
+        if (getUserProvider(user) == "FIREBASE" && !user.isEmailVerified()) {
+            new AlertDialog.Builder(context)
                     .setTitle("Email verification")
                     .setMessage("Your account is not activated since your email address is not verified. Activate your account clicking on the activation link sent at " + user.getEmail() + ". If you didn't receive the email click on 'Send' button to send another email.")
                     .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch

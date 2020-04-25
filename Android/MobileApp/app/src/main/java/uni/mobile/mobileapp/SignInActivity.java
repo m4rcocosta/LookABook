@@ -70,7 +70,6 @@ public class SignInActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
     private static final int RC_SIGN_IN = 9001;
     private JsonPlaceHolderApi jsonPlaceHolderApi;
-    private String idToken;
     private static final int STORAGE_PERMISSION_CODE = 101;
 
     @Override
@@ -172,20 +171,11 @@ public class SignInActivity extends AppCompatActivity {
                                     }
                                 } else {
                                     final FirebaseUser user = auth.getCurrentUser();
-                                    User railsUser = RestLocalMethods.getUserByEmail( user.getEmail());
+                                    User railsUser = RestLocalMethods.getUserByEmail(user.getEmail());
                                     if (railsUser != null) Toast.makeText(getApplicationContext(),"User with email address " + railsUser.getEmail() + " exists!" ,Toast.LENGTH_SHORT).show();
                                     else{
                                         Toast.makeText(getApplicationContext(),"User with email address " + user.getEmail() + " doesn't exists!" ,Toast.LENGTH_SHORT).show();
-                                        User newRailsUser = RestLocalMethods.createUser( new User(user.getDisplayName(), "", user.getPhoneNumber(), user.getEmail(), idToken));
-                                        if(newRailsUser!=null) {
-                                            Toast.makeText(getApplicationContext(), "User with email address " + newRailsUser.getEmail() + " created on backend!", Toast.LENGTH_SHORT).show();
-                                            RestLocalMethods.setMyUserId(newRailsUser.getId());
-                                            RestLocalMethods.setUserToken(newRailsUser.getAuth_token());
-
-                                        }
-                                            else {
-                                            Toast.makeText(getApplicationContext(), "Problem with api result in creation of user", Toast.LENGTH_SHORT).show();
-                                        }
+                                        createUserOnBackend(user);
                                     }
                                 }
                             }
@@ -257,17 +247,12 @@ public class SignInActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             final FirebaseUser user = auth.getCurrentUser();
-                            user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                                public void onComplete(@NonNull Task<GetTokenResult> task) {
-                                    if (task.isSuccessful()) {
-                                        idToken = task.getResult().getToken();
-                                        // Send token to your backend via HTTPS
-                                        Log.i("User Token: ", idToken);
-                                    } else {
-                                        // Handle error -> task.getException();
-                                    }
-                                }
-                            });
+                            User railsUser = RestLocalMethods.getUserByEmail(user.getEmail());
+                            if (railsUser != null) Toast.makeText(getApplicationContext(),"User with email address " + railsUser.getEmail() + " exists!" ,Toast.LENGTH_SHORT).show();
+                            else{
+                                Toast.makeText(getApplicationContext(),"User with email address " + user.getEmail() + " doesn't exists!" ,Toast.LENGTH_SHORT).show();
+                                createUserOnBackend(user);
+                            }
                             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot snapshot) {
@@ -277,16 +262,14 @@ public class SignInActivity extends AppCompatActivity {
                                     else databaseReference.child(user.getUid()).setValue(new Userinformation(""));
                                 }
                                 @Override
-                                public void onCancelled( DatabaseError databaseError) {
+                                public void onCancelled(DatabaseError databaseError) {
 
                                 }
                             });
-
-                        } else {
-                            // If sign in fails, display a message to the user.
                         }
-
-                        // ...
+                        else {
+                            Toast.makeText(getApplicationContext(),"Authentication with Google failed!" ,Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }
@@ -315,24 +298,55 @@ public class SignInActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser user = auth.getCurrentUser();
-                            user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                                public void onComplete(@NonNull Task<GetTokenResult> task) {
-                                    if (task.isSuccessful()) {
-                                        String idToken = task.getResult().getToken();
-                                        // Send token to your backend via HTTPS
-                                        Log.i("User Token: ", idToken);
-                                    } else {
-                                        // Handle error -> task.getException();
+                            final FirebaseUser user = auth.getCurrentUser();
+                            User railsUser = RestLocalMethods.getUserByEmail(user.getEmail());
+                            if (railsUser != null) Toast.makeText(getApplicationContext(),"User with email address " + railsUser.getEmail() + " exists!" ,Toast.LENGTH_SHORT).show();
+                            else{
+                                Toast.makeText(getApplicationContext(),"User with email address " + user.getEmail() + " doesn't exists!" ,Toast.LENGTH_SHORT).show();
+                                createUserOnBackend(user);
+                            }
+                            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot snapshot) {
+                                    if (snapshot.hasChild(user.getUid())) {
+                                        // run some code
                                     }
+                                    else databaseReference.child(user.getUid()).setValue(new Userinformation(""));
+                                }
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
                                 }
                             });
-                            databaseReference.child(user.getUid()).setValue(new Userinformation(""));
                         } else {
-                            Toast.makeText(SignInActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignInActivity.this, "Authentication with Facebook failed!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    private void createUserOnBackend(FirebaseUser user) {
+        user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+            public void onComplete(@NonNull Task<GetTokenResult> task) {
+                if (task.isSuccessful()) {
+                    String idToken = task.getResult().getToken();
+                    Log.i("User Token: ", idToken);
+                    // Send token to your backend via HTTPS
+                    User newRailsUser = RestLocalMethods.createUser(new User(user.getDisplayName(), "", user.getPhoneNumber(), user.getEmail(), idToken));
+                    if(newRailsUser!=null) {
+                        Toast.makeText(getApplicationContext(), "User with email address " + newRailsUser.getEmail() + " created on backend!", Toast.LENGTH_SHORT).show();
+                        RestLocalMethods.setMyUserId(newRailsUser.getId());
+                        RestLocalMethods.setUserToken(newRailsUser.getAuth_token());
+
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Problem with api result in creation of user", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    // Handle error -> task.getException();
+                }
+            }
+        });
     }
 
     private void navigateSignUp() {
