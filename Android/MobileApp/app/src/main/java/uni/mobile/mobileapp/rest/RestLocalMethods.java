@@ -79,9 +79,11 @@ public class RestLocalMethods {
     //To build jsonPlaceHolderApi object handling REST API
     public static Boolean initRetrofit(Context ctx) {
 
+
         if(userId==null){
             Toast.makeText(ctx,"UserId not found",Toast.LENGTH_SHORT).show();
-            userId=1; //Todo remove after login also ensured
+            return false;
+
         }
         if(userToken==null){
             Toast.makeText(ctx,"Token not found",Toast.LENGTH_SHORT).show();

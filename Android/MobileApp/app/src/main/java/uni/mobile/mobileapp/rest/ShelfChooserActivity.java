@@ -39,7 +39,7 @@ public class ShelfChooserActivity extends AppCompatActivity {
             }
         });
 
-        RestLocalMethods.initRetrofit(getApplicationContext(),"fooToken"); //Todo remove it for user one
+        RestLocalMethods.initRetrofit(getApplicationContext(),RestLocalMethods.getUserToken()); //Todo remove it for user one
 
         /* Building the tree*/
         //Root

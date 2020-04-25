@@ -47,10 +47,9 @@ public class HouseFragment extends Fragment {
             }
         });
 
-        RestLocalMethods.initRetrofit(this.getContext());
-        RestLocalMethods.setUserToken("fooToken"); //TODO put user token
+        RestLocalMethods.initRetrofit(this.getContext(),RestLocalMethods.getUserToken());
 
-        Call<MyResponse<House>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getHouses(1); //TODO correct userID
+        Call<MyResponse<House>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getHouses(RestLocalMethods.getMyUserId()); //TODO correct userID
         callAsync.enqueue(new Callback<MyResponse<House>>()
         {
 
