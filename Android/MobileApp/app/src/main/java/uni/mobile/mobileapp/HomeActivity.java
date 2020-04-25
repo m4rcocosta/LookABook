@@ -214,7 +214,7 @@ public class HomeActivity extends AppCompatActivity {
         navigationSelectedItem = R.id.navigation_home;
         openFragment(new HomeFragment());
 
-        if (getUserProvider(user) == "FIREBASE" && !user.isEmailVerified()) {
+        if (getUserProvider(user).equals("FIREBASE") && !user.isEmailVerified()) {
             new AlertDialog.Builder(context)
                     .setTitle("Email verification")
                     .setMessage("Your account is not activated since your email address is not verified. Activate your account clicking on the activation link sent at " + user.getEmail() + ". If you didn't receive the email click on 'Send' button to send another email.")
