@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_22_110346) do
+ActiveRecord::Schema.define(version: 2020_04_25_173323) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
+  enable_extension "plpgsql"
 
   create_table "books", force: :cascade do |t|
     t.string "title"
@@ -27,7 +31,7 @@ ActiveRecord::Schema.define(version: 2020_04_22_110346) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "shelf_id"
-    t.json "googleData", default: "{}", null: false
+    t.jsonb "googleData", default: "{}", null: false
   end
 
   create_table "houses", force: :cascade do |t|
@@ -40,13 +44,13 @@ ActiveRecord::Schema.define(version: 2020_04_22_110346) do
   end
 
   create_table "houses_users", id: false, force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "house_id"
+    t.bigint "user_id"
+    t.bigint "house_id"
     t.index ["house_id"], name: "index_houses_users_on_house_id"
     t.index ["user_id"], name: "index_houses_users_on_user_id"
   end
 
-  create_table "rooms", force: :cascade do |t|
+  create_table "rooms", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -62,7 +66,7 @@ ActiveRecord::Schema.define(version: 2020_04_22_110346) do
     t.integer "wall_id"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -80,4 +84,6 @@ ActiveRecord::Schema.define(version: 2020_04_22_110346) do
     t.integer "room_id"
   end
 
+  add_foreign_key "houses_users", "houses"
+  add_foreign_key "houses_users", "users"
 end

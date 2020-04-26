@@ -54,23 +54,6 @@ public class RestLocalMethods {
     private static String userToken;
 
 
-    public static String getUserToken() {
-        return userToken;
-    }
-
-    public static void setUserToken(String userToken) {
-        RestLocalMethods.userToken = userToken;
-        initRetrofit(context);
-    }
-
-    public static Integer getMyUserId() {
-        return userId;
-    }
-
-    public static void setMyUserId(Integer myUserId) {
-        RestLocalMethods.userId = myUserId;
-    }
-
     public static Boolean initRetrofit(Context ctx,String token){
         if(userToken==null)
             userToken=token;
@@ -82,8 +65,6 @@ public class RestLocalMethods {
 
         if(userId==null){
             Toast.makeText(ctx,"UserId not found",Toast.LENGTH_SHORT).show();
-            return false;
-
         }
         if(userToken==null){
             Toast.makeText(ctx,"Token not found",Toast.LENGTH_SHORT).show();
@@ -817,6 +798,24 @@ private static Boolean isResponseSuccessfull(Response response){
     public static JsonPlaceHolderApi getJsonPlaceHolderApi() {
         return jsonPlaceHolderApi;
     }
+
+    public static String getUserToken() {
+        return userToken;
+    }
+
+    public static void setUserToken(String userToken) {
+        RestLocalMethods.userToken = userToken;
+        initRetrofit(context);
+    }
+
+    public static Integer getMyUserId() {
+        return userId;
+    }
+
+    public static void setMyUserId(Integer myUserId) {
+        RestLocalMethods.userId = myUserId;
+    }
+
 }
 
 

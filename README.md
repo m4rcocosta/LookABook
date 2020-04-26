@@ -4,5 +4,14 @@ Project for Mobile Application and Cloud Computing course
 
 ## Pushing rails app on heroku
 You need to launch the command:
+'''
 git subtree push --prefix Backend/firebase-rails-modified heroku master
-
+'''
+## To suppress ruby 2.7.1 warnings
+'''
+RUBYOPT='-W:no-deprecated -W:no-experimental' rails c
+'''
+or
+'''
+RUBYOPT='-W:no-deprecated -W:no-experimental' rails s -b 0.0.0.0
+'''
