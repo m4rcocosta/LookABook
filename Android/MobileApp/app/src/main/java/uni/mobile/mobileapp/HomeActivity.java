@@ -38,6 +38,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.storage.FirebaseStorage;
@@ -45,6 +46,9 @@ import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import uni.mobile.mobileapp.rest.RestLocalMethods;
+import uni.mobile.mobileapp.rest.User;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -67,6 +71,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
 
         context = this;
 
@@ -187,6 +192,17 @@ public class HomeActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         final FirebaseUser user = firebaseAuth.getCurrentUser();
+
+        String idToken =user.getUid();
+        //Do whatever
+        Log.d("User", "GetTokenResult result = " + idToken);
+
+        RestLocalMethods.initRetrofit(context, idToken );
+
+        User railsUser = RestLocalMethods.getUserByEmail(user.getEmail(),user,RestLocalMethods.FIRST_CHECK);
+
+
+
 
         if (getUserProvider(user).equals("GOOGLE")) {
             Uri imageUri = Uri.parse(user.getPhotoUrl().toString().replace("s96-c", "s400-c"));

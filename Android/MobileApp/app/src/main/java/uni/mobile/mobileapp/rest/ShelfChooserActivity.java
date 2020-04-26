@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -54,12 +55,7 @@ public class ShelfChooserActivity extends AppCompatActivity {
         fab2 = (FloatingActionButton) findViewById(R.id.fab2);
         fab3 = (FloatingActionButton) findViewById(R.id.fab3);
         fab4 = (FloatingActionButton) findViewById(R.id.fab4);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
 
         RestLocalMethods.initRetrofit(getApplicationContext(),"fooToken"); //Todo remove it for user one
 
@@ -79,7 +75,7 @@ public class ShelfChooserActivity extends AppCompatActivity {
 
         //Add AndroidTreeView into view.
         AndroidTreeView tView = new AndroidTreeView(getApplicationContext(), root);
-        ((LinearLayout) findViewById(R.id.shelfChoserLayout)).addView(tView.getView());
+        ((FrameLayout) findViewById(R.id.shelfChoserLayout)).addView(tView.getView());
 
 
 

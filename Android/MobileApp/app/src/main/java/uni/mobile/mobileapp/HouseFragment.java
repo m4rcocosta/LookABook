@@ -66,7 +66,7 @@ public class HouseFragment extends Fragment {
                 Request original = chain.request();
 
                 Request request = original.newBuilder()
-                        .header("TOKEN", "2gckKwQEs396rdmXdVeERKa5")
+                        .header("TOKEN", RestLocalMethods.getUserToken())
                         .header("Accept", "application/json")
                         .method(original.method(), original.body())
                         .build();
@@ -101,7 +101,7 @@ public class HouseFragment extends Fragment {
 
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-        Call<MyResponse<House>> callAsync = jsonPlaceHolderApi.getHouses(1); //TODO correct userID
+        Call<MyResponse<House>> callAsync = jsonPlaceHolderApi.getHouses(RestLocalMethods.getMyUserId()); //TODO correct userID
         callAsync.enqueue(new Callback<MyResponse<House>>()
         {
 

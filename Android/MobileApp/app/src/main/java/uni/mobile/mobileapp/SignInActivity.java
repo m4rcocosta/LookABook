@@ -34,6 +34,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -101,7 +102,7 @@ public class SignInActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         //
-         RestLocalMethods.initRetrofit(this);
+        RestLocalMethods.initRetrofit(this);
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -136,8 +137,8 @@ public class SignInActivity extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = emailSignIn.getText().toString();
-                final String password = passwordSignIn.getText().toString();
+                String email = emailSignIn.getText().toString().trim();
+                final String password = passwordSignIn.getText().toString().trim();
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(getApplicationContext(), "Enter your mail address", Toast.LENGTH_SHORT).show();
                     return;
@@ -152,35 +153,35 @@ public class SignInActivity extends AppCompatActivity {
                 }
                 //authenticate user
                 auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (!task.isSuccessful()) {
-                                    // there was an error
-                                    try {
-                                        throw task.getException();
-                                    }
-                                    // if user enters wrong email.
-                                    catch (FirebaseAuthInvalidUserException invalidEmail) {
-                                        Toast.makeText(getApplicationContext(),"Wrong email.",Toast.LENGTH_SHORT).show();
-                                    }
-                                    // if user enters wrong password.
-                                    catch (FirebaseAuthInvalidCredentialsException wrongPassword) {
-                                        Toast.makeText(getApplicationContext(),"Wrong password.",Toast.LENGTH_SHORT).show();
-                                    }
-                                    catch (Exception e) {
-                                        Log.d("SIGN IN", "onComplete: " + e.getMessage());
-                                    }
-                                } else {
-                                    final FirebaseUser user = auth.getCurrentUser();
-                                    User railsUser = RestLocalMethods.getUserByEmail(user.getEmail(),user,RestLocalMethods.FIRST_CHECK);
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (!task.isSuccessful()) {
+                            // there was an error
+                            try {
+                                throw task.getException();
+                            }
+                            // if user enters wrong email.
+                            catch (FirebaseAuthInvalidUserException invalidEmail) {
+                                Toast.makeText(getApplicationContext(),"Wrong email.",Toast.LENGTH_SHORT).show();
+                            }
+                            // if user enters wrong password.
+                            catch (FirebaseAuthInvalidCredentialsException wrongPassword) {
+                                Toast.makeText(getApplicationContext(),"Wrong password.",Toast.LENGTH_SHORT).show();
+                            }
+                            catch (Exception e) {
+                                Log.d("SIGN IN", "onComplete: " + e.getMessage());
+                            }
+                        } else {
+                            final FirebaseUser user = auth.getCurrentUser();
+                            User railsUser = RestLocalMethods.getUserByEmail(user.getEmail(),user,RestLocalMethods.FIRST_CHECK);
 //                                    if (railsUser != null) Toast.makeText(getApplicationContext(),"User with email address " + railsUser.getEmail() + " exists!" ,Toast.LENGTH_SHORT).show();
 //                                    else{
 //                                        Toast.makeText(getApplicationContext(),"User with email address " + user.getEmail() + " doesn't exists!" ,Toast.LENGTH_SHORT).show();
 //                                        createUserOnBackend(user);
 //                                    }
-                                }
-                            }
-                        });
+                        }
+                    }
+                });
             }
         });
 
@@ -239,40 +240,41 @@ public class SignInActivity extends AppCompatActivity {
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    //GOOGLE
     private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         auth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            final FirebaseUser user = auth.getCurrentUser();
-                            User railsUser = RestLocalMethods.getUserByEmail(user.getEmail(),null,RestLocalMethods.FIRST_CHECK);
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+                    final FirebaseUser user = auth.getCurrentUser();
+                    User railsUser = RestLocalMethods.getUserByEmail(user.getEmail(),user,RestLocalMethods.FIRST_CHECK);
 //                            if (railsUser != null) Toast.makeText(getApplicationContext(),"User with email address " + railsUser.getEmail() + " exists!" ,Toast.LENGTH_SHORT).show();
 //                            else{
 //                                Toast.makeText(getApplicationContext(),"User with email address " + user.getEmail() + " doesn't exists!" ,Toast.LENGTH_SHORT).show();
 //                                createUserOnBackend(user);
 //                            }
-                            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot snapshot) {
-                                    if (snapshot.hasChild(user.getUid())) {
-                                        // run some code
-                                    }
-                                    else databaseReference.child(user.getUid()).setValue(new Userinformation(""));
-                                }
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
+                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            if (snapshot.hasChild(user.getUid())) {
+                                // run some code
+                            }
+                            else databaseReference.child(user.getUid()).setValue(new Userinformation(""));
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                                }
-                            });
                         }
-                        else {
-                            Toast.makeText(getApplicationContext(),"Authentication with Google failed!" ,Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                    });
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),"Authentication with Google failed!" ,Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
@@ -293,49 +295,47 @@ public class SignInActivity extends AppCompatActivity {
         else mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    //FACEBOOK
     private void handleAccessToken(AccessToken accessToken) {
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
         auth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            final FirebaseUser user = auth.getCurrentUser();
-                            User railsUser = RestLocalMethods.getUserByEmail(user.getEmail(),user,RestLocalMethods.FIRST_CHECK);
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    final FirebaseUser user = auth.getCurrentUser();
+                    User railsUser = RestLocalMethods.getUserByEmail(user.getEmail(),user,RestLocalMethods.FIRST_CHECK);
 //                            if (railsUser != null) Toast.makeText(getApplicationContext(),"User with email address " + railsUser.getEmail() + " exists!" ,Toast.LENGTH_SHORT).show();
 //                            else{
 //                                Toast.makeText(getApplicationContext(),"User with email address " + user.getEmail() + " doesn't exists!" ,Toast.LENGTH_SHORT).show();
 //                                createUserOnBackend(user);
 //                            }
-                            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot snapshot) {
-                                    if (snapshot.hasChild(user.getUid())) {
-                                        // run some code
-                                    }
-                                    else databaseReference.child(user.getUid()).setValue(new Userinformation(""));
-                                }
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                        } else {
-                            Toast.makeText(SignInActivity.this, "Authentication with Facebook failed!", Toast.LENGTH_SHORT).show();
+                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            if (snapshot.hasChild(user.getUid())) {
+                                // run some code
+                            }
+                            else databaseReference.child(user.getUid()).setValue(new Userinformation(""));
                         }
-                    }
-                });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                } else {
+                    Toast.makeText(SignInActivity.this, "Authentication with Facebook failed!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public static void createUserOnBackend(FirebaseUser user) {
-        user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-            public void onComplete(@NonNull Task<GetTokenResult> task) {
-                if (task.isSuccessful()) {
-                    String idToken = task.getResult().getToken();
-                    Log.i("User Token: ", idToken);
-                    // Send token to your backend via HTTPS
-                    RestLocalMethods.setUserToken(idToken);
-                    User newRailsUser = RestLocalMethods.createUser(new User(user.getDisplayName(), "", user.getPhoneNumber(), user.getEmail(), idToken));
 
+        String idToken = user.getUid();
+        Log.i("User Token: ", idToken);
+        // Send token to your backend via HTTPS
+        RestLocalMethods.setUserToken(idToken);
+        User newRailsUser = RestLocalMethods.createUser(new User(user.getDisplayName(), "", user.getPhoneNumber(), user.getEmail(), idToken));
  /*
         if(newRailsUser!=null) {
                         Toast.makeText(getApplicationContext(), "User with email address " + newRailsUser.getEmail() + " created on backend!", Toast.LENGTH_SHORT).show();
@@ -348,9 +348,7 @@ public class SignInActivity extends AppCompatActivity {
                 } else {
                     // Handle error -> task.getException();
                 }*/
-            }
-        }
-    });
+
     }
 
     private void navigateSignUp() {

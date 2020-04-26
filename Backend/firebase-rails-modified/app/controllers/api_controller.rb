@@ -70,11 +70,13 @@ class ApiController < ApplicationController
                 if(request.fullpath[0,request.fullpath.index('?')] != "/api/v1/users/get-user-by-email")
                     puts "ok è una get email stai calmo"
                 else
+                    puts "not token and not get email"
                     return unauthorize_no_token
                 end 
             else
                 @user = User.find_by(auth_token: user_token ) 
                 if @user.nil? &&  (request.fullpath != "/api/v1/users" || request.method!="POST")#Non esiste token e non è una post
+                    puts "no user found "
                     return unauthorize_no_token
                 elsif params[:id] #User con quel token esiste
                     @req_user=User.find_by(params[:id])
@@ -123,9 +125,7 @@ class ApiController < ApplicationController
         return false
     end
     
-    def person_params
-        params.require(:user).permit(:name,:id)
-    end
+    
     
 end
 

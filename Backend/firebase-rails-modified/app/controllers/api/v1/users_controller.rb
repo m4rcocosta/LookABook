@@ -34,7 +34,8 @@
         if @user.save
           render json: {status: 'SUCCESS', message: 'Created user', data: [@user]}, status: :ok
         else
-          render json: { json: 'Error in creation of user'}, status: 400
+          puts  @user.errors.full_messages
+          render json: { json: @user.errors.full_messages }, status: 400
         end
       
     end
@@ -90,6 +91,6 @@
 
       # Never trust parameters from the scary internet, only allow the white list through.
       def user_params
-        params.permit( :name, :email, :phone, :provider_token, :auth_token)
+        params.permit( :name, :email, :phone, :provider_token, :auth_token, :id)
       end
   end

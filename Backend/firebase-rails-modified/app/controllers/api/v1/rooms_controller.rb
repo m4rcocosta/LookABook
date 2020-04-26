@@ -11,6 +11,13 @@ class Api::V1::RoomsController < ApiController
     rooms = @house.rooms
     render json: {status: 'SUCCESS', message: 'Loaded all rooms', data: rooms}, status: :ok
   end
+
+  # GET all books for a user
+  def allRooms
+    houses=@user.houses
+    rooms= houses.map(&:rooms).flatten() 
+    render json: {status: 'SUCCESS', message: 'Loaded all books', data: rooms}, status: :ok
+  end
   
   # GET /rooms/1
   # GET /rooms/1.json

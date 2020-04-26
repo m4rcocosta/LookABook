@@ -70,11 +70,10 @@ public class RestLocalMethods {
     public static Boolean initRetrofit(Context ctx) {
 
 
-        if(userId==null){
-            Toast.makeText(ctx,"UserId not found",Toast.LENGTH_SHORT).show();
-        }
+
         if(userToken==null){
             Toast.makeText(ctx,"Token not found",Toast.LENGTH_SHORT).show();
+            userToken="";
         }
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -126,7 +125,7 @@ public class RestLocalMethods {
 
 
     /*
-    * HELPERS
+     * HELPERS
      */
     // To stringify from object to json
     public static String jsonize(Object obj){
@@ -152,13 +151,26 @@ public class RestLocalMethods {
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
             public void onResponse(Call<MyResponse<User>> call, Response<MyResponse<User>> response) {
-                if(!isResponseSuccessfull(response)) return;;
 
-                users = response.body().getData();
+                User newRailsUser;
+                if (!isResponseSuccessfull(response)){
+                    newRailsUser = null;
+                }
+                else {
+                    users = response.body().getData();
+                    newRailsUser = users.get(0);
+                    RestLocalMethods.setMyUserId(newRailsUser.getId());
+
+                }
+
                 if (type_of_check == FIRST_CHECK) {
-                    if (userToBeCreated != null) Toast.makeText(context,"User with email address " + users.get(0).getEmail() + " exists!" ,Toast.LENGTH_SHORT).show();
+                    if (newRailsUser != null) {
+                        Toast.makeText(context, "User with email address " + users.get(0).getEmail() + " exists!", Toast.LENGTH_SHORT).show();
+                        RestLocalMethods.setUserToken(newRailsUser.getAuth_token());
+                        RestLocalMethods.setMyUserId(newRailsUser.getId());
+                    }
                     else{
-                        Toast.makeText(context,"User with email address " + userToBeCreated.getEmail() + " doesn't exists!" ,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,"User with email address " + email + " doesn't exists!" ,Toast.LENGTH_SHORT).show();
                         SignInActivity.createUserOnBackend(userToBeCreated);
                     }
                 }
@@ -170,6 +182,8 @@ public class RestLocalMethods {
 
                 }
             }
+
+
 
             @Override
             public void onFailure(Call<MyResponse<User>> call, Throwable t) {}
@@ -554,7 +568,7 @@ public class RestLocalMethods {
 
     //PATCH
     public static void patchWall(  final Integer userId,final Integer houseId,
-                            Integer wallId, Integer roomId,Wall patchedWall){
+                                   Integer wallId, Integer roomId,Wall patchedWall){
 
         Call<MyResponse<Wall>> call = jsonPlaceHolderApi.patchWall(userId,houseId,roomId,wallId,patchedWall);
 
@@ -638,7 +652,7 @@ public class RestLocalMethods {
 
     //POST
     public static Shelf createShelf(   final Integer userId ,Integer houseId,
-                              Integer roomId, Integer wallId, Shelf shelf){
+                                       Integer roomId, Integer wallId, Shelf shelf){
 
         Call<MyResponse<Shelf>> call = jsonPlaceHolderApi.createShelf(userId,houseId, roomId, wallId, shelf);
 
@@ -663,7 +677,7 @@ public class RestLocalMethods {
 
     //PATCH
     public static void patchShelf(  final Integer userId,final Integer houseId,
-                             Integer roomId,Integer wallId,Integer shelfId, Shelf patchedShelf){
+                                    Integer roomId,Integer wallId,Integer shelfId, Shelf patchedShelf){
 
         Call<MyResponse<Shelf>> call = jsonPlaceHolderApi.patchShelf(userId, houseId, roomId, shelfId, wallId, patchedShelf);
 
@@ -773,7 +787,7 @@ public class RestLocalMethods {
 
     //POST
     public static Book createBook(   final Integer userId ,final Integer houseId,
-                             final Integer roomId, final Integer wallId,  final Integer shelfId ,Book book){
+                                     final Integer roomId, final Integer wallId,  final Integer shelfId ,Book book){
 
         books=null;
         Call<MyResponse<Book>> call = jsonPlaceHolderApi.createBook(userId,houseId, roomId, wallId, shelfId,book);
@@ -799,7 +813,7 @@ public class RestLocalMethods {
 
     //PATCH
     public static void patchBook(  final Integer userId,final Integer houseId,
-                            final Integer roomId,final Integer wallId, final Integer shelfId,final Integer bookId, Book patchedBook){
+                                   final Integer roomId,final Integer wallId, final Integer shelfId,final Integer bookId, Book patchedBook){
 
         Call<MyResponse<Book>> call = jsonPlaceHolderApi.patchBook(userId, houseId, roomId, wallId, shelfId,bookId, patchedBook);
 
@@ -822,7 +836,7 @@ public class RestLocalMethods {
 
     //DELETE
     public static void deleteBook(  final Integer userId, final Integer houseId, final Integer roomId,
-                             final Integer wallId ,final Integer shelfId, final Integer bookId){
+                                    final Integer wallId ,final Integer shelfId, final Integer bookId){
         Call<MyResponse<Book>> call = jsonPlaceHolderApi.deleteBook(userId,houseId,roomId, wallId,shelfId ,bookId);
         call.enqueue(new Callback<MyResponse<Book>>() {
             @Override
@@ -840,13 +854,13 @@ public class RestLocalMethods {
         });
     }
 
-private static Boolean isResponseSuccessfull(Response response){
-    if(! response.isSuccessful()){
-        Toast.makeText(context,"API response unsuccessful" ,Toast.LENGTH_SHORT).show();
-        return false;
+    private static Boolean isResponseSuccessfull(Response response){
+        if(! response.isSuccessful()){
+            Toast.makeText(context,"API response unsuccessful" ,Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
-    return true;
-}
 
     public static JsonPlaceHolderApi getJsonPlaceHolderApi() {
         return jsonPlaceHolderApi;
