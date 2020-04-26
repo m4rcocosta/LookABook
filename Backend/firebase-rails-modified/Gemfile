@@ -5,7 +5,6 @@ source 'https://rubygems.org'
 gem 'rails', '~> 5.2.0'
 # Use sqlite3 as the database for Active Record
 gem 'pg'
-gem 'rails_12factor', group: :production
 #gem 'sqlite3', group: :development
 
 # Use Puma as the app server
@@ -51,14 +50,12 @@ gem 'faker'
 
 gem 'firebase-ruby'
 
-# To introduce transactions used in Api::books controller 
-#gem 'dry-transaction'
 
 gem 'async-http'
 gem 'httparty'
 
+# To introduce transactions used in Api::books controller 
 gem 'dry-transaction'
 
 
-#ruby '2.5.0'
 ruby '2.7.1'
