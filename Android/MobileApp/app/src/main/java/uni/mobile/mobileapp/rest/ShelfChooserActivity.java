@@ -24,22 +24,44 @@ import uni.mobile.mobileapp.rest.atv.view.AndroidTreeView;
 
 public class ShelfChooserActivity extends AppCompatActivity {
 
+    private Boolean isFABOpen =false;
+    private FloatingActionButton fab1;
+    private FloatingActionButton fab2;
+    private FloatingActionButton fab3;
+    private FloatingActionButton fab4;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shelf_chooser);
 
-        FloatingActionButton fab = findViewById(R.id.floating_action_button);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                if(!isFABOpen){
+                    showFABMenu();
+                }else{
+                    closeFABMenu();
+                }
             }
         });
 
-        RestLocalMethods.initRetrofit(getApplicationContext(),RestLocalMethods.getUserToken()); //Todo remove it for user one
+        fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fab3 = (FloatingActionButton) findViewById(R.id.fab3);
+        fab4 = (FloatingActionButton) findViewById(R.id.fab4);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        RestLocalMethods.initRetrofit(getApplicationContext(),"fooToken"); //Todo remove it for user one
 
         /* Building the tree*/
         //Root
@@ -58,6 +80,26 @@ public class ShelfChooserActivity extends AppCompatActivity {
         //Add AndroidTreeView into view.
         AndroidTreeView tView = new AndroidTreeView(getApplicationContext(), root);
         ((LinearLayout) findViewById(R.id.shelfChoserLayout)).addView(tView.getView());
+
+
+
+    }
+
+    private void showFABMenu(){
+        isFABOpen=true;
+        fab1.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+        fab2.animate().translationY(-getResources().getDimension(R.dimen.standard_100));
+        fab3.animate().translationY(-getResources().getDimension(R.dimen.standard_145));
+        fab4.animate().translationY(-getResources().getDimension(R.dimen.standard_185));
+
+    }
+
+    private void closeFABMenu(){
+        isFABOpen=false;
+        fab1.animate().translationY(0);
+        fab2.animate().translationY(0);
+        fab3.animate().translationY(0);
+        fab4.animate().translationY(0);
 
     }
 }

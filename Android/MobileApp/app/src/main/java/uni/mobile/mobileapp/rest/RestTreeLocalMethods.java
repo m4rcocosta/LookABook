@@ -26,9 +26,13 @@ public class RestTreeLocalMethods {
      * ALL
      */
     public static void printAllObjectsFromUser(final TreeNode root,final Context ctx,final TextView textViewResult , JsonPlaceHolderApi jsonPlaceHolderApi){
-            getHouses(root, ctx, textViewResult, jsonPlaceHolderApi, true);
+        printAllObjectsFromUser(null, root, ctx, textViewResult , jsonPlaceHolderApi);
+    }
+    public static void printAllObjectsFromUser(final Integer userId,final TreeNode root,final Context ctx,final TextView textViewResult , JsonPlaceHolderApi jsonPlaceHolderApi){
+        getHouses(userId,root, ctx, textViewResult, jsonPlaceHolderApi, true);
 
     }
+
 
     /*
     User
@@ -41,9 +45,10 @@ public class RestTreeLocalMethods {
 
 
 
-    public  static void getHouses(final TreeNode parent,final Context ctx, final TextView textViewResult, final JsonPlaceHolderApi jsonPlaceHolderApi, final Boolean recursiveSearch  ){
-
-        Call<MyResponse<House>> call = jsonPlaceHolderApi.getHouses(RestLocalMethods.getMyUserId());
+    public  static void getHouses(Integer userId,final TreeNode parent,final Context ctx, final TextView textViewResult, final JsonPlaceHolderApi jsonPlaceHolderApi, final Boolean recursiveSearch  ){
+        if(userId==null)
+            userId=1; //TODO use the real one
+        Call<MyResponse<House>> call = jsonPlaceHolderApi.getHouses(userId);
 
         call.enqueue(new Callback<MyResponse<House>>() {
             @Override

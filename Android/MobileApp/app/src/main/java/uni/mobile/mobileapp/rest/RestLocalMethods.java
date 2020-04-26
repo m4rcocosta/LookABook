@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -37,6 +38,7 @@ import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import uni.mobile.mobileapp.SignInActivity;
 
 public class RestLocalMethods {
 
@@ -52,6 +54,11 @@ public class RestLocalMethods {
     private static Context context;
     private static Integer userId;
     private static String userToken;
+    public static final int FIRST_CHECK = 1;
+    public static final int SECOND_CHECK = 2;
+    public static final int MARCO_CHECK = 3;
+
+
 
 
     public static Boolean initRetrofit(Context ctx,String token){
@@ -68,7 +75,6 @@ public class RestLocalMethods {
         }
         if(userToken==null){
             Toast.makeText(ctx,"Token not found",Toast.LENGTH_SHORT).show();
-            userToken="";
         }
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -140,7 +146,7 @@ public class RestLocalMethods {
      */
 
 
-    public static User getUserByEmail( String email){
+    public static User getUserByEmail( String email,FirebaseUser userToBeCreated,int type_of_check){
         users = null;
         Call<MyResponse<User>> call = jsonPlaceHolderApi.getUserByEmail(email);
         call.enqueue(new Callback<MyResponse<User>>() {
@@ -149,6 +155,20 @@ public class RestLocalMethods {
                 if(!isResponseSuccessfull(response)) return;;
 
                 users = response.body().getData();
+                if (type_of_check == FIRST_CHECK) {
+                    if (userToBeCreated != null) Toast.makeText(context,"User with email address " + users.get(0).getEmail() + " exists!" ,Toast.LENGTH_SHORT).show();
+                    else{
+                        Toast.makeText(context,"User with email address " + userToBeCreated.getEmail() + " doesn't exists!" ,Toast.LENGTH_SHORT).show();
+                        SignInActivity.createUserOnBackend(userToBeCreated);
+                    }
+                }
+                else if (type_of_check == SECOND_CHECK){
+                    checkGetUserByMail( users.get(0));
+                }
+
+                else{
+
+                }
             }
 
             @Override
@@ -187,6 +207,15 @@ public class RestLocalMethods {
                 if(!isResponseSuccessfull(response)) return;;
 
                 users = response.body().getData();
+                User newRailsUser = users.get(0);
+                if(newRailsUser!=null) {
+                    Toast.makeText(context, "User with email address " + newRailsUser.getEmail() + " created on backend!", Toast.LENGTH_SHORT).show();
+                    RestLocalMethods.setMyUserId(newRailsUser.getId());
+                    RestLocalMethods.setUserToken(newRailsUser.getAuth_token());
+                }
+                else {
+                    Toast.makeText(context, "User not  created on backend (fail)!", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -194,6 +223,30 @@ public class RestLocalMethods {
         });
         if (users != null) return users.get(0);
         else return null;
+    }
+
+
+    private static void checkCreate(User newRailsUser, String mail) {
+        if(newRailsUser!=null) {
+            Toast.makeText(context, "User with email address " + newRailsUser.getEmail() + " created on backend!", Toast.LENGTH_SHORT).show();
+            RestLocalMethods.setMyUserId(newRailsUser.getId());
+            RestLocalMethods.setUserToken(newRailsUser.getAuth_token());
+        }
+        else {
+
+        }
+
+    }
+
+    private static void checkGetUserByMail(User oldRailsUser){
+
+        if(oldRailsUser!=null) {
+            RestLocalMethods.setMyUserId(oldRailsUser.getId());
+            Toast.makeText(context, "User found on rails", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(context, "Problem with api result in creation of user", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public static User patchUser(  int userId,  User user){

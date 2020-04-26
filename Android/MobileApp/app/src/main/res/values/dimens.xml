@@ -4,4 +4,28 @@
     <dimen name="treeview_right_padding">20dp</dimen>
     <dimen name="treeview_top_padding">20dp</dimen>
     <dimen name="treeview_bottom_padding">20dp</dimen>
+
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+
+    <dimen name="standard_12">12dp</dimen>
+    <dimen name="standard_23">23dp</dimen>
+    <dimen name="standard_55">55dp</dimen>
+    <dimen name="standard_100">100dp</dimen>
+    <dimen name="standard_145">145dp</dimen>
+    <dimen name="standard_185">185dp</dimen>
+    <dimen name="logo_w_h">100dp</dimen>
+    <dimen name="button_size">25sp</dimen>
+    <dimen name="title_size">40sp</dimen>
+    <dimen name="header_size">30sp</dimen>
+    <dimen name="options_size">20sp</dimen>
+    <dimen name="info_size">15sp</dimen>
+    <dimen name="text_input_size">25sp</dimen>
+    <dimen name="edit_info_button_size">65dp</dimen>
+
+
 </resources>

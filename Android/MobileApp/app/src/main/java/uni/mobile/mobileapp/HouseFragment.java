@@ -66,7 +66,7 @@ public class HouseFragment extends Fragment {
                 Request original = chain.request();
 
                 Request request = original.newBuilder()
-                        .header("TOKEN", RestLocalMethods.getUserToken())
+                        .header("TOKEN", "2gckKwQEs396rdmXdVeERKa5")
                         .header("Accept", "application/json")
                         .method(original.method(), original.body())
                         .build();
