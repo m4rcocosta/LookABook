@@ -53,7 +53,7 @@ public class ShowRestResultActivity extends AppCompatActivity {
                         .addInterceptor(loggingInterceptor)
                         .build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://lookabook.herokuapp.com/api/v1/")
+                .baseUrl("http://192.168.1.174:3000/api/v1/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();

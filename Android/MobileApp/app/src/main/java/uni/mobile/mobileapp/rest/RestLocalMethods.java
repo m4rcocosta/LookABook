@@ -92,7 +92,7 @@ public class RestLocalMethods {
             }
         });
 
-        String railsHostBaseUrl="http://192.168.1.157:3000/api/v1/";
+        String railsHostBaseUrl="http://192.168.1.174:3000/api/v1/";
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         Gson gson = new GsonBuilder()
