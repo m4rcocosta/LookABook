@@ -54,11 +54,15 @@ public class HouseFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
- 
 
-addHouseButton = view.findViewById(R.id.addHouseButton);
+        addHouseButton = view.findViewById(R.id.addHouseButton);
         addHouseButton.setOnClickListener(new View.OnClickListener() {
             @Override
+<<<<<<< HEAD
+            public void onClick(View view) {
+                Snackbar.make(getActivity().findViewById(android.R.id.content), "Here's a Snackbar", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+=======
             public void onClick(View v) {
                 LayoutInflater inflater = getLayoutInflater();
                 View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_add_house, null);
@@ -77,21 +81,42 @@ addHouseButton = view.findViewById(R.id.addHouseButton);
                         })
                         .setNegativeButton("Cancel", null)
                         .show();
-            }
-        });
-
-        FloatingActionButton fab = view.findViewById(R.id.floating_action_button);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+>>>>>>> e60042b4d490123ef497cf8aa584600e07521e2c
             }
         });
 
       RestLocalMethods.initRetrofit(getContext(),RestLocalMethods.getUserToken());
 
+<<<<<<< HEAD
         Call<MyResponse<House>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getHouses(RestLocalMethods.getMyUserId());
+=======
+        String railsHostBaseUrl="https://lookabookreal.herokuapp.com/api/v1/";
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        Gson gson = new GsonBuilder()
+                .enableComplexMapKeySerialization()
+                .serializeNulls()
+                .setDateFormat(DateFormat.LONG)
+                .disableInnerClassSerialization()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .setPrettyPrinting()
+                .setVersion(1.0)
+                .create();
+
+        OkHttpClient client = httpClient
+                .addInterceptor(loggingInterceptor)
+                .build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(railsHostBaseUrl)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
+                .build();
+
+
+        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+
+        Call<MyResponse<House>> callAsync = jsonPlaceHolderApi.getHouses(RestLocalMethods.getMyUserId()); //TODO correct userID
+>>>>>>> e60042b4d490123ef497cf8aa584600e07521e2c
         callAsync.enqueue(new Callback<MyResponse<House>>()
         {
 

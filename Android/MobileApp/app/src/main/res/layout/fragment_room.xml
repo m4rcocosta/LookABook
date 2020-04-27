@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BookFragment">
+    tools:context=".RoomFragment">
 
     <ListView
-        android:id="@+id/bookList"
+        android:id="@+id/roomList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
@@ -18,7 +18,7 @@
         <!-- Main content -->
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addBookButton"
+            android:id="@+id/addRoomButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"

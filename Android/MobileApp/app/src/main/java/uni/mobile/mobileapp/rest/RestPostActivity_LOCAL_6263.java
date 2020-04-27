@@ -52,11 +52,7 @@
                     .addInterceptor(loggingInterceptor)
                     .build();
             Retrofit retrofit = new Retrofit.Builder()
-<<<<<<< HEAD
                     .baseUrl("http://lookabookreal.herokuapp.com/api/v1/")
-=======
-                    .baseUrl("https://lookabookreal.herokuapp.com/api/v1/")
->>>>>>> e60042b4d490123ef497cf8aa584600e07521e2c
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();

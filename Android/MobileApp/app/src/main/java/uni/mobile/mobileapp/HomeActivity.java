@@ -40,7 +40,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.storage.FirebaseStorage;
@@ -74,7 +73,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
 
         context = this;
 
@@ -120,11 +118,30 @@ public class HomeActivity extends AppCompatActivity {
         nv = findViewById(R.id.navigation);
         bottomNavigationView = findViewById(R.id.bottomNavigation);
 
+        // No item selected on bottom navbar
+        for(int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
+            bottomNavigationView.getMenu().getItem(i).setCheckable(false);
+        }
+
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
+                for(int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
+                    bottomNavigationView.getMenu().getItem(i).setCheckable(false);
+                }
                 switch (id) {
+                    case R.id.nav_home:
+                        if (item.getItemId() == navigationSelectedItem) {
+                            bottomNavigationSelectedItem = -1;
+                            dl.closeDrawers();
+                            break;
+                        }
+                        navigationSelectedItem = R.id.nav_home;
+                        bottomNavigationSelectedItem = -1;
+                        openFragment(new HomeFragment());
+                        dl.closeDrawers();
+                        return true;
                     case R.id.nav_profile:
                         if (item.getItemId() == navigationSelectedItem) {
                             bottomNavigationSelectedItem = -1;
@@ -144,13 +161,14 @@ public class HomeActivity extends AppCompatActivity {
                         }
                         navigationSelectedItem = R.id.nav_settings;
                         bottomNavigationSelectedItem = -1;
-                        openFragment(new SettingsFragment(bottomNavigationView));
+                        openFragment(new SettingsFragment());
                         dl.closeDrawers();
                         return true;
                     case R.id.nav_info:
+                        dl.closeDrawers();
                         new AlertDialog.Builder(context)
                                 .setTitle("App information")
-                                .setMessage("This app is created by Giuseppe Capaldi and Marco Costa")
+                                .setMessage("This app is created by Giuseppe Capaldi and Marco Costa.\nIt was developed for Mobile Application and Cloud Computing course.\nCopyright \u00a9 2020, La Sapienza Università di Roma")
                                 .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
                                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                     @Override
@@ -171,18 +189,33 @@ public class HomeActivity extends AppCompatActivity {
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                for(int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
+                    bottomNavigationView.getMenu().getItem(i).setCheckable(true);
+                }
                 switch (item.getItemId()) {
-                    case R.id.navigation_home:
-                        if (item.getItemId() == bottomNavigationSelectedItem) break;
-                        navigationSelectedItem = -1;
-                        bottomNavigationSelectedItem = R.id.navigation_home;
-                        openFragment(new HomeFragment());
-                        return true;
                     case R.id.navigation_house:
                         if (item.getItemId() == bottomNavigationSelectedItem) break;
                         navigationSelectedItem = -1;
                         bottomNavigationSelectedItem = R.id.navigation_house;
                         openFragment(new HouseFragment());
+                        return true;
+                    case R.id.navigation_room:
+                        if (item.getItemId() == bottomNavigationSelectedItem) break;
+                        navigationSelectedItem = -1;
+                        bottomNavigationSelectedItem = R.id.navigation_room;
+                        openFragment(new RoomFragment());
+                        return true;
+                    case R.id.navigation_wall:
+                        if (item.getItemId() == bottomNavigationSelectedItem) break;
+                        navigationSelectedItem = -1;
+                        bottomNavigationSelectedItem = R.id.navigation_wall;
+                        openFragment(new WallFragment());
+                        return true;
+                    case R.id.navigation_shelf:
+                        if (item.getItemId() == bottomNavigationSelectedItem) break;
+                        navigationSelectedItem = -1;
+                        bottomNavigationSelectedItem = R.id.navigation_shelf;
+                        openFragment(new ShelfFragment());
                         return true;
                     case R.id.navigation_book:
                         if (item.getItemId() == bottomNavigationSelectedItem) break;
@@ -221,9 +254,6 @@ public class HomeActivity extends AppCompatActivity {
 
         User railsUser = RestLocalMethods.getUserByEmail(user.getEmail(),user,RestLocalMethods.FIRST_CHECK);
 
-
-
-
         if (getUserProvider(user).equals("GOOGLE")) {
             Uri imageUri = Uri.parse(user.getPhotoUrl().toString().replace("s96-c", "s400-c"));
             Picasso.get().load(imageUri).fit().centerInside().into(profilePic);
@@ -243,12 +273,6 @@ public class HomeActivity extends AppCompatActivity {
         }
         navTitle.setText(user.getDisplayName());
         Toast.makeText(HomeActivity.this, "Welcome, " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
-
-
-        //loading the default fragment
-        bottomNavigationSelectedItem = R.id.navigation_home;
-        navigationSelectedItem = R.id.navigation_home;
-        openFragment(new HomeFragment());
 
         if (getUserProvider(user).equals("FIREBASE") && !user.isEmailVerified()) {
             new AlertDialog.Builder(context)
@@ -271,6 +295,11 @@ public class HomeActivity extends AppCompatActivity {
                     })
                     .show();
         }
+
+        //loading the default fragment
+        bottomNavigationSelectedItem = -1;
+        navigationSelectedItem = R.id.nav_home;
+        openFragment(new HomeFragment());
     }
 
     @Override

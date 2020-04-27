@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home_white_24dp"
-        android:title="@string/home_navigation"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/navigation_house"
-        android:icon="@drawable/ic_house_white_24dp"
+        android:icon="@drawable/ic_home_white_24dp"
         android:title="@string/house_navigation"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/navigation_room"
+        android:icon="@drawable/ic_room"
+        android:title="@string/room_navigation"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/navigation_wall"
+        android:icon="@drawable/ic_wall"
+        android:title="@string/wall_navigation"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/navigation_shelf"
+        android:icon="@drawable/ic_shelf"
+        android:title="@string/shelf_navigation"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/navigation_book"
-        android:icon="@drawable/ic_book_white_24dp"
+        android:icon="@drawable/ic_book"
         android:title="@string/book_navigation"
         app:showAsAction="ifRoom" />
 </menu>
