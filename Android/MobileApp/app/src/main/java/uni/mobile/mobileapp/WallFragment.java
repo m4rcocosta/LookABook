@@ -5,14 +5,28 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import uni.mobile.mobileapp.guiAdapters.ListAdapter;
+import uni.mobile.mobileapp.rest.MyResponse;
+import uni.mobile.mobileapp.rest.RestLocalMethods;
+import uni.mobile.mobileapp.rest.Wall;
 
 public class WallFragment extends Fragment {
 
@@ -47,6 +61,60 @@ public class WallFragment extends Fragment {
                         })
                         .setNegativeButton("Cancel", null)
                         .show();
+            }
+        });
+
+        RestLocalMethods.initRetrofit(this.getContext());
+        
+        Call<MyResponse<Wall>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getAllWalls(RestLocalMethods.getMyUserId());
+        callAsync.enqueue(new Callback<MyResponse<Wall>>()
+        {
+
+            @Override
+            public void onResponse(Call<MyResponse<Wall>> call, Response<MyResponse<Wall>> response)
+            {
+                if (response.isSuccessful())
+                {
+
+                    List<Wall> walls = response.body().getData();
+
+                    ArrayList<String> names = new ArrayList<String>();
+                    ArrayList<String> subNames = new ArrayList<String>();
+                    for(Wall b: walls){
+                        names.add( b.getName() ) ;
+                        subNames.add("None");
+                    }
+
+                    ListView lView = view.findViewById(R.id.wallList);
+
+                    ListAdapter lAdapter = new ListAdapter(getContext(), names, subNames, null,R.drawable.ic_wallicon2);
+
+                    lView.setAdapter(lAdapter);
+                    if(getContext()==null)  //too late now to print
+                        return;
+                    Toast.makeText(getContext(), "Found " + walls.size() +" walls", Toast.LENGTH_SHORT).show();
+                    Log.d("WWWW",names.toString());
+                    lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                            Toast.makeText(getContext(), names.get(i), Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+
+
+                }
+                else
+                {
+                    Log.d("WWWW","Request Error :: " + response.errorBody());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MyResponse<Wall>> call, Throwable t)
+            {
+                Log.d("WWWW","Request Error :: " + t.getMessage() );
             }
         });
     }

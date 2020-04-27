@@ -13,6 +13,15 @@ class Api::V1::ShelvesController < ApiController
     shelves = @wall.shelves
     render json: {status: 'SUCCESS', message: 'Loaded all shelves', data: shelves}, status: :ok
   end
+
+
+  def allShelves
+    houses=@user.houses
+    rooms= houses.map(&:rooms).flatten()
+    walls = rooms.map(&:walls).flatten()
+    shelves = walls.map(&:shelves).flatten()
+    render json: {status: 'SUCCESS', message: 'Loaded all shelves', data: shelves}, status: :ok 
+  end
   
   # GET /shelves/1
   # GET /shelves/1.json
@@ -75,16 +84,22 @@ class Api::V1::ShelvesController < ApiController
   
   
   def get_house
+    if params[:house_id]
     @house = House.find(params[:house_id])
+  end
   end
   
   
   def get_room
+    if params[:room_id]
     @room = Room.find(params[:room_id])
+    end
   end
   
   def get_wall
+    if params[:wall_id]
     @wall = Wall.find(params[:wall_id])
+    end
   end
   
   # Use callbacks to share common setup or constraints between actions.

@@ -16,7 +16,7 @@ class Api::V1::RoomsController < ApiController
   def allRooms
     houses=@user.houses
     rooms= houses.map(&:rooms).flatten() 
-    render json: {status: 'SUCCESS', message: 'Loaded all books', data: rooms}, status: :ok
+    render json: {status: 'SUCCESS', message: 'Loaded all rooms', data: rooms}, status: :ok
   end
   
   # GET /rooms/1
@@ -83,7 +83,9 @@ class Api::V1::RoomsController < ApiController
   
   
   def get_house
+    if(params[:house_id])
     @house = House.find(params[:house_id])
+    end
   end
   
   
