@@ -34,7 +34,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import uni.mobile.mobileapp.guiAdapters.ListAdapter;
 import uni.mobile.mobileapp.rest.House;
-import uni.mobile.mobileapp.rest.House;
 import uni.mobile.mobileapp.rest.JsonPlaceHolderApi;
 import uni.mobile.mobileapp.rest.MyResponse;
 import uni.mobile.mobileapp.rest.RestLocalMethods;
@@ -54,8 +53,7 @@ public class HouseFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
 
@@ -85,7 +83,6 @@ public class HouseFragment extends Fragment {
                 .disableInnerClassSerialization()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .setPrettyPrinting()
-                //.excludeFieldsWithoutExposeAnnotation()
                 .setVersion(1.0)
                 .create();
 

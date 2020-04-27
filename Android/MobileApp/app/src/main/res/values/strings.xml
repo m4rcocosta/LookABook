@@ -18,6 +18,9 @@
     <string name="profile_navigation">Profile</string>
     <string name="settings_navigation">Settings</string>
     <string name="house_navigation">Houses</string>
+    <string name="room_navigation">Rooms</string>
+    <string name="wall_navigation">Walls</string>
+    <string name="shelf_navigation">Shelfs</string>
     <string name="book_navigation">Books</string>
 
 

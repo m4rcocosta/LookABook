@@ -51,6 +51,7 @@
         android:layout_gravity="bottom"
         android:background = "@color/colorPrimary"
         app:menu="@menu/bottom_navigation"
+        app:labelVisibilityMode="labeled"
         app:itemIconTint="@drawable/selected_bottom_navigation_item_color"
         app:itemTextColor="@drawable/selected_bottom_navigation_item_color"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

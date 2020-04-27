@@ -28,61 +28,75 @@
                 android:layout_height="match_parent"
                 android:padding="15dp">
 
-            <RadioGroup
-                android:id="@+id/radioTheme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checkedButton="@+id/radioDay"
-                android:orientation="vertical">
-                <TextView
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/textColorPrimary"/>
+                <RadioGroup
+                    android:id="@+id/radioTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/theme"
+                    android:checkedButton="@+id/radioDay"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/theme"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/header_size"
+                        android:id="@+id/theme_textview"/>
+                    <RadioButton
+                        android:id="@+id/radioDay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/options_size"
+                        android:text="@string/day"/>
+                    <RadioButton
+                        android:id="@+id/radioNight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/options_size"
+                        android:text="@string/night"/>
+                    <RadioButton
+                        android:id="@+id/radioAuto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/options_size"
+                        android:text="@string/auto"/>
+                    <RadioButton
+                        android:id="@+id/radioBattery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/options_size"
+                        android:text="@string/battery"/>
+                </RadioGroup>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/textColorPrimary"/>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/useBiometricsSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:textSize="@dimen/header_size"
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/header_size"
-                    android:id="@+id/theme_textview"/>
-                <RadioButton
-                    android:id="@+id/radioDay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/options_size"
-                    android:text="@string/day"/>
-                <RadioButton
-                    android:id="@+id/radioNight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/options_size"
-                    android:text="@string/night"/>
-                <RadioButton
-                    android:id="@+id/radioAuto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/options_size"
-                    android:text="@string/auto"/>
-                <RadioButton
-                    android:id="@+id/radioBattery"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/options_size"
-                    android:text="@string/battery"/>
-            </RadioGroup>
+                    app:useMaterialThemeColors="false"
+                    android:text="@string/biometric_authentication"/>
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/useBiometricsSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:textSize="@dimen/header_size"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimary"
-                app:useMaterialThemeColors="false"
-                android:text="@string/biometric_authentication"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/textColorPrimary"/>
             </TableLayout>
         </LinearLayout>
     </ScrollView>
