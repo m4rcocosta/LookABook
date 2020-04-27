@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +59,7 @@ public class HomeActivity extends AppCompatActivity {
     private static final int STORAGE_PERMISSION_CODE = 101;
     private int bottomNavigationSelectedItem, navigationSelectedItem;
     private Toolbar toolbar;
+    private Button scanButton;
     private DrawerLayout dl;
     private TextView titleToolbar;
     private ActionBarDrawerToggle t;
@@ -88,6 +91,12 @@ public class HomeActivity extends AppCompatActivity {
 
         titleToolbar = findViewById(R.id.toolbar_title);
         dl = findViewById(R.id.activity_home);
+
+        scanButton = findViewById(R.id.scanButton);
+        scanButton.setClickable(false);
+
+
+
         t = new ActionBarDrawerToggle(this, dl, toolbar, R.string.Open, R.string.Close) {
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -197,7 +206,18 @@ public class HomeActivity extends AppCompatActivity {
         //Do whatever
         Log.d("User", "GetTokenResult result = " + idToken);
 
+        Activity act=this;
         RestLocalMethods.initRetrofit(context, idToken );
+        scanButton.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Perform action on click
+                Toast.makeText(getApplicationContext(),"scan",Toast.LENGTH_SHORT).show();
+                RestLocalMethods.scanAllBooks(act,scanButton);
+            }
+        });
+
+        scanButton.setClickable(true);
 
         User railsUser = RestLocalMethods.getUserByEmail(user.getEmail(),user,RestLocalMethods.FIRST_CHECK);
 
@@ -317,5 +337,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }

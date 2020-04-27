@@ -1,5 +1,7 @@
 package uni.mobile.mobileapp.rest;
 
+import uni.mobile.mobileapp.rest.googleJson.GoogleBook;
+
 public class Book {
     private Integer id;
     private String title;
@@ -14,7 +16,7 @@ public class Book {
     private String country;
     private Float price;
     private Integer shelfId;
-    private String googleData;
+    private GoogleBook googleData;
 
     public Book( String title,  String authors, String publisher, String publishedDate, String description, Integer isbn, Integer pageCount, String categories, String imageLinks, String country, Float price, Integer shelfId) {
         this.title = title;

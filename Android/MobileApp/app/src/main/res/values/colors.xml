@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#0097a7</color>
     <color name="colorAccent">#ffdf00</color>
     <color name="gray">#CCCCCC</color>
+    <color name="shrine_pink_100">#7A1083</color>
+    <color name="shrine_pink_900">#210983</color>
+
 </resources>

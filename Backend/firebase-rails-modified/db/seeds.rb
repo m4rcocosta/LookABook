@@ -9,16 +9,28 @@
 
 Room.create(name: 'my_room', created_at: Time.now, updated_at: Time.now)
 
-
+admin=true
+houses=[]
+$user=nil
+$adUser=nil
 5.times do
-
-    user=User.create({
-        name: Faker::Name.name,
-        phone: Faker::PhoneNumber.cell_phone,
-        email: Faker::Internet.email
-        })
-    user.save
-
+    if admin
+        # FIREBASE TOKEN MISMATCH PROBLEM
+        # $adUser=User.create({
+        #     name: Faker::Name.name,
+        #     phone: Faker::PhoneNumber.cell_phone,
+        #     email: "pubadv99@gmail.com"
+        #     })
+        # $adUser.save
+        admin=false
+    else
+        $user=User.create({
+            name: Faker::Name.name,
+            phone: Faker::PhoneNumber.cell_phone,
+            email: Faker::Internet.email
+            })
+        $user.save
+    end
     2.times do
         h= House.create({
             name: Faker::Address.street_name 
@@ -30,7 +42,8 @@ Room.create(name: 'my_room', created_at: Time.now, updated_at: Time.now)
                 2.times do
                     s = Shelf.create({name: Faker::House.furniture })
                     2.times do
-                        b = Book.create({title: Faker::Book.title})
+                        b = Book.create({title: Faker::Book.title,
+                        authors: Faker::Book.author})
                         b.save
                         s.books << b
                     end
@@ -44,10 +57,17 @@ Room.create(name: 'my_room', created_at: Time.now, updated_at: Time.now)
             h.rooms << r
         end
         h.save
-        user.houses << h
+        if($user!=nil)
+            $user.houses << h
+        elsif ($user!=nil)
+            $adUser.houses << h
+        end
     end
-    user.save
-
+    if($user!=nil)
+        $user.save
+    elsif ($user!=nil)
+        $adUser.save
+    end
         # HOUSE Faker::Address.street_name 
         # ROOM       Faker::House.room #=> "kitchen"
         # Wall Faker::Address.building_number 

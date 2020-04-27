@@ -76,6 +76,8 @@ public class BookFragment extends Fragment {
                     ListAdapter lAdapter = new ListAdapter(getContext(), titles, authors, null,R.drawable.ic_book_red);
 
                     lView.setAdapter(lAdapter);
+                    if(getContext()==null)  //too late now to print
+                        return;
                     Toast.makeText(getContext(), "Found " + books.size() +" books", Toast.LENGTH_SHORT).show();
                     Log.d("BBBB",titles.toString());
                     lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -14,21 +14,6 @@
         android:layout_gravity="center"
         android:textSize="@dimen/button_size"/>
 
-    <Button
-        android:id="@+id/restButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="100dp"
-        android:text="rest get" />
-
-    <Button
-        android:id="@+id/restPostButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="150dp"
-        android:text="rest post" />
 
     <Button
         android:id="@+id/chooseShelfButton"

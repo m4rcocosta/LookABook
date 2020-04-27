@@ -21,8 +21,6 @@
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".rest.ShowRestResultActivity" />
-        <activity android:name=".rest.RestPostActivity" />
         <activity android:name=".recognition.TextRecognitionActivity" />
         <activity android:name=".EditProfileActivity" />
         <activity android:name=".ResetPasswordActivity" />

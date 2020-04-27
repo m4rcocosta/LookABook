@@ -54,54 +54,14 @@ public class HouseFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+                Snackbar.make(getActivity().findViewById(android.R.id.content), "Here's a Snackbar", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
+      RestLocalMethods.initRetrofit(getContext(),RestLocalMethods.getUserToken());
 
-                Request request = original.newBuilder()
-                        .header("TOKEN", RestLocalMethods.getUserToken())
-                        .header("Accept", "application/json")
-                        .method(original.method(), original.body())
-                        .build();
-
-                return chain.proceed(request);
-            }
-        });
-
-        String railsHostBaseUrl="http://192.168.1.157:3000/api/v1/";
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        Gson gson = new GsonBuilder()
-                .enableComplexMapKeySerialization()
-                .serializeNulls()
-                .setDateFormat(DateFormat.LONG)
-                .disableInnerClassSerialization()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .setPrettyPrinting()
-                //.excludeFieldsWithoutExposeAnnotation()
-                .setVersion(1.0)
-                .create();
-
-        OkHttpClient client = httpClient
-                .addInterceptor(loggingInterceptor)
-                .build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(railsHostBaseUrl)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(client)
-                .build();
-
-
-        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-
-        Call<MyResponse<House>> callAsync = jsonPlaceHolderApi.getHouses(RestLocalMethods.getMyUserId()); //TODO correct userID
+        Call<MyResponse<House>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getHouses(RestLocalMethods.getMyUserId());
         callAsync.enqueue(new Callback<MyResponse<House>>()
         {
 
@@ -125,12 +85,15 @@ public class HouseFragment extends Fragment {
                     ListAdapter lAdapter = new ListAdapter(getContext(), names, null, null,R.drawable.ic_houseicon);
 
                     lView.setAdapter(lAdapter);
+                    if(getContext()==null)
+                        return;
                     Toast.makeText(getContext(), "Found " + houses.size() +" Houses", Toast.LENGTH_SHORT).show();
                     Log.d("BBBB",names.toString());
                     lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+                            if(getContext()==null)
+                                return;
                             Toast.makeText(getContext(), names.get(i), Toast.LENGTH_SHORT).show();
 
                         }

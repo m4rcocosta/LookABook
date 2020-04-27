@@ -17,9 +17,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import uni.mobile.mobileapp.recognition.TextRecognitionActivity;
-import uni.mobile.mobileapp.rest.RestPostActivity;
 import uni.mobile.mobileapp.rest.ShelfChooserActivity;
-import uni.mobile.mobileapp.rest.ShowRestResultActivity;
 
 public class HomeFragment extends Fragment {
 
@@ -49,27 +47,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        //Todo check on internet connection
-        Button restButton = view.findViewById(R.id.restButton);
-        restButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
 
-                Intent intent = new Intent(getActivity(), ShowRestResultActivity.class);
-                startActivity(intent);
 
-            }
-        });
-
-        //Todo check on internet connection
-        Button restPostButton = view.findViewById(R.id.restPostButton);
-        restPostButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                Intent intent = new Intent(getActivity(), RestPostActivity.class);
-                startActivity(intent);
-
-            }
-        });
 
         //Todo check on internet connection
         Button chooseShelfButton = view.findViewById(R.id.chooseShelfButton);

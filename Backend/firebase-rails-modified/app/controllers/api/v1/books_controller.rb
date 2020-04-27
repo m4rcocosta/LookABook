@@ -31,7 +31,7 @@ class Api::V1::BooksController < ApiController
     book=@book
     render json: {status: 'SUCCESS', message: 'Loaded all book', data: [book]}, status: :ok
   end
-
+  
   # GET all books for a user
   def allBooks
     houses=@user.houses
@@ -42,7 +42,7 @@ class Api::V1::BooksController < ApiController
     render json: {status: 'SUCCESS', message: 'Loaded all books', data: books}, status: :ok
   end
   
-
+  
   
   # # GET /books/new
   # def new
@@ -100,8 +100,25 @@ class Api::V1::BooksController < ApiController
     puts "Async search started >>>"
     render json: {status: 'SUCCESS', message: 'Search on Google request received', data: books}, status: :ok
   end
-
-
+  
+  #GET /scanAllBooks
+  def scanAllBooks
+    houses=@user.houses
+    rooms= houses.map(&:rooms).flatten() 
+    walls = rooms.map(&:rooms).flatten()
+    shelves = walls.map(&:rooms).flatten()
+    books = shelves.map(&:rooms).flatten()
+    puts "<<< Starting Async search"
+    my_threads = []
+    books.each do |b|
+      puts "Starting thread for #{b.title}"
+      my_threads << Thread.new{ google_search(b)} 
+    end
+    
+    puts "Async search started >>>"
+    render json: {status: 'SUCCESS', message: 'Search on Google request received', data: books}, status: :ok
+  end
+  
   
   
   private
@@ -117,56 +134,57 @@ class Api::V1::BooksController < ApiController
     puts "Resonse:" + JSON.pretty_generate(response)
     book.googleData = response
     if book.save
-      puts ""
+      puts "[V] Book #{book.title} updated"
     else
-      puts "ERROR"
+      if room.errors.any?
+        puts "[E] #{ book.errors.full_messages }"
+      end
     end
   end
   
   def get_user
     if(params[:user_id])
-    @user = User.find(params[:user_id])
+      @user = User.find(params[:user_id])
     end
   end
   
   
   def get_house
     if(params[:house_id])
-    @house = House.find(params[:house_id])
+      @house = House.find(params[:house_id])
     end
   end
   
   
   def get_room
     if(params[:room_id])
-    @room = Room.find(params[:room_id])
+      @room = Room.find(params[:room_id])
     end
   end
   
   def get_wall
     if(params[:wall_id])
-    @wall = Wall.find(params[:wall_id])
+      @wall = Wall.find(params[:wall_id])
     end
   end
   
   
   def get_shelf
     if(params[:shelf_id])
-    @shelf = Shelf.find(params[:shelf_id])
+      @shelf = Shelf.find(params[:shelf_id])
     end
   end
   
   # Use callbacks to share common setup or constraints between actions.
   def set_book
     if(params[:id])
-    @book = Book.find(params[:id])
+      @book = Book.find(params[:id])
     end
   end
   
   # Never trust parameters from the scary internet, only allow the white list through.
   def book_params
     params.permit(:title, :authors, :publisher, :publishedDate, :description,
-      :isbn, :pageCount, :categories, :imageLinks, :country, :price)
-    end
+    :isbn, :pageCount, :categories, :imageLinks, :country, :price)
   end
-  
+end

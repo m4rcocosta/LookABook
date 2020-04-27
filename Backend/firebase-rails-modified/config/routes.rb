@@ -57,6 +57,9 @@ Rails.application.routes.draw do
       get '/allBooks/:user_id',
       to: 'books#allBooks', as: "allBooks"
 
+      get '/scan-all-books/:user_id',
+      to: 'books#scanAllBooks'
+
     end
   end
 
