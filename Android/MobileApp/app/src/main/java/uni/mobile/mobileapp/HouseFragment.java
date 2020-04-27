@@ -80,14 +80,7 @@ addHouseButton = view.findViewById(R.id.addHouseButton);
             }
         });
 
-        FloatingActionButton fab = view.findViewById(R.id.floating_action_button);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
       RestLocalMethods.initRetrofit(getContext(),RestLocalMethods.getUserToken());
 
