@@ -2,6 +2,7 @@ package uni.mobile.mobileapp.rest;
 
 import android.content.Context;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -20,7 +21,6 @@ import uni.mobile.mobileapp.rest.atv.model.TreeNode;
 public class RestTreeLocalMethods {
 
     public  static Multimap<String, Integer> objectsIds = HashMultimap.create();
-
 
     /*
      * ALL
@@ -53,16 +53,10 @@ public class RestTreeLocalMethods {
         call.enqueue(new Callback<MyResponse<House>>() {
             @Override
             public void onResponse(Call<MyResponse<House>> call, Response<MyResponse<House>> response) {
-                if(!response.isSuccessful()){
-                    if(textViewResult!=null) textViewResult.setText( "House Code: " + response.code());
-                    return;
-                }
+                if(!isResponseSuccessfull(response))return;
 
                 List<House> houses = response.body().getData();
-                String content = "\n HOUSES \n";
-                if(textViewResult!=null) textViewResult.append(content);
                 for(House house: houses){
-                    content="";
                     objectsIds.put("houses",house.getId());
                     //Child
                     MyHolder.IconTreeItem childItem = new MyHolder.IconTreeItem(R.drawable.ic_houseicon, house.getName() );
@@ -70,9 +64,6 @@ public class RestTreeLocalMethods {
                     //Add child.
                     parent.addChildren(child);
 
-
-                    content += "Name: " + house.getName() + "\n";
-                    if(textViewResult!=null) textViewResult.append(content);
 
                     if(recursiveSearch){
                         getRooms(child,ctx,textViewResult,jsonPlaceHolderApi,house.getId(),true);
@@ -108,13 +99,9 @@ public class RestTreeLocalMethods {
         call.enqueue(new Callback<MyResponse<Room>>() {
             @Override
             public void onResponse(Call<MyResponse<Room>> call, Response<MyResponse<Room>> response) {
-                if (!response.isSuccessful()) {
-                    if(textViewResult!=null) textViewResult.setText("Code: " + response.code());
-                    return;
-                }
+                if(!isResponseSuccessfull(response))return;
+
                 List<Room> rooms = response.body().getData();
-                String content = "\n ROOMS" + "\n";
-                if(textViewResult!=null) textViewResult.append(content);
                 for (Room room : rooms) {
                     objectsIds.put("rooms", room.getId());
                     //Child
@@ -124,13 +111,9 @@ public class RestTreeLocalMethods {
                     child.setSelected(false);
                     parent.addChildren(child);
 
-                    content += "";
-                    content += "ID: " + room.getId() + "\n";
-                    content += "Name: " + room.getName() + "\n";
-                    if(textViewResult!=null) textViewResult.append(content);
 
                     if(recursiveSearch){
-                        getWalls(parent,ctx,textViewResult,jsonPlaceHolderApi,houseId,room.getId(),true);
+                        getWalls(child,ctx,textViewResult,jsonPlaceHolderApi,houseId,room.getId(),true);
                     }
 
 
@@ -140,7 +123,7 @@ public class RestTreeLocalMethods {
 
             @Override
             public void onFailure(Call<MyResponse<Room>> call, Throwable t) {
-                if(textViewResult!=null) textViewResult.setText(t.getMessage());
+
             }
         });
 
@@ -154,10 +137,8 @@ public class RestTreeLocalMethods {
         call.enqueue(new Callback<MyResponse<Wall>>() {
             @Override
             public void onResponse(Call<MyResponse<Wall>> call, Response<MyResponse<Wall>> response) {
-                if(!response.isSuccessful()){
-                    if(textViewResult!=null) textViewResult.setText( "Code: " + response.code());
-                    return;
-                }
+                if(!isResponseSuccessfull(response))return;
+
                 List<Wall> walls = response.body().getData();
                 String content = "\n WALLS" + "\n";
                 if(textViewResult!=null) textViewResult.append(content);
@@ -176,7 +157,7 @@ public class RestTreeLocalMethods {
                     if(textViewResult!=null) textViewResult.append(content);
 
                     if(recursiveSearch){
-                        getShelves(parent,ctx,textViewResult,jsonPlaceHolderApi,houseId,roomId,wall.getId(),true);
+                        getShelves(child,ctx,textViewResult,jsonPlaceHolderApi,houseId,roomId,wall.getId(),true);
 
                     }
 
@@ -277,6 +258,15 @@ public class RestTreeLocalMethods {
                 if(textViewResult!=null) textViewResult.setText(t.getMessage());
             }
         });
+    }
+
+    private static Boolean isResponseSuccessfull(Response response){
+        if(! response.isSuccessful()){
+            if(RestLocalMethods.getContext() != null)
+                Toast.makeText(RestLocalMethods.getContext(),"API response unsuccessful" ,Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
 }

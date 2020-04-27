@@ -948,6 +948,9 @@ public class RestLocalMethods {
         RestLocalMethods.userId = myUserId;
     }
 
+    public static Context getContext() {
+        return context;
+    }
 }
 
 

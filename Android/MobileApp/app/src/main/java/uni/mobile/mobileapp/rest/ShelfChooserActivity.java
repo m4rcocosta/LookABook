@@ -57,7 +57,7 @@ public class ShelfChooserActivity extends AppCompatActivity {
         fab4 = (FloatingActionButton) findViewById(R.id.fab4);
 
 
-        RestLocalMethods.initRetrofit(getApplicationContext()); //Todo remove it for user one
+        RestLocalMethods.initRetrofit(getApplicationContext());
 
         /* Building the tree*/
         //Root
