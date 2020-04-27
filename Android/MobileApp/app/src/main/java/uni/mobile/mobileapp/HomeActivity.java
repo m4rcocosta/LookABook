@@ -157,9 +157,10 @@ public class HomeActivity extends AppCompatActivity {
                         dl.closeDrawers();
                         return true;
                     case R.id.nav_info:
+                        dl.closeDrawers();
                         new AlertDialog.Builder(context)
                                 .setTitle("App information")
-                                .setMessage("This app is created by Giuseppe Capaldi and Marco Costa")
+                                .setMessage("This app is created by Giuseppe Capaldi and Marco Costa.\nIt was developed for Mobile Application and Cloud Computing course.\nCopyright \u00a9 2020, La Sapienza Università di Roma")
                                 .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
                                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                     @Override
