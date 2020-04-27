@@ -57,6 +57,9 @@ public interface JsonPlaceHolderApi {
     /*
      * ROOM
      * */
+    @GET("getAllRooms/{userId}")
+    Call<MyResponse<Room>> getAllRooms(@Path("userId") int userId );
+
     @GET("users/{userId}/houses/{houseId}/rooms")
     Call<MyResponse<Room>> getRooms(@Path("userId") int userId,@Path("houseId") int houseId);
 
@@ -73,6 +76,9 @@ public interface JsonPlaceHolderApi {
     /*
      * WALL
      * */
+    @GET("getAllWalls/{userId}")
+    Call<MyResponse<Wall>> getAllWalls(@Path("userId") int userId);
+
     @GET("users/{userId}/houses/{houseId}/rooms/{roomId}/walls")
     Call<MyResponse<Wall>> getWalls(@Path("userId") int userId,@Path("houseId") int houseId,@Path("roomId") int roomId);
 
@@ -90,6 +96,9 @@ public interface JsonPlaceHolderApi {
     /*
      * SHELF
      * */
+    @GET("getAllShelves/{userId}")
+    Call<MyResponse<Shelf>> getAllShelves(@Path("userId") int userId);
+
     @GET("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}/shelves")
     Call<MyResponse<Shelf>> getShelves(@Path("userId") int userId,@Path("houseId") int houseId,@Path("roomId") int roomId, @Path("wallId") int wallId);
 
@@ -109,7 +118,7 @@ public interface JsonPlaceHolderApi {
     @GET("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}/shelves/{shelfId}/books")
     Call<MyResponse<Book>> getBooks(@Path("userId") Integer userId,@Path("houseId") int houseId,@Path("roomId") int roomId,@Path("wallId") int wallId,@Path("shelfId") int shelfId);
 
-    @GET("allBooks/{userId}")
+    @GET("getAllBooks/{userId}")
     Call<MyResponse<Book>> getAllBooks(@Path("userId") int userId);
 
     @GET("scan-all-books/{userId}")

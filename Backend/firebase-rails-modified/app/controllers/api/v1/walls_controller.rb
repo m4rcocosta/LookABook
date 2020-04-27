@@ -13,6 +13,13 @@ class Api::V1::WallsController < ApiController
     render json: {status: 'SUCCESS', message: 'Loaded all walls', data: walls}, status: :ok
   end
 
+  def allWalls
+    houses=@user.houses
+    rooms= houses.map(&:rooms).flatten()
+    walls = rooms.map(&:walls).flatten()
+    render json: {status: 'SUCCESS', message: 'Loaded all walls', data: walls}, status: :ok 
+  end
+
   # GET /walls/1
   # GET /walls/1.json
   def show
@@ -71,12 +78,16 @@ class Api::V1::WallsController < ApiController
     
 
     def get_house
+      if(params[:house_id])
       @house = House.find(params[:house_id])
+      end
     end
       
     
     def get_room
+      if(params[:room_id])
       @room = Room.find(params[:room_id])
+      end
     end
       
 

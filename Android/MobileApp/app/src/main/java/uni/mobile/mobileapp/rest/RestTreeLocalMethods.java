@@ -1,5 +1,6 @@
 package uni.mobile.mobileapp.rest;
 
+
 import android.content.Context;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -130,7 +131,7 @@ public class RestTreeLocalMethods {
     }
 
 
-    public  static void getWalls(final TreeNode parent,final Context ctx ,final TextView textViewResult, final JsonPlaceHolderApi jsonPlaceHolderApi, final Integer houseId,final Integer roomId   , final Boolean recursiveSearch ){
+    public  static void getWalls(final TreeNode parent, final Context ctx , final TextView textViewResult, final JsonPlaceHolderApi jsonPlaceHolderApi, final Integer houseId, final Integer roomId   , final Boolean recursiveSearch ){
         //Call<MyResponse<Wall>> call = jsonPlaceHolderApi.getWalls(1,1,1);
         Call<MyResponse<Wall>> call = jsonPlaceHolderApi.getWalls(1,houseId,  roomId);
 
@@ -140,8 +141,8 @@ public class RestTreeLocalMethods {
                 if(!isResponseSuccessfull(response))return;
 
                 List<Wall> walls = response.body().getData();
-                String content = "\n WALLS" + "\n";
-                if(textViewResult!=null) textViewResult.append(content);
+
+
                 for(Wall wall: walls){
                     objectsIds.put("walls",wall.getId());
 
@@ -151,10 +152,10 @@ public class RestTreeLocalMethods {
                     //Add child.
                     parent.addChildren(child);
 
-                    content="";
-                    content += "ID: " + wall.getId() + "\n";
-                    content += "Name: " + wall.getName() + "\n";
-                    if(textViewResult!=null) textViewResult.append(content);
+
+
+
+
 
                     if(recursiveSearch){
                         getShelves(child,ctx,textViewResult,jsonPlaceHolderApi,houseId,roomId,wall.getId(),true);
@@ -188,8 +189,8 @@ public class RestTreeLocalMethods {
                     return;
                 }
                 List<Shelf> shelves = response.body().getData();
-                String content = "\n SHELVES" + "\n";
-                if(textViewResult!=null) textViewResult.append(content);
+
+
                 for(Shelf shelf: shelves){
                     objectsIds.put("shelves",shelf.getId());
 
@@ -199,10 +200,10 @@ public class RestTreeLocalMethods {
                     //Add child.
                     parent.addChildren(child);
 
-                    content="";
-                    content += "ID: " + shelf.getId() + "\n";
-                    content += "Name: " + shelf.getName() + "\n";
-                    if(textViewResult!=null) textViewResult.append(content);
+
+
+
+
                     //if(recursiveSearch)
                     // getBooks(textViewResult,jsonPlaceHolderApi,houseId,roomId,wallId,shelf.getId(),true);
 
@@ -233,8 +234,8 @@ public class RestTreeLocalMethods {
                     return;
                 }
                 List<Book> books = response.body().getData();
-                String content = "\n BookS" + "\n";
-                if(textViewResult!=null) textViewResult.append(content);
+
+
 
                 for(Book book: books){
                     objectsIds.put("books",book.getId());
@@ -244,10 +245,10 @@ public class RestTreeLocalMethods {
                     //Add child.
                     parent.addChildren(child);
 
-                    content="";
-                    content += "ID: " + book.getId() + "\n";
-                    content += "Name: " + book.getTitle() + "\n";
-                    if(textViewResult!=null) textViewResult.append(content);
+
+
+
+
 
                 }
 

@@ -70,7 +70,7 @@ public class ShelfChooserActivity extends AppCompatActivity {
 
         JsonPlaceHolderApi jsonPlaceHolderApi = RestLocalMethods.getJsonPlaceHolderApi();
 
-        RestTreeLocalMethods.printAllObjectsFromUser(parent,getApplicationContext(),null,jsonPlaceHolderApi);
+        RestTreeLocalMethods.printAllObjectsFromUser(RestLocalMethods.getMyUserId(),parent,getApplicationContext(),null,jsonPlaceHolderApi);
 
 
         //Add AndroidTreeView into view.

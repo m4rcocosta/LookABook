@@ -45,16 +45,16 @@ Rails.application.routes.draw do
       to: 'users#get_user_by_email', as: "get_user_by_email"
 
       
-      get '/allRooms/:user_id',
+      get '/getAllRooms/:user_id',
       to: 'rooms#allRooms', as: "allRooms"
 
-      get '/allWalls/:user_id',
+      get '/getAllWalls/:user_id',
       to: 'walls#allWalls', as: "allWalls"
 
-      get '/allShelves/:user_id',
+      get '/getAllShelves/:user_id',
       to: 'shelves#allShelves', as: "allShelves"
       
-      get '/allBooks/:user_id',
+      get '/getAllBooks/:user_id',
       to: 'books#allBooks', as: "allBooks"
 
       get '/scan-all-books/:user_id',
