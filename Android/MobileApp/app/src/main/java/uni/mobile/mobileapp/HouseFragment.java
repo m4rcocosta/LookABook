@@ -1,5 +1,6 @@
 package uni.mobile.mobileapp;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,9 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.FieldNamingPolicy;
@@ -40,6 +43,9 @@ import uni.mobile.mobileapp.rest.RestLocalMethods;
 
 
 public class HouseFragment extends Fragment {
+
+    private FloatingActionButton addHouseButton;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -49,11 +55,27 @@ public class HouseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        FloatingActionButton fab = view.findViewById(R.id.floating_action_button);
-        fab.setOnClickListener(new View.OnClickListener() {
+        addHouseButton = view.findViewById(R.id.addHouseButton);
+        addHouseButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            public void onClick(View v) {
+                LayoutInflater inflater = getLayoutInflater();
+                View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_add_house, null);
+                final EditText houseNameEditText = alertLayout.findViewById(R.id.houseName);
+                new MaterialAlertDialogBuilder(getContext())
+                        .setTitle("Create new house")
+                        .setMessage("Insert the house name")
+                        .setView(alertLayout) // this is set the view from XML inside AlertDialog
+                        .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                        .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String houseName = houseNameEditText.getText().toString();
+                                Toast.makeText(getContext(), "House " + houseName + " created!", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
             }
         });
 
@@ -73,7 +95,7 @@ public class HouseFragment extends Fragment {
             }
         });
 
-        String railsHostBaseUrl="http://192.168.1.174:3000/api/v1/";
+        String railsHostBaseUrl="https://lookabookreal.herokuapp.com/api/v1/";
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         Gson gson = new GsonBuilder()
@@ -117,7 +139,7 @@ public class HouseFragment extends Fragment {
                         //authors.add(b.getAuthors());
                     }
 
-                    ListView lView = (ListView) view.findViewById(R.id.androidList);
+                    ListView lView = view.findViewById(R.id.houseList);
 
                     ListAdapter lAdapter = new ListAdapter(getContext(), names, null, null,R.drawable.ic_houseicon);
 

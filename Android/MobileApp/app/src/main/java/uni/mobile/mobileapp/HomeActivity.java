@@ -38,7 +38,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.storage.FirebaseStorage;
@@ -255,12 +254,6 @@ public class HomeActivity extends AppCompatActivity {
         navTitle.setText(user.getDisplayName());
         Toast.makeText(HomeActivity.this, "Welcome, " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
 
-
-        //loading the default fragment
-        bottomNavigationSelectedItem = -1;
-        navigationSelectedItem = R.id.nav_home;
-        openFragment(new HomeFragment());
-
         if (getUserProvider(user).equals("FIREBASE") && !user.isEmailVerified()) {
             new AlertDialog.Builder(context)
                     .setTitle("Email verification")
@@ -282,6 +275,11 @@ public class HomeActivity extends AppCompatActivity {
                     })
                     .show();
         }
+
+        //loading the default fragment
+        bottomNavigationSelectedItem = -1;
+        navigationSelectedItem = R.id.nav_home;
+        openFragment(new HomeFragment());
     }
 
     @Override

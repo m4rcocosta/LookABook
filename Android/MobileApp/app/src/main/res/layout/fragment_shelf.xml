@@ -5,5 +5,29 @@
     android:layout_height="match_parent"
     tools:context=".ShelfFragment">
 
+    <ListView
+        android:id="@+id/shelfList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Main content -->
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addShelfButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="60dp"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/colorPrimary"
+            app:srcCompat="@drawable/ic_add_white_24dp"
+            app:tint="@color/colorAccent" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </FrameLayout>
