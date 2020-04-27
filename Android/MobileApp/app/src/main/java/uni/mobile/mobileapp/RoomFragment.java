@@ -19,6 +19,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import uni.mobile.mobileapp.rest.House;
+import uni.mobile.mobileapp.rest.RestLocalMethods;
+import uni.mobile.mobileapp.rest.Room;
+
 
 public class RoomFragment extends Fragment {
 
@@ -48,7 +52,8 @@ public class RoomFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String roomName = roomNameEditText.getText().toString();
-                                Toast.makeText(getContext(), "Room " + roomName + " created!", Toast.LENGTH_SHORT).show();
+                                //RestLocalMethods.createHouse(view,RestLocalMethods.getMyUserId(),new Room(roomName));
+                                //Toast.makeText(getContext(), "Room " + roomName + " created!", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setNegativeButton("Cancel", null)

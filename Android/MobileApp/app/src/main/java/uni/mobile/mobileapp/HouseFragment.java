@@ -1,5 +1,6 @@
 package uni.mobile.mobileapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
@@ -54,10 +55,12 @@ public class HouseFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
- 
+        RestLocalMethods.initRetrofit(getContext(),RestLocalMethods.getUserToken());
+        printHouses(view,getContext());
 
-addHouseButton = view.findViewById(R.id.addHouseButton);
+        addHouseButton = view.findViewById(R.id.addHouseButton);
         addHouseButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 LayoutInflater inflater = getLayoutInflater();
@@ -72,7 +75,8 @@ addHouseButton = view.findViewById(R.id.addHouseButton);
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String houseName = houseNameEditText.getText().toString();
-                                Toast.makeText(getContext(), "House " + houseName + " created!", Toast.LENGTH_SHORT).show();
+                                RestLocalMethods.createHouse(view,RestLocalMethods.getMyUserId(),new House(houseName,null,null,false));
+                                //Toast.makeText(getContext(), "House " + houseName + " created!", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setNegativeButton("Cancel", null)
@@ -82,7 +86,13 @@ addHouseButton = view.findViewById(R.id.addHouseButton);
 
 
 
-      RestLocalMethods.initRetrofit(getContext(),RestLocalMethods.getUserToken());
+
+
+
+
+    }
+
+    public static void printHouses(View view, Context context){
 
         Call<MyResponse<House>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getHouses(RestLocalMethods.getMyUserId());
         callAsync.enqueue(new Callback<MyResponse<House>>()
@@ -105,19 +115,19 @@ addHouseButton = view.findViewById(R.id.addHouseButton);
 
                     ListView lView = view.findViewById(R.id.houseList);
 
-                    ListAdapter lAdapter = new ListAdapter(getContext(), names, null, null,R.drawable.ic_houseicon);
+                    ListAdapter lAdapter = new ListAdapter(context, names, null, null,R.drawable.ic_houseicon);
 
                     lView.setAdapter(lAdapter);
-                    if(getContext()==null)
+                    if(context==null)
                         return;
-                    Toast.makeText(getContext(), "Found " + houses.size() +" Houses", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Found " + houses.size() +" Houses", Toast.LENGTH_SHORT).show();
                     Log.d("BBBB",names.toString());
                     lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            if(getContext()==null)
+                            if(context==null)
                                 return;
-                            Toast.makeText(getContext(), names.get(i), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, names.get(i), Toast.LENGTH_SHORT).show();
 
                         }
                     });
@@ -136,8 +146,5 @@ addHouseButton = view.findViewById(R.id.addHouseButton);
                 Log.d("BBBB","Request Error :: " + t.getMessage() );
             }
         });
-
-
-
     }
 }
