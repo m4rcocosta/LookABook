@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +23,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,6 +42,8 @@ public class RoomFragment extends Fragment {
     private FloatingActionButton addRoomButton;
     private Spinner userHouses;
     private List<House> houses = null;
+    private Map<String, Integer> houseIds = null;
+    private String currentHouse = "Select an house!";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,71 +53,82 @@ public class RoomFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+
+        RestLocalMethods.initRetrofit(getContext());
+
+        // Custom choices
+        List<String> choices = new ArrayList<>();
+        choices.add("Select an house!");
+
+        Call<MyResponse<House>> call = RestLocalMethods.getJsonPlaceHolderApi().getHouses(RestLocalMethods.getMyUserId());
+        call.enqueue(new Callback<MyResponse<House>>() {
+            @Override
+            public void onResponse(Call<MyResponse<House>> call, Response<MyResponse<House>> response) {
+                if(!response.isSuccessful()) return;
+                houses = response.body().getData();
+
+                // User Can't add a Room if he has not an house
+                if (houses.isEmpty()) {
+                    new MaterialAlertDialogBuilder(getContext())
+                            .setTitle("No house found")
+                            .setMessage("Please create one first.")
+                            .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.fragmentContainer, new HouseFragment());
+                                    transaction.commit();
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
+
+                houseIds = new HashMap<String, Integer>();
+                for(House house: houses){
+                    choices.add(house.getName());
+                    houseIds.put(house.getName(), house.getId());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MyResponse<House>> call, Throwable t) {
+                Log.d("RRRR","Request Error :: " + t.getMessage() );
+            }
+
+        });
+        // Create an ArrayAdapter with custom choices
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, choices){
+            @Override
+            public boolean isEnabled(int position){
+                return position != 0;
+            }
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if(position == 0) {
+                    // Set the hint text color gray
+                    tv.setTextColor(Color.GRAY);
+                }
+                return view;
+            }
+        };
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(R.layout.item_spinner);
+
         addRoomButton = view.findViewById(R.id.addRoomButton);
+
         addRoomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LayoutInflater inflater = getLayoutInflater();
                 View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_add_room, null);
 
-                RestLocalMethods.initRetrofit(getContext());
-
                 final EditText roomNameEditText = alertLayout.findViewById(R.id.roomName);
                 userHouses = alertLayout.findViewById(R.id.userHouses);
-
-                // Custom choices
-                List<String> choices = new ArrayList<>();
-                choices.add("Select an house!");
-
-                Call<MyResponse<House>> call = RestLocalMethods.getJsonPlaceHolderApi().getHouses(RestLocalMethods.getMyUserId());
-                call.enqueue(new Callback<MyResponse<House>>() {
-                    @Override
-                    public void onResponse(Call<MyResponse<House>> call, Response<MyResponse<House>> response) {
-                        if(!response.isSuccessful()) return;
-                        houses = response.body().getData();
-                        if(houses == null || houses.isEmpty()) {
-                            Toast.makeText(getContext(), "No house found, you should create one first.", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            for(House house: houses){
-                                choices.add(house.getName());
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<MyResponse<House>> call, Throwable t) {
-                        Log.d("RRRR","Request Error :: " + t.getMessage() );
-                    }
-
-                });
-
-                // Create an ArrayAdapter with custom choices
-                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, choices){
-                    @Override
-                    public boolean isEnabled(int position){
-                        if(position == 0) {
-                            return false;
-                        }
-                        else {
-                            return true;
-                        }
-                    }
-                    @Override
-                    public View getDropDownView(int position, View convertView,
-                                                ViewGroup parent) {
-                        View view = super.getDropDownView(position, convertView, parent);
-                        TextView tv = (TextView) view;
-                        if(position == 0) {
-                            // Set the hint text color gray
-                            tv.setTextColor(Color.GRAY);
-                        }
-                        return view;
-                    }
-                };
-
-                // Specify the layout to use when the list of choices appears
-                adapter.setDropDownViewResource(R.layout.item_spinner);
 
                 // Set the adapter to th spinner
                 userHouses.setAdapter(adapter);
@@ -121,6 +137,7 @@ public class RoomFragment extends Fragment {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         Toast.makeText(getContext(), userHouses.getSelectedItem() + " selected", Toast.LENGTH_SHORT).show();
+                        currentHouse = userHouses.getSelectedItem().toString();
                     }
 
                     @Override
@@ -128,6 +145,7 @@ public class RoomFragment extends Fragment {
 
                     }
                 });
+
                 new MaterialAlertDialogBuilder(getContext())
                         .setTitle("Create new room")
                         .setMessage("Insert the room name")
@@ -137,16 +155,14 @@ public class RoomFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String roomName = roomNameEditText.getText().toString();
-                                //RestLocalMethods.createHouse(view,RestLocalMethods.getMyUserId(),new Room(roomName));
-                                //Toast.makeText(getContext(), "Room " + roomName + " created!", Toast.LENGTH_SHORT).show();
+                                if (currentHouse.equals("Select an house!")) Toast.makeText(getContext(), "Please select an house!", Toast.LENGTH_SHORT).show();
+                                else RestLocalMethods.createRoom(RestLocalMethods.getMyUserId(), houseIds.get(currentHouse), new Room(RestLocalMethods.getMyUserId(), roomName, null, null));
                             }
                         })
                         .setNegativeButton("Cancel", null)
                         .show();
             }
         });
-
-
 
        /* Wall w = RestLocalMethods.createWall(1,6,1,new Wall("stranaHouse") );
         //t.setText(h.getName());
@@ -155,8 +171,7 @@ public class RoomFragment extends Fragment {
 
 
         Call<MyResponse<Room>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getAllRooms(RestLocalMethods.getMyUserId());
-        callAsync.enqueue(new Callback<MyResponse<Room>>()
-        {
+        callAsync.enqueue(new Callback<MyResponse<Room>>() {
 
             @Override
             public void onResponse(Call<MyResponse<Room>> call, Response<MyResponse<Room>> response)
