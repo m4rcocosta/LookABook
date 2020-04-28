@@ -3,23 +3,28 @@ package uni.mobile.mobileapp;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -28,24 +33,23 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import uni.mobile.mobileapp.guiAdapters.ListAdapter;
 import uni.mobile.mobileapp.rest.Book;
-import uni.mobile.mobileapp.rest.House;
-import uni.mobile.mobileapp.rest.JsonPlaceHolderApi;
 import uni.mobile.mobileapp.rest.MyResponse;
 import uni.mobile.mobileapp.rest.RestLocalMethods;
-import uni.mobile.mobileapp.rest.User;
-import uni.mobile.mobileapp.rest.Wall;
+import uni.mobile.mobileapp.rest.Shelf;
 
 
 public class BookFragment extends Fragment {
 
+    private BottomNavigationView bottomNavigationView;
     private FloatingActionButton addBookButton;
     private MaterialCardView cardView;
     private ImageView googleImage;
@@ -55,6 +59,14 @@ public class BookFragment extends Fragment {
     private MaterialButton ignoreButton;
     private MaterialButton acceptButton;
     private ListView lView;
+    private Spinner userShelves;
+    private List<Shelf> shelves = null;
+    private Map<String, Shelf> shelfDic = null;
+    private String currentShelf = "Select a shelf!";
+
+    public BookFragment(BottomNavigationView bottomNavigationView) {
+        this.bottomNavigationView = bottomNavigationView;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,14 +77,19 @@ public class BookFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
+        RestLocalMethods.setContext(getContext());
+
+        // Load user books
+        getUserBooks(view);
+
         //car related
         cardView = view.findViewById(R.id.card);
-        googleImage=view.findViewById(R.id.googleImage);
-        googleTitle =view.findViewById(R.id.googleTitle );
-        googleAuthors =view.findViewById(R.id.googleAuthors);
-        googleDesc=view.findViewById(R.id.googleDesc);
-        ignoreButton=view.findViewById(R.id.ignoreButton);
-        acceptButton=view.findViewById(R.id.acceptButton);
+        googleImage= view.findViewById(R.id.googleImage);
+        googleTitle = view.findViewById(R.id.googleTitle );
+        googleAuthors = view.findViewById(R.id.googleAuthors);
+        googleDesc = view.findViewById(R.id.googleDesc);
+        ignoreButton = view.findViewById(R.id.ignoreButton);
+        acceptButton = view.findViewById(R.id.acceptButton);
 
         ignoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +109,70 @@ public class BookFragment extends Fragment {
             }
         });
 
+        // Custom choices
+        List<String> choices = new ArrayList<>();
+        choices.add("Select a shelf!");
+
+        Call<MyResponse<Shelf>> call = RestLocalMethods.getJsonPlaceHolderApi().getAllShelves(RestLocalMethods.getMyUserId());
+        call.enqueue(new Callback<MyResponse<Shelf>>() {
+            @Override
+            public void onResponse(Call<MyResponse<Shelf>> call, Response<MyResponse<Shelf>> response) {
+                if(!response.isSuccessful()) return;
+                shelves = response.body().getData();
+
+                // User Can't add a Room if he has not an house
+                if (shelves.isEmpty()) {
+                    new MaterialAlertDialogBuilder(getContext())
+                            .setTitle("No shelf found")
+                            .setMessage("Please create one first.")
+                            .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    bottomNavigationView.setSelectedItemId(R.id.navigation_shelf);
+                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.fragmentContainer, new ShelfFragment(bottomNavigationView));
+                                    transaction.commit();
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
+
+                shelfDic = new HashMap<String, Shelf>();
+                for(Shelf shelf: shelves){
+                    choices.add(shelf.getName());
+                    shelfDic.put(shelf.getName(), shelf);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MyResponse<Shelf>> call, Throwable t) {
+                Log.d("SHELF","Request Error :: " + t.getMessage() );
+            }
+
+        });
+
+        // Create an ArrayAdapter with custom choices
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, choices){
+            @Override
+            public boolean isEnabled(int position){
+                return position != 0;
+            }
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if(position == 0) {
+                    // Set the hint text color gray
+                    tv.setTextColor(Color.GRAY);
+                }
+                return view;
+            }
+        };
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(R.layout.item_spinner);
 
         //fab related
         addBookButton = view.findViewById(R.id.addBookButton);
@@ -100,7 +181,25 @@ public class BookFragment extends Fragment {
             public void onClick(View v) {
                 LayoutInflater inflater = getLayoutInflater();
                 View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_add_book, null);
-                final EditText bookNameEditText = alertLayout.findViewById(R.id.bookName);
+                final EditText bookTitleEditText = alertLayout.findViewById(R.id.bookTitle);
+                final EditText bookAuthorEditText = alertLayout.findViewById(R.id.bookTitle);
+                final EditText bookISBNEditText = alertLayout.findViewById(R.id.bookTitle);
+                userShelves = alertLayout.findViewById(R.id.userShelves);
+
+                // Set the adapter to th spinner
+                userShelves.setAdapter(adapter);
+
+                userShelves.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        currentShelf = userShelves.getSelectedItem().toString();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
                 new MaterialAlertDialogBuilder(getContext())
                         .setTitle("Create new book")
                         .setMessage("Insert the book name")
@@ -109,34 +208,36 @@ public class BookFragment extends Fragment {
                         .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                String bookName = bookNameEditText.getText().toString();
-                                Toast.makeText(getContext(), "Book " + bookName + " created!", Toast.LENGTH_SHORT).show();
+                                String bookTitle = bookTitleEditText.getText().toString();
+                                String bookAuthor = bookAuthorEditText.getText().toString();
+                                String bookISBN = bookISBNEditText.getText().toString();
+                                if (currentShelf.equals("Select a shelf!")) Toast.makeText(getContext(), "Please select a shelf!", Toast.LENGTH_SHORT).show();
+                                else {
+                                    Shelf selectedShelf = shelfDic.get(currentShelf);
+                                    RestLocalMethods.createBook(RestLocalMethods.getMyUserId(), selectedShelf.getHouseId(), selectedShelf.getRoomId(), selectedShelf.getWallId(), selectedShelf.getId(), new Book(bookTitle, bookAuthor, bookISBN, selectedShelf.getId(), selectedShelf.getWallId(), selectedShelf.getRoomId(), selectedShelf.getHouseId()));
+                                    // Reload fragment in order to see new added wall
+                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.fragmentContainer, new ShelfFragment(bottomNavigationView));
+                                    transaction.commit();
+                                }
                             }
                         })
                         .setNegativeButton("Cancel", null)
                         .show();
             }
         });
+
         //List related
-
         lView = view.findViewById(R.id.bookList);
+    }
 
-        RestLocalMethods.setContext(getContext());
-
-       /* Wall w = RestLocalMethods.createWall(1,6,1,new Wall("stranaHouse") );
-        //t.setText(h.getName());
-        User back=RestLocalMethods.createUser(new User("mardzxcfaio","","","asdxzcsad@asasdd.com","zzxczxz<x<zx"));
-        //t.setText( back.getEmail() );*/
-
+    private void getUserBooks(View view) {
         Call<MyResponse<Book>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getAllBooks(RestLocalMethods.getMyUserId());
-        callAsync.enqueue(new Callback<MyResponse<Book>>()
-        {
+        callAsync.enqueue(new Callback<MyResponse<Book>>() {
 
             @Override
-            public void onResponse(Call<MyResponse<Book>> call, Response<MyResponse<Book>> response)
-            {
-                if (response.isSuccessful())
-                {
+            public void onResponse(Call<MyResponse<Book>> call, Response<MyResponse<Book>> response) {
+                if (response.isSuccessful()) {
 
                     List<Book> books = response.body().getData();
 
@@ -154,7 +255,7 @@ public class BookFragment extends Fragment {
                     if(getContext()==null)  //too late now to print
                         return;
                     Toast.makeText(getContext(), "Found " + books.size() +" books", Toast.LENGTH_SHORT).show();
-                    Log.d("BBBB",titles.toString());
+                    Log.d("BOOK",titles.toString());
                     lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -179,23 +280,17 @@ public class BookFragment extends Fragment {
 
 
                 }
-                else
-                {
-                    Log.d("BBBB","Request Error :: " + response.errorBody());
+                else {
+                    Log.d("BOOK","Request Error :: " + response.errorBody());
                     Toast.makeText(getContext(), "Google api error", Toast.LENGTH_SHORT).show();
-
                 }
             }
 
             @Override
-            public void onFailure(Call<MyResponse<Book>> call, Throwable t)
-            {
-                Log.d("BBBB","Request Error :: " + t.getMessage() );
+            public void onFailure(Call<MyResponse<Book>> call, Throwable t) {
+                Log.d("BOOK","Request Error :: " + t.getMessage() );
             }
         });
-
-
-
     }
 
     private static Drawable LoadImageFromWebOperations(String url) {

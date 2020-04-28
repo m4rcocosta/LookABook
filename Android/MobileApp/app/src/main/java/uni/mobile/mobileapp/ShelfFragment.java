@@ -1,24 +1,32 @@
 package uni.mobile.mobileapp;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,10 +35,20 @@ import uni.mobile.mobileapp.guiAdapters.ListAdapter;
 import uni.mobile.mobileapp.rest.MyResponse;
 import uni.mobile.mobileapp.rest.RestLocalMethods;
 import uni.mobile.mobileapp.rest.Shelf;
+import uni.mobile.mobileapp.rest.Wall;
 
 public class ShelfFragment extends Fragment {
 
+    private BottomNavigationView bottomNavigationView;
     private FloatingActionButton addShelfButton;
+    private Spinner userWalls;
+    private List<Wall> walls = null;
+    private Map<String, Wall> wallDic = null;
+    private String currentWall = "Select a wall!";
+
+    public ShelfFragment(BottomNavigationView bottomNavigationView) {
+        this.bottomNavigationView = bottomNavigationView;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,6 +58,77 @@ public class ShelfFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+
+        RestLocalMethods.initRetrofit(this.getContext());
+
+        // Load user shelves
+        getUserShelves(view);
+
+        // Custom choices
+        List<String> choices = new ArrayList<>();
+        choices.add("Select a wall!");
+
+        Call<MyResponse<Wall>> call = RestLocalMethods.getJsonPlaceHolderApi().getAllWalls(RestLocalMethods.getMyUserId());
+        call.enqueue(new Callback<MyResponse<Wall>>() {
+            @Override
+            public void onResponse(Call<MyResponse<Wall>> call, Response<MyResponse<Wall>> response) {
+                if(!response.isSuccessful()) return;
+                walls = response.body().getData();
+
+                // User Can't add a Room if he has not an house
+                if (walls.isEmpty()) {
+                    new MaterialAlertDialogBuilder(getContext())
+                            .setTitle("No wall found")
+                            .setMessage("Please create one first.")
+                            .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    bottomNavigationView.setSelectedItemId(R.id.navigation_wall);
+                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.fragmentContainer, new WallFragment(bottomNavigationView));
+                                    transaction.commit();
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
+
+                wallDic = new HashMap<String, Wall>();
+                for(Wall wall: walls){
+                    choices.add(wall.getName());
+                    wallDic.put(wall.getName(), wall);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MyResponse<Wall>> call, Throwable t) {
+                Log.d("WALL","Request Error :: " + t.getMessage() );
+            }
+
+        });
+
+        // Create an ArrayAdapter with custom choices
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, choices){
+            @Override
+            public boolean isEnabled(int position){
+                return position != 0;
+            }
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if(position == 0) {
+                    // Set the hint text color gray
+                    tv.setTextColor(Color.GRAY);
+                }
+                return view;
+            }
+        };
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(R.layout.item_spinner);
+
         addShelfButton = view.findViewById(R.id.addShelfButton);
         addShelfButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,6 +136,22 @@ public class ShelfFragment extends Fragment {
                 LayoutInflater inflater = getLayoutInflater();
                 View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_add_shelf, null);
                 final EditText shelfNameEditText = alertLayout.findViewById(R.id.shelfName);
+                userWalls = alertLayout.findViewById(R.id.userWalls);
+
+                // Set the adapter to th spinner
+                userWalls.setAdapter(adapter);
+
+                userWalls.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        currentWall = userWalls.getSelectedItem().toString();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
                 new MaterialAlertDialogBuilder(getContext())
                         .setTitle("Create new shelf")
                         .setMessage("Insert the shelf name")
@@ -56,24 +161,30 @@ public class ShelfFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String shelfName = shelfNameEditText.getText().toString();
-                                Toast.makeText(getContext(), "Shelf " + shelfName + " created!", Toast.LENGTH_SHORT).show();
+                                if (currentWall.equals("Select a wall!")) Toast.makeText(getContext(), "Please select a wall!", Toast.LENGTH_SHORT).show();
+                                else {
+                                    Wall selectedWall = wallDic.get(currentWall);
+                                    RestLocalMethods.createShelf(RestLocalMethods.getMyUserId(), selectedWall.getHouseId(), selectedWall.getRoomId(), selectedWall.getId(), new Shelf(shelfName, selectedWall.getId(), selectedWall.getRoomId(), selectedWall.getHouseId()));
+                                    // Reload fragment in order to see new added wall
+                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.fragmentContainer, new ShelfFragment(bottomNavigationView));
+                                    transaction.commit();
+                                }
                             }
                         })
                         .setNegativeButton("Cancel", null)
                         .show();
             }
         });
+    }
 
-        RestLocalMethods.initRetrofit(this.getContext());
+    private void getUserShelves(View view) {
         Call<MyResponse<Shelf>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getAllShelves(RestLocalMethods.getMyUserId());
-        callAsync.enqueue(new Callback<MyResponse<Shelf>>()
-        {
+        callAsync.enqueue(new Callback<MyResponse<Shelf>>() {
 
             @Override
-            public void onResponse(Call<MyResponse<Shelf>> call, Response<MyResponse<Shelf>> response)
-            {
-                if (response.isSuccessful())
-                {
+            public void onResponse(Call<MyResponse<Shelf>> call, Response<MyResponse<Shelf>> response) {
+                if (response.isSuccessful()) {
 
                     List<Shelf> shelves = response.body().getData();
 
@@ -92,28 +203,22 @@ public class ShelfFragment extends Fragment {
                     if(getContext()==null)  //too late now to print
                         return;
                     Toast.makeText(getContext(), "Found " + shelves.size() +" shelves", Toast.LENGTH_SHORT).show();
-                    Log.d("SSSS",names.toString());
+                    Log.d("SHELF",names.toString());
                     lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
                             Toast.makeText(getContext(), names.get(i), Toast.LENGTH_SHORT).show();
-
                         }
                     });
-
-
                 }
-                else
-                {
-                    Log.d("SSSS","Request Error :: " + response.errorBody());
+                else {
+                    Log.d("SHELF","Request Error :: " + response.errorBody());
                 }
             }
 
             @Override
-            public void onFailure(Call<MyResponse<Shelf>> call, Throwable t)
-            {
-                Log.d("SSSS","Request Error :: " + t.getMessage() );
+            public void onFailure(Call<MyResponse<Shelf>> call, Throwable t) {
+                Log.d("SHELF","Request Error :: " + t.getMessage() );
             }
         });
     }

@@ -56,15 +56,32 @@ public class Book {
     @Expose
     private GoogleData googleData;
 
-    public Book(Integer id, String title, String authors, Object isbn) {
-        this.id = id;
+    private Integer wallId, roomId, houseId;
+
+    public Book(String title, String authors, Object isbn, Integer shelfId, Integer wallId, Integer roomId, Integer houseId) {
         this.title = title;
         this.authors = authors;
         this.isbn = isbn;
+        this.shelfId = shelfId;
+        this.wallId = wallId;
+        this.roomId = roomId;
+        this.houseId = houseId;
     }
 
     public Integer getId() {
         return id;
+    }
+
+    public int getWallId() {
+        return wallId;
+    }
+
+    public int getRoomId() {
+        return roomId;
+    }
+
+    public int getHouseId() {
+        return houseId;
     }
 
     public void setId(Integer id) {

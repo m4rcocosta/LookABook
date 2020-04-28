@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -39,11 +40,16 @@ import uni.mobile.mobileapp.rest.Room;
 
 public class RoomFragment extends Fragment {
 
+    private BottomNavigationView bottomNavigationView;
     private FloatingActionButton addRoomButton;
     private Spinner userHouses;
     private List<House> houses = null;
-    private Map<String, Integer> houseIds = null;
+    private Map<String, House> houseDic = null;
     private String currentHouse = "Select an house!";
+
+    public RoomFragment(BottomNavigationView bottomNavigationView) {
+        this.bottomNavigationView = bottomNavigationView;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,6 +61,9 @@ public class RoomFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
         RestLocalMethods.initRetrofit(getContext());
+
+        // Load user Rooms
+        getUserRooms(view);
 
         // Custom choices
         List<String> choices = new ArrayList<>();
@@ -76,6 +85,7 @@ public class RoomFragment extends Fragment {
                             .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    bottomNavigationView.setSelectedItemId(R.id.navigation_house);
                                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                                     transaction.replace(R.id.fragmentContainer, new HouseFragment());
                                     transaction.commit();
@@ -85,16 +95,16 @@ public class RoomFragment extends Fragment {
                             .show();
                 }
 
-                houseIds = new HashMap<String, Integer>();
+                houseDic = new HashMap<String, House>();
                 for(House house: houses){
                     choices.add(house.getName());
-                    houseIds.put(house.getName(), house.getId());
+                    houseDic.put(house.getName(), house);
                 }
             }
 
             @Override
             public void onFailure(Call<MyResponse<House>> call, Throwable t) {
-                Log.d("RRRR","Request Error :: " + t.getMessage() );
+                Log.d("HOUSE","Request Error :: " + t.getMessage() );
             }
 
         });
@@ -136,7 +146,6 @@ public class RoomFragment extends Fragment {
                 userHouses.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        Toast.makeText(getContext(), userHouses.getSelectedItem() + " selected", Toast.LENGTH_SHORT).show();
                         currentHouse = userHouses.getSelectedItem().toString();
                     }
 
@@ -156,34 +165,35 @@ public class RoomFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 String roomName = roomNameEditText.getText().toString();
                                 if (currentHouse.equals("Select an house!")) Toast.makeText(getContext(), "Please select an house!", Toast.LENGTH_SHORT).show();
-                                else RestLocalMethods.createRoom(RestLocalMethods.getMyUserId(), houseIds.get(currentHouse), new Room(RestLocalMethods.getMyUserId(), roomName));
+                                else {
+                                    House selectedHouse = houseDic.get(currentHouse);
+                                    RestLocalMethods.createRoom(RestLocalMethods.getMyUserId(), selectedHouse.getId(), new Room(roomName, selectedHouse.getId()));
+                                    // Reload fragment in order to see new added room
+                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.fragmentContainer, new RoomFragment(bottomNavigationView));
+                                    transaction.commit();
+                                }
                             }
                         })
                         .setNegativeButton("Cancel", null)
                         .show();
             }
         });
+    }
 
-       /* Wall w = RestLocalMethods.createWall(1,6,1,new Wall("stranaHouse") );
-        //t.setText(h.getName());
-        User back=RestLocalMethods.createUser(new User("mardzxcfaio","","","asdxzcsad@asasdd.com","zzxczxz<x<zx"));
-        //t.setText( back.getEmail() );*/
-
-
+    private void getUserRooms(View view) {
         Call<MyResponse<Room>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getAllRooms(RestLocalMethods.getMyUserId());
         callAsync.enqueue(new Callback<MyResponse<Room>>() {
 
             @Override
-            public void onResponse(Call<MyResponse<Room>> call, Response<MyResponse<Room>> response)
-            {
-                if (response.isSuccessful())
-                {
+            public void onResponse(Call<MyResponse<Room>> call, Response<MyResponse<Room>> response) {
+                if (response.isSuccessful()) {
 
                     List<Room> rooms = response.body().getData();
 
                     ArrayList<String> names = new ArrayList<String>();
                     ArrayList<String> subNames = new ArrayList<String>();
-                    for(Room b: rooms){
+                    for(Room b: rooms) {
                         names.add( b.getName() ) ;
                         subNames.add("None");
                     }
@@ -196,7 +206,7 @@ public class RoomFragment extends Fragment {
                     if(getContext()==null)  //too late now to print
                         return;
                     Toast.makeText(getContext(), "Found " + rooms.size() +" rooms", Toast.LENGTH_SHORT).show();
-                    Log.d("RRRR",names.toString());
+                    Log.d("ROOM",names.toString());
                     lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -205,19 +215,15 @@ public class RoomFragment extends Fragment {
 
                         }
                     });
-
-
                 }
-                else
-                {
-                    Log.d("RRRR","Request Error :: " + response.errorBody());
+                else {
+                    Log.d("ROOM","Request Error :: " + response.errorBody());
                 }
             }
 
             @Override
-            public void onFailure(Call<MyResponse<Room>> call, Throwable t)
-            {
-                Log.d("RRRR","Request Error :: " + t.getMessage() );
+            public void onFailure(Call<MyResponse<Room>> call, Throwable t) {
+                Log.d("ROOM","Request Error :: " + t.getMessage() );
             }
         });
     }

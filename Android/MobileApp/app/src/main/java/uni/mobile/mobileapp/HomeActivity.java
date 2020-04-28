@@ -40,7 +40,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.storage.FirebaseStorage;
@@ -204,25 +203,25 @@ public class HomeActivity extends AppCompatActivity {
                         if (item.getItemId() == bottomNavigationSelectedItem) break;
                         navigationSelectedItem = -1;
                         bottomNavigationSelectedItem = R.id.navigation_room;
-                        openFragment(new RoomFragment());
+                        openFragment(new RoomFragment(bottomNavigationView));
                         return true;
                     case R.id.navigation_wall:
                         if (item.getItemId() == bottomNavigationSelectedItem) break;
                         navigationSelectedItem = -1;
                         bottomNavigationSelectedItem = R.id.navigation_wall;
-                        openFragment(new WallFragment());
+                        openFragment(new WallFragment(bottomNavigationView));
                         return true;
                     case R.id.navigation_shelf:
                         if (item.getItemId() == bottomNavigationSelectedItem) break;
                         navigationSelectedItem = -1;
                         bottomNavigationSelectedItem = R.id.navigation_shelf;
-                        openFragment(new ShelfFragment());
+                        openFragment(new ShelfFragment(bottomNavigationView));
                         return true;
                     case R.id.navigation_book:
                         if (item.getItemId() == bottomNavigationSelectedItem) break;
                         navigationSelectedItem = -1;
                         bottomNavigationSelectedItem = R.id.navigation_book;
-                        openFragment(new BookFragment());
+                        openFragment(new BookFragment(bottomNavigationView));
                         return true;
                 }
                 return false;

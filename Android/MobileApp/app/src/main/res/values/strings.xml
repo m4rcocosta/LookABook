@@ -13,6 +13,10 @@
     <string name="enter_your_phone_number">Enter your phone number</string>
     <string name="remember_me">Remember me</string>
     <string name="submit">Submit</string>
+    <string name="title">Title</string>
+    <string name="author">Author</string>
+    <string name="isbn">ISBN</string>
+
 
     <string name="home_navigation">Home</string>
     <string name="profile_navigation">Profile</string>
