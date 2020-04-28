@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -45,6 +46,9 @@ public class BookFragment extends Fragment {
     private TextView googleTitle;
     private TextView googleAuthors;
     private TextView googleDesc;
+    private MaterialButton ignoreButton;
+    private MaterialButton acceptButton;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,12 +59,32 @@ public class BookFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
+        //car related
         cardView = view.findViewById(R.id.card);
         googleImage=view.findViewById(R.id.googleImage);
         googleTitle =view.findViewById(R.id.googleTitle );
         googleAuthors =view.findViewById(R.id.googleAuthors);
         googleDesc=view.findViewById(R.id.googleDesc);
+        ignoreButton=view.findViewById(R.id.ignoreButton);
+        acceptButton=view.findViewById(R.id.acceptButton);
 
+        ignoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cardView.setVisibility(View.GONE);
+            }
+        });
+        acceptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            //TODO update rails with a patch
+                cardView.setVisibility(View.GONE);
+
+            }
+        });
+
+
+        //fab related
         addBookButton = view.findViewById(R.id.addBookButton);
         addBookButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,10 +149,13 @@ public class BookFragment extends Fragment {
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             //googleImage
                             if(books.get(i).getGoogleData()!=null) {
+                                Toast.makeText(getContext(), "Google "+titles.get(i), Toast.LENGTH_SHORT).show();
                                 googleTitle.setText(books.get(i).getGoogleData().getVolumeInfo().getTitle());
                                 //googleTitle.setText(books.get(i).getGoogleData().getVolumeInfo().getTitle() );
                                 cardView.setVisibility(View.VISIBLE);
-                                Toast.makeText(getContext(), titles.get(i), Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Toast.makeText(getContext(), "No Google info for "+titles.get(i), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -151,4 +178,6 @@ public class BookFragment extends Fragment {
 
 
     }
+
+
 }

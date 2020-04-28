@@ -40,14 +40,13 @@ class Api::V1::RoomsController < ApiController
   def create
     @room = @house.rooms.build(room_params)
     
-    respond_to do |format|
       if @room.save
         
         render json: {status: 'SUCCESS', message: 'Created room', data: [@room]}, status: :ok
       else
         render json: { json: 'Error in creation'}, status: 400
       end
-    end
+    
   end
   
   # PATCH/PUT /rooms/1

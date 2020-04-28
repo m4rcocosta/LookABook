@@ -6,7 +6,10 @@ Project for Mobile Application and Cloud Computing course
 You need to launch the command:
 '''
 git subtree push --prefix Backend/firebase-rails-modified heroku master
+'''
 
+## Other
+'''
 git push origin `git subtree split --prefix build gh-pages`:master --force
 
 '''
