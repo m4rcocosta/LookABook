@@ -6,11 +6,9 @@ public class Room {
     private String createdAt;
     private String updatedAt;
 
-    public Room(Integer id, String name, String createdAt, String updatedAt) {
+    public Room(Integer id, String name) {
         this.id = id;
         this.name = name;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public int getId() {

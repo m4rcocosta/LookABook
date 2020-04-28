@@ -79,7 +79,7 @@ class ApiController < ApplicationController
                     puts "no user found "
                     return unauthorize_no_token
                 elsif params[:id] #User con quel token esiste
-                    @req_user=User.find_by(params[:id])
+                    @req_user=User.find(params[:id])
                     if user_token.to_s != @req_user.auth_token.to_s  
                         puts "unmatched token"
                         return unauthorize_wrong_token

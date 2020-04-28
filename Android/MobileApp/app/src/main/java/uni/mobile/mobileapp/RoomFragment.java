@@ -156,7 +156,7 @@ public class RoomFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 String roomName = roomNameEditText.getText().toString();
                                 if (currentHouse.equals("Select an house!")) Toast.makeText(getContext(), "Please select an house!", Toast.LENGTH_SHORT).show();
-                                else RestLocalMethods.createRoom(RestLocalMethods.getMyUserId(), houseIds.get(currentHouse), new Room(RestLocalMethods.getMyUserId(), roomName, null, null));
+                                else RestLocalMethods.createRoom(RestLocalMethods.getMyUserId(), houseIds.get(currentHouse), new Room(RestLocalMethods.getMyUserId(), roomName));
                             }
                         })
                         .setNegativeButton("Cancel", null)
