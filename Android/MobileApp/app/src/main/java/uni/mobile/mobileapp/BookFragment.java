@@ -55,6 +55,7 @@ public class BookFragment extends Fragment {
     private MaterialButton ignoreButton;
     private MaterialButton acceptButton;
     private ListView lView;
+    private Book currentBook;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -86,6 +87,7 @@ public class BookFragment extends Fragment {
             @Override
             public void onClick(View v) {
             //TODO update rails with a patch
+                //RestLocalMethods.patchBook(RestLocalMethods.getMyUserId(),currentBook);
                 cardView.setVisibility(View.GONE);
                 lView.setClickable(true);
 
@@ -142,9 +144,14 @@ public class BookFragment extends Fragment {
 
                     ArrayList<String> titles = new ArrayList<String>();
                     ArrayList<String> authors = new ArrayList<String>();
+                    ArrayList<Integer> images = new ArrayList<Integer>();
+
                     for(Book b: books){
                         titles.add( b.getTitle() ) ;
                         authors.add(b.getAuthors());
+//                        if(b.getGoogleData()!=null && b.getGoogleData().getVolumeInfo().getImageLinks().getSmallThumbnail()!=null){
+//                            //images.add(b.getGoogleData().getVolumeInfo().getImageLinks().getSmallThumbnail());
+//                        }
                     }
 
 
@@ -159,15 +166,17 @@ public class BookFragment extends Fragment {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             //googleImage
-                            if(books.get(i).getGoogleData()!=null) {
-                                if(books.get(i).getGoogleData().getVolumeInfo().getImageLinks().getThumbnail()!=null) {
+                            currentBook=books.get(i);
+
+                            if(currentBook.getGoogleData()!=null) {
+                                if(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail()!=null) {
                                     new DownloadImageTask(  googleImage)
-                                            .execute(books.get(i).getGoogleData().getVolumeInfo().getImageLinks().getThumbnail());
+                                            .execute(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail());
                                 }
                                 Toast.makeText(getContext(), "Google "+titles.get(i), Toast.LENGTH_SHORT).show();
-                                googleTitle.setText(books.get(i).getGoogleData().getVolumeInfo().getTitle());
-                                googleAuthors.setText(books.get(i).getGoogleData().getVolumeInfo().getAuthors().toString() );
-                                googleDesc.setText(books.get(i).getGoogleData().getVolumeInfo().getDescription());
+                                googleTitle.setText(currentBook.getGoogleData().getVolumeInfo().getTitle());
+                                googleAuthors.setText(currentBook.getGoogleData().getVolumeInfo().getAuthors().toString() );
+                                googleDesc.setText(currentBook.getGoogleData().getVolumeInfo().getDescription());
                                 lView.setClickable(false);
                                 cardView.setVisibility(View.VISIBLE);
                             }
