@@ -48,7 +48,7 @@ public class BookFragment extends Fragment {
     private TextView googleDesc;
     private MaterialButton ignoreButton;
     private MaterialButton acceptButton;
-
+    private ListView lView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -108,6 +108,10 @@ public class BookFragment extends Fragment {
                         .show();
             }
         });
+        //List related
+
+        lView = view.findViewById(R.id.bookList);
+
 
         RestLocalMethods.initRetrofit(this.getContext());
 
@@ -135,7 +139,6 @@ public class BookFragment extends Fragment {
                         authors.add(b.getAuthors());
                     }
 
-                    ListView lView = view.findViewById(R.id.bookList);
 
                     ListAdapter lAdapter = new ListAdapter(getContext(), titles, authors, null,R.drawable.ic_book_red);
 
