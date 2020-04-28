@@ -813,10 +813,7 @@ public class RestLocalMethods {
     //GET
     public  static List<Book> getAllBooks(){
         books=null;
-        if(userId==null) {
-            Toast.makeText(context, "UserId not found", Toast.LENGTH_SHORT);
-            userId=1; //TODO remove
-        }
+
 
         Call<MyResponse<Book>> call = jsonPlaceHolderApi.getAllBooks(userId );
 
@@ -950,6 +947,10 @@ public class RestLocalMethods {
 
     public static Context getContext() {
         return context;
+    }
+
+    public static void setContext(Context context) {
+        RestLocalMethods.context = context;
     }
 }
 

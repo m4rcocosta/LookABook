@@ -48,7 +48,7 @@ public class VolumeInfo {
     private ReadingModes readingModes;
     @SerializedName("averageRating")
     @Expose
-    private Integer averageRating;
+    private Float averageRating;
     @SerializedName("publishedDate")
     @Expose
     private String publishedDate;
@@ -175,11 +175,11 @@ public class VolumeInfo {
         this.readingModes = readingModes;
     }
 
-    public Integer getAverageRating() {
+    public Float getAverageRating() {
         return averageRating;
     }
 
-    public void setAverageRating(Integer averageRating) {
+    public void setAverageRating(Float averageRating) {
         this.averageRating = averageRating;
     }
 

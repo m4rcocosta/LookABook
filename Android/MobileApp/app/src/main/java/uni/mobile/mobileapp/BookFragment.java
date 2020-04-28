@@ -1,6 +1,10 @@
 package uni.mobile.mobileapp;
 
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -21,6 +25,8 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,6 +78,8 @@ public class BookFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 cardView.setVisibility(View.GONE);
+                lView.setClickable(true);
+
             }
         });
         acceptButton.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +87,7 @@ public class BookFragment extends Fragment {
             public void onClick(View v) {
             //TODO update rails with a patch
                 cardView.setVisibility(View.GONE);
+                lView.setClickable(true);
 
             }
         });
@@ -112,8 +121,7 @@ public class BookFragment extends Fragment {
 
         lView = view.findViewById(R.id.bookList);
 
-
-        RestLocalMethods.initRetrofit(this.getContext());
+        RestLocalMethods.setContext(getContext());
 
        /* Wall w = RestLocalMethods.createWall(1,6,1,new Wall("stranaHouse") );
         //t.setText(h.getName());
@@ -152,9 +160,15 @@ public class BookFragment extends Fragment {
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             //googleImage
                             if(books.get(i).getGoogleData()!=null) {
+                                if(books.get(i).getGoogleData().getVolumeInfo().getImageLinks().getThumbnail()!=null) {
+                                    new DownloadImageTask(  googleImage)
+                                            .execute(books.get(i).getGoogleData().getVolumeInfo().getImageLinks().getThumbnail());
+                                }
                                 Toast.makeText(getContext(), "Google "+titles.get(i), Toast.LENGTH_SHORT).show();
                                 googleTitle.setText(books.get(i).getGoogleData().getVolumeInfo().getTitle());
-                                //googleTitle.setText(books.get(i).getGoogleData().getVolumeInfo().getTitle() );
+                                googleAuthors.setText(books.get(i).getGoogleData().getVolumeInfo().getAuthors().toString() );
+                                googleDesc.setText(books.get(i).getGoogleData().getVolumeInfo().getDescription());
+                                lView.setClickable(false);
                                 cardView.setVisibility(View.VISIBLE);
                             }
                             else{
@@ -168,6 +182,8 @@ public class BookFragment extends Fragment {
                 else
                 {
                     Log.d("BBBB","Request Error :: " + response.errorBody());
+                    Toast.makeText(getContext(), "Google api error", Toast.LENGTH_SHORT).show();
+
                 }
             }
 
@@ -182,5 +198,38 @@ public class BookFragment extends Fragment {
 
     }
 
+    private static Drawable LoadImageFromWebOperations(String url) {
+        try {
+            InputStream is = (InputStream) new URL(url).getContent();
+            Drawable d = Drawable.createFromStream(is, "src name");
+            return d;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
 
 }
