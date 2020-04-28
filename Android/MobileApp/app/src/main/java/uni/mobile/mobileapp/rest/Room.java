@@ -1,18 +1,22 @@
 package uni.mobile.mobileapp.rest;
 
 public class Room {
-    private Integer id;
+    private Integer id, houseId;
     private String name;
     private String createdAt;
     private String updatedAt;
 
-    public Room(Integer id, String name) {
-        this.id = id;
+    public Room(String name, Integer houseId) {
+        this.houseId = houseId;
         this.name = name;
     }
 
     public int getId() {
         return id;
+    }
+
+    public int getHouseId() {
+        return houseId;
     }
 
     public String getName() {

@@ -35,15 +35,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import uni.mobile.mobileapp.guiAdapters.ListAdapter;
 import uni.mobile.mobileapp.rest.Book;
-import uni.mobile.mobileapp.rest.House;
-import uni.mobile.mobileapp.rest.JsonPlaceHolderApi;
 import uni.mobile.mobileapp.rest.MyResponse;
 import uni.mobile.mobileapp.rest.RestLocalMethods;
 import uni.mobile.mobileapp.rest.Shelf;
@@ -61,7 +59,9 @@ public class BookFragment extends Fragment {
     private MaterialButton ignoreButton;
     private MaterialButton acceptButton;
     private ListView lView;
+<<<<<<< HEAD
     private Book currentBook;
+=======
     private Spinner userShelves;
     private List<Shelf> shelves = null;
     private Map<String, Shelf> shelfDic = null;
@@ -70,7 +70,7 @@ public class BookFragment extends Fragment {
     public BookFragment(BottomNavigationView bottomNavigationView) {
         this.bottomNavigationView = bottomNavigationView;
     }
-
+>>>>>>> 2e4c6287148eebedcee399d1ecf6ee24d5f579dc
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -233,14 +233,10 @@ public class BookFragment extends Fragment {
         });
 
         //List related
-
         lView = view.findViewById(R.id.bookList);
     }
 
-
-  private void getUserBooks(View view) {
-        RestLocalMethods.setContext(getContext());
-
+    private void getUserBooks(View view) {
         Call<MyResponse<Book>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getAllBooks(RestLocalMethods.getMyUserId());
         callAsync.enqueue(new Callback<MyResponse<Book>>() {
 
@@ -308,7 +304,6 @@ public class BookFragment extends Fragment {
             }
         });
     }
-
 
     private static Drawable LoadImageFromWebOperations(String url) {
         try {

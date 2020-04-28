@@ -3,23 +3,67 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="15dp">
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+    <Spinner
+        android:id="@+id/userShelves"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@android:layout/simple_spinner_item"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:layout_marginBottom="10dp"
+        app:endIconMode="clear_text">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/bookTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:layout_marginBottom="10dp"
-            app:endIconMode="clear_text">
+            android:hint="@string/title"
+            android:inputType="textPersonName|textCapSentences"
+            android:imeOptions="actionDone"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/bookName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/name"
-                android:inputType="textPersonName|textCapSentences"
-                android:imeOptions="actionDone"
-                android:singleLine="true" />
-        </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:layout_marginBottom="10dp"
+        app:endIconMode="clear_text">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/bookAuthor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/author"
+            android:inputType="textPersonName|textCapSentences"
+            android:imeOptions="actionDone"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:layout_marginBottom="10dp"
+        app:endIconMode="clear_text">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/bookISBN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/isbn"
+            android:inputType="textPersonName|textCapSentences"
+            android:imeOptions="actionDone"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>
