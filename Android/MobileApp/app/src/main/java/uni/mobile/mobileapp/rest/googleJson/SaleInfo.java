@@ -5,70 +5,36 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 public class SaleInfo {
 
+    @SerializedName("offers")
+    @Expose
+    private List<Offer> offers = null;
+    @SerializedName("buyLink")
+    @Expose
+    private String buyLink;
     @SerializedName("country")
     @Expose
     private String country;
-    @SerializedName("saleability")
-    @Expose
-    private String saleability;
     @SerializedName("isEbook")
     @Expose
     private Boolean isEbook;
     @SerializedName("listPrice")
     @Expose
-    private ListPrice listPrice;
+    private ListPrice_ listPrice;
     @SerializedName("retailPrice")
     @Expose
-    private RetailPrice retailPrice;
-    @SerializedName("buyLink")
+    private RetailPrice_ retailPrice;
+    @SerializedName("saleability")
     @Expose
-    private String buyLink;
-    @SerializedName("offers")
-    @Expose
-    private List<Offer> offers = null;
+    private String saleability;
 
-    public String getCountry() {
-        return country;
+    public List<Offer> getOffers() {
+        return offers;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getSaleability() {
-        return saleability;
-    }
-
-    public void setSaleability(String saleability) {
-        this.saleability = saleability;
-    }
-
-    public Boolean getIsEbook() {
-        return isEbook;
-    }
-
-    public void setIsEbook(Boolean isEbook) {
-        this.isEbook = isEbook;
-    }
-
-    public ListPrice getListPrice() {
-        return listPrice;
-    }
-
-    public void setListPrice(ListPrice listPrice) {
-        this.listPrice = listPrice;
-    }
-
-    public RetailPrice getRetailPrice() {
-        return retailPrice;
-    }
-
-    public void setRetailPrice(RetailPrice retailPrice) {
-        this.retailPrice = retailPrice;
+    public void setOffers(List<Offer> offers) {
+        this.offers = offers;
     }
 
     public String getBuyLink() {
@@ -79,17 +45,44 @@ public class SaleInfo {
         this.buyLink = buyLink;
     }
 
-    public List<Offer> getOffers() {
-        return offers;
+    public String getCountry() {
+        return country;
     }
 
-    public void setOffers(List<Offer> offers) {
-        this.offers = offers;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this).append("country", country).append("saleability", saleability).append("isEbook", isEbook).append("listPrice", listPrice).append("retailPrice", retailPrice).append("buyLink", buyLink).append("offers", offers).toString();
+    public Boolean getIsEbook() {
+        return isEbook;
+    }
+
+    public void setIsEbook(Boolean isEbook) {
+        this.isEbook = isEbook;
+    }
+
+    public ListPrice_ getListPrice() {
+        return listPrice;
+    }
+
+    public void setListPrice(ListPrice_ listPrice) {
+        this.listPrice = listPrice;
+    }
+
+    public RetailPrice_ getRetailPrice() {
+        return retailPrice;
+    }
+
+    public void setRetailPrice(RetailPrice_ retailPrice) {
+        this.retailPrice = retailPrice;
+    }
+
+    public String getSaleability() {
+        return saleability;
+    }
+
+    public void setSaleability(String saleability) {
+        this.saleability = saleability;
     }
 
 }

@@ -4,8 +4,6 @@ package uni.mobile.mobileapp.rest.googleJson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 public class PanelizationSummary {
 
     @SerializedName("containsEpubBubbles")
@@ -29,11 +27,6 @@ public class PanelizationSummary {
 
     public void setContainsImageBubbles(Boolean containsImageBubbles) {
         this.containsImageBubbles = containsImageBubbles;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this).append("containsEpubBubbles", containsEpubBubbles).append("containsImageBubbles", containsImageBubbles).toString();
     }
 
 }

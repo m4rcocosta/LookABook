@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -38,6 +40,11 @@ import uni.mobile.mobileapp.rest.Wall;
 public class BookFragment extends Fragment {
 
     private FloatingActionButton addBookButton;
+    private MaterialCardView cardView;
+    private ImageView googleImage;
+    private TextView googleTitle;
+    private TextView googleAuthors;
+    private TextView googleDesc;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,6 +54,12 @@ public class BookFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+
+        cardView = view.findViewById(R.id.card);
+        googleImage=view.findViewById(R.id.googleImage);
+        googleTitle =view.findViewById(R.id.googleTitle );
+        googleAuthors =view.findViewById(R.id.googleAuthors);
+        googleDesc=view.findViewById(R.id.googleDesc);
 
         addBookButton = view.findViewById(R.id.addBookButton);
         addBookButton.setOnClickListener(new View.OnClickListener() {
@@ -110,9 +123,13 @@ public class BookFragment extends Fragment {
                     lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                            Toast.makeText(getContext(), titles.get(i), Toast.LENGTH_SHORT).show();
-
+                            //googleImage
+                            if(books.get(i).getGoogleData()!=null) {
+                                googleTitle.setText(books.get(i).getGoogleData().getVolumeInfo().getTitle());
+                                //googleTitle.setText(books.get(i).getGoogleData().getVolumeInfo().getTitle() );
+                                cardView.setVisibility(View.VISIBLE);
+                                Toast.makeText(getContext(), titles.get(i), Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
 

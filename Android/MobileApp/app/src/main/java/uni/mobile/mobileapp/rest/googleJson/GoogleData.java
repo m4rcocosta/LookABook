@@ -3,42 +3,33 @@ package uni.mobile.mobileapp.rest.googleJson;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Item {
+public class GoogleData {
 
-    @SerializedName("kind")
-    @Expose
-    private String kind;
     @SerializedName("id")
     @Expose
     private String id;
     @SerializedName("etag")
     @Expose
     private String etag;
-    @SerializedName("selfLink")
+    @SerializedName("kind")
     @Expose
-    private String selfLink;
-    @SerializedName("volumeInfo")
-    @Expose
-    private VolumeInfo volumeInfo;
+    private String kind;
     @SerializedName("saleInfo")
     @Expose
     private SaleInfo saleInfo;
+    @SerializedName("selfLink")
+    @Expose
+    private String selfLink;
     @SerializedName("accessInfo")
     @Expose
     private AccessInfo accessInfo;
     @SerializedName("searchInfo")
     @Expose
     private SearchInfo searchInfo;
-
-    public String getKind() {
-        return kind;
-    }
-
-    public void setKind(String kind) {
-        this.kind = kind;
-    }
+    @SerializedName("volumeInfo")
+    @Expose
+    private VolumeInfo volumeInfo;
 
     public String getId() {
         return id;
@@ -56,20 +47,12 @@ public class Item {
         this.etag = etag;
     }
 
-    public String getSelfLink() {
-        return selfLink;
+    public String getKind() {
+        return kind;
     }
 
-    public void setSelfLink(String selfLink) {
-        this.selfLink = selfLink;
-    }
-
-    public VolumeInfo getVolumeInfo() {
-        return volumeInfo;
-    }
-
-    public void setVolumeInfo(VolumeInfo volumeInfo) {
-        this.volumeInfo = volumeInfo;
+    public void setKind(String kind) {
+        this.kind = kind;
     }
 
     public SaleInfo getSaleInfo() {
@@ -78,6 +61,14 @@ public class Item {
 
     public void setSaleInfo(SaleInfo saleInfo) {
         this.saleInfo = saleInfo;
+    }
+
+    public String getSelfLink() {
+        return selfLink;
+    }
+
+    public void setSelfLink(String selfLink) {
+        this.selfLink = selfLink;
     }
 
     public AccessInfo getAccessInfo() {
@@ -96,9 +87,12 @@ public class Item {
         this.searchInfo = searchInfo;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this).append("kind", kind).append("id", id).append("etag", etag).append("selfLink", selfLink).append("volumeInfo", volumeInfo).append("saleInfo", saleInfo).append("accessInfo", accessInfo).append("searchInfo", searchInfo).toString();
+    public VolumeInfo getVolumeInfo() {
+        return volumeInfo;
+    }
+
+    public void setVolumeInfo(VolumeInfo volumeInfo) {
+        this.volumeInfo = volumeInfo;
     }
 
 }

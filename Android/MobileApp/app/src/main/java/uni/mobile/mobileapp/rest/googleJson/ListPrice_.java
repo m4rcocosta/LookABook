@@ -4,23 +4,21 @@ package uni.mobile.mobileapp.rest.googleJson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 public class ListPrice_ {
 
-    @SerializedName("amountInMicros")
+    @SerializedName("amount")
     @Expose
-    private Integer amountInMicros;
+    private Double amount;
     @SerializedName("currencyCode")
     @Expose
     private String currencyCode;
 
-    public Integer getAmountInMicros() {
-        return amountInMicros;
+    public Double getAmount() {
+        return amount;
     }
 
-    public void setAmountInMicros(Integer amountInMicros) {
-        this.amountInMicros = amountInMicros;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     public String getCurrencyCode() {
@@ -29,11 +27,6 @@ public class ListPrice_ {
 
     public void setCurrencyCode(String currencyCode) {
         this.currencyCode = currencyCode;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this).append("amountInMicros", amountInMicros).append("currencyCode", currencyCode).toString();
     }
 
 }

@@ -4,8 +4,6 @@ package uni.mobile.mobileapp.rest.googleJson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 public class ReadingModes {
 
     @SerializedName("text")
@@ -29,11 +27,6 @@ public class ReadingModes {
 
     public void setImage(Boolean image) {
         this.image = image;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this).append("text", text).append("image", image).toString();
     }
 
 }

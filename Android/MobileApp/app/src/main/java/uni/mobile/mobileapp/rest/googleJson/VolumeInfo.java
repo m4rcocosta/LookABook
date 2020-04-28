@@ -4,7 +4,6 @@ package uni.mobile.mobileapp.rest.googleJson;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class VolumeInfo {
 
@@ -14,66 +13,63 @@ public class VolumeInfo {
     @SerializedName("authors")
     @Expose
     private List<String> authors = null;
-    @SerializedName("publisher")
+    @SerializedName("infoLink")
     @Expose
-    private String publisher;
-    @SerializedName("publishedDate")
+    private String infoLink;
+    @SerializedName("language")
     @Expose
-    private String publishedDate;
-    @SerializedName("description")
-    @Expose
-    private String description;
-    @SerializedName("industryIdentifiers")
-    @Expose
-    private List<IndustryIdentifier> industryIdentifiers = null;
-    @SerializedName("readingModes")
-    @Expose
-    private ReadingModes readingModes;
+    private String language;
     @SerializedName("pageCount")
     @Expose
     private Integer pageCount;
     @SerializedName("printType")
     @Expose
     private String printType;
+    @SerializedName("publisher")
+    @Expose
+    private String publisher;
     @SerializedName("categories")
     @Expose
     private List<String> categories = null;
-    @SerializedName("averageRating")
+    @SerializedName("imageLinks")
     @Expose
-    private Double averageRating;
+    private ImageLinks imageLinks;
+    @SerializedName("description")
+    @Expose
+    private String description;
+    @SerializedName("previewLink")
+    @Expose
+    private String previewLink;
     @SerializedName("ratingsCount")
     @Expose
     private Integer ratingsCount;
+    @SerializedName("readingModes")
+    @Expose
+    private ReadingModes readingModes;
+    @SerializedName("averageRating")
+    @Expose
+    private Integer averageRating;
+    @SerializedName("publishedDate")
+    @Expose
+    private String publishedDate;
+    @SerializedName("contentVersion")
+    @Expose
+    private String contentVersion;
     @SerializedName("maturityRating")
     @Expose
     private String maturityRating;
     @SerializedName("allowAnonLogging")
     @Expose
     private Boolean allowAnonLogging;
-    @SerializedName("contentVersion")
-    @Expose
-    private String contentVersion;
-    @SerializedName("panelizationSummary")
-    @Expose
-    private PanelizationSummary panelizationSummary;
-    @SerializedName("imageLinks")
-    @Expose
-    private ImageLinks imageLinks;
-    @SerializedName("language")
-    @Expose
-    private String language;
-    @SerializedName("previewLink")
-    @Expose
-    private String previewLink;
-    @SerializedName("infoLink")
-    @Expose
-    private String infoLink;
     @SerializedName("canonicalVolumeLink")
     @Expose
     private String canonicalVolumeLink;
-    @SerializedName("subtitle")
+    @SerializedName("industryIdentifiers")
     @Expose
-    private String subtitle;
+    private List<IndustryIdentifier> industryIdentifiers = null;
+    @SerializedName("panelizationSummary")
+    @Expose
+    private PanelizationSummary panelizationSummary;
 
     public String getTitle() {
         return title;
@@ -91,44 +87,20 @@ public class VolumeInfo {
         this.authors = authors;
     }
 
-    public String getPublisher() {
-        return publisher;
+    public String getInfoLink() {
+        return infoLink;
     }
 
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
+    public void setInfoLink(String infoLink) {
+        this.infoLink = infoLink;
     }
 
-    public String getPublishedDate() {
-        return publishedDate;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setPublishedDate(String publishedDate) {
-        this.publishedDate = publishedDate;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<IndustryIdentifier> getIndustryIdentifiers() {
-        return industryIdentifiers;
-    }
-
-    public void setIndustryIdentifiers(List<IndustryIdentifier> industryIdentifiers) {
-        this.industryIdentifiers = industryIdentifiers;
-    }
-
-    public ReadingModes getReadingModes() {
-        return readingModes;
-    }
-
-    public void setReadingModes(ReadingModes readingModes) {
-        this.readingModes = readingModes;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public Integer getPageCount() {
@@ -147,6 +119,14 @@ public class VolumeInfo {
         this.printType = printType;
     }
 
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
     public List<String> getCategories() {
         return categories;
     }
@@ -155,12 +135,28 @@ public class VolumeInfo {
         this.categories = categories;
     }
 
-    public Double getAverageRating() {
-        return averageRating;
+    public ImageLinks getImageLinks() {
+        return imageLinks;
     }
 
-    public void setAverageRating(Double averageRating) {
-        this.averageRating = averageRating;
+    public void setImageLinks(ImageLinks imageLinks) {
+        this.imageLinks = imageLinks;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPreviewLink() {
+        return previewLink;
+    }
+
+    public void setPreviewLink(String previewLink) {
+        this.previewLink = previewLink;
     }
 
     public Integer getRatingsCount() {
@@ -169,6 +165,38 @@ public class VolumeInfo {
 
     public void setRatingsCount(Integer ratingsCount) {
         this.ratingsCount = ratingsCount;
+    }
+
+    public ReadingModes getReadingModes() {
+        return readingModes;
+    }
+
+    public void setReadingModes(ReadingModes readingModes) {
+        this.readingModes = readingModes;
+    }
+
+    public Integer getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(Integer averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public String getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(String publishedDate) {
+        this.publishedDate = publishedDate;
+    }
+
+    public String getContentVersion() {
+        return contentVersion;
+    }
+
+    public void setContentVersion(String contentVersion) {
+        this.contentVersion = contentVersion;
     }
 
     public String getMaturityRating() {
@@ -187,54 +215,6 @@ public class VolumeInfo {
         this.allowAnonLogging = allowAnonLogging;
     }
 
-    public String getContentVersion() {
-        return contentVersion;
-    }
-
-    public void setContentVersion(String contentVersion) {
-        this.contentVersion = contentVersion;
-    }
-
-    public PanelizationSummary getPanelizationSummary() {
-        return panelizationSummary;
-    }
-
-    public void setPanelizationSummary(PanelizationSummary panelizationSummary) {
-        this.panelizationSummary = panelizationSummary;
-    }
-
-    public ImageLinks getImageLinks() {
-        return imageLinks;
-    }
-
-    public void setImageLinks(ImageLinks imageLinks) {
-        this.imageLinks = imageLinks;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public String getPreviewLink() {
-        return previewLink;
-    }
-
-    public void setPreviewLink(String previewLink) {
-        this.previewLink = previewLink;
-    }
-
-    public String getInfoLink() {
-        return infoLink;
-    }
-
-    public void setInfoLink(String infoLink) {
-        this.infoLink = infoLink;
-    }
-
     public String getCanonicalVolumeLink() {
         return canonicalVolumeLink;
     }
@@ -243,17 +223,20 @@ public class VolumeInfo {
         this.canonicalVolumeLink = canonicalVolumeLink;
     }
 
-    public String getSubtitle() {
-        return subtitle;
+    public List<IndustryIdentifier> getIndustryIdentifiers() {
+        return industryIdentifiers;
     }
 
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
+    public void setIndustryIdentifiers(List<IndustryIdentifier> industryIdentifiers) {
+        this.industryIdentifiers = industryIdentifiers;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this).append("title", title).append("authors", authors).append("publisher", publisher).append("publishedDate", publishedDate).append("description", description).append("industryIdentifiers", industryIdentifiers).append("readingModes", readingModes).append("pageCount", pageCount).append("printType", printType).append("categories", categories).append("averageRating", averageRating).append("ratingsCount", ratingsCount).append("maturityRating", maturityRating).append("allowAnonLogging", allowAnonLogging).append("contentVersion", contentVersion).append("panelizationSummary", panelizationSummary).append("imageLinks", imageLinks).append("language", language).append("previewLink", previewLink).append("infoLink", infoLink).append("canonicalVolumeLink", canonicalVolumeLink).append("subtitle", subtitle).toString();
+    public PanelizationSummary getPanelizationSummary() {
+        return panelizationSummary;
+    }
+
+    public void setPanelizationSummary(PanelizationSummary panelizationSummary) {
+        this.panelizationSummary = panelizationSummary;
     }
 
 }

@@ -3,7 +3,6 @@ package uni.mobile.mobileapp.rest.googleJson;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class Epub {
 
@@ -28,11 +27,6 @@ public class Epub {
 
     public void setAcsTokenLink(String acsTokenLink) {
         this.acsTokenLink = acsTokenLink;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this).append("isAvailable", isAvailable).append("acsTokenLink", acsTokenLink).toString();
     }
 
 }

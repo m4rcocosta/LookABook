@@ -3,31 +3,27 @@ package uni.mobile.mobileapp.rest.googleJson;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class AccessInfo {
 
-    @SerializedName("country")
-    @Expose
-    private String country;
-    @SerializedName("viewability")
-    @Expose
-    private String viewability;
-    @SerializedName("embeddable")
-    @Expose
-    private Boolean embeddable;
-    @SerializedName("publicDomain")
-    @Expose
-    private Boolean publicDomain;
-    @SerializedName("textToSpeechPermission")
-    @Expose
-    private String textToSpeechPermission;
-    @SerializedName("epub")
-    @Expose
-    private Epub epub;
     @SerializedName("pdf")
     @Expose
     private Pdf pdf;
+    @SerializedName("epub")
+    @Expose
+    private Epub epub;
+    @SerializedName("country")
+    @Expose
+    private String country;
+    @SerializedName("embeddable")
+    @Expose
+    private Boolean embeddable;
+    @SerializedName("viewability")
+    @Expose
+    private String viewability;
+    @SerializedName("publicDomain")
+    @Expose
+    private Boolean publicDomain;
     @SerializedName("webReaderLink")
     @Expose
     private String webReaderLink;
@@ -37,45 +33,16 @@ public class AccessInfo {
     @SerializedName("quoteSharingAllowed")
     @Expose
     private Boolean quoteSharingAllowed;
+    @SerializedName("textToSpeechPermission")
+    @Expose
+    private String textToSpeechPermission;
 
-    public String getCountry() {
-        return country;
+    public Pdf getPdf() {
+        return pdf;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getViewability() {
-        return viewability;
-    }
-
-    public void setViewability(String viewability) {
-        this.viewability = viewability;
-    }
-
-    public Boolean getEmbeddable() {
-        return embeddable;
-    }
-
-    public void setEmbeddable(Boolean embeddable) {
-        this.embeddable = embeddable;
-    }
-
-    public Boolean getPublicDomain() {
-        return publicDomain;
-    }
-
-    public void setPublicDomain(Boolean publicDomain) {
-        this.publicDomain = publicDomain;
-    }
-
-    public String getTextToSpeechPermission() {
-        return textToSpeechPermission;
-    }
-
-    public void setTextToSpeechPermission(String textToSpeechPermission) {
-        this.textToSpeechPermission = textToSpeechPermission;
+    public void setPdf(Pdf pdf) {
+        this.pdf = pdf;
     }
 
     public Epub getEpub() {
@@ -86,12 +53,36 @@ public class AccessInfo {
         this.epub = epub;
     }
 
-    public Pdf getPdf() {
-        return pdf;
+    public String getCountry() {
+        return country;
     }
 
-    public void setPdf(Pdf pdf) {
-        this.pdf = pdf;
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public Boolean getEmbeddable() {
+        return embeddable;
+    }
+
+    public void setEmbeddable(Boolean embeddable) {
+        this.embeddable = embeddable;
+    }
+
+    public String getViewability() {
+        return viewability;
+    }
+
+    public void setViewability(String viewability) {
+        this.viewability = viewability;
+    }
+
+    public Boolean getPublicDomain() {
+        return publicDomain;
+    }
+
+    public void setPublicDomain(Boolean publicDomain) {
+        this.publicDomain = publicDomain;
     }
 
     public String getWebReaderLink() {
@@ -118,9 +109,12 @@ public class AccessInfo {
         this.quoteSharingAllowed = quoteSharingAllowed;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this).append("country", country).append("viewability", viewability).append("embeddable", embeddable).append("publicDomain", publicDomain).append("textToSpeechPermission", textToSpeechPermission).append("epub", epub).append("pdf", pdf).append("webReaderLink", webReaderLink).append("accessViewStatus", accessViewStatus).append("quoteSharingAllowed", quoteSharingAllowed).toString();
+    public String getTextToSpeechPermission() {
+        return textToSpeechPermission;
+    }
+
+    public void setTextToSpeechPermission(String textToSpeechPermission) {
+        this.textToSpeechPermission = textToSpeechPermission;
     }
 
 }

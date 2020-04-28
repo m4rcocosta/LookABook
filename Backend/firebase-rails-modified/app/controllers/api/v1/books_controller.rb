@@ -105,9 +105,9 @@ class Api::V1::BooksController < ApiController
   def scanAllBooks
     houses=@user.houses
     rooms= houses.map(&:rooms).flatten() 
-    walls = rooms.map(&:rooms).flatten()
-    shelves = walls.map(&:rooms).flatten()
-    books = shelves.map(&:rooms).flatten()
+    walls = rooms.map(&:walls).flatten()
+    shelves = walls.map(&:shelves).flatten()
+    books = shelves.map(&:books).flatten()
     puts "<<< Starting Async search"
     my_threads = []
     books.each do |b|
@@ -131,10 +131,10 @@ class Api::V1::BooksController < ApiController
     response = HTTParty.get(url, format: :json)
     response = JSON.parse(response.body)["items"][0]
     #response.save("/tmp/search.html")
-    puts "Resonse:" + JSON.pretty_generate(response)
+    #puts "Resonse:" + JSON.pretty_generate(response)+"..."
     book.googleData = response
     if book.save
-      puts "[V] Book #{book.title} updated"
+      puts "[V] Book #{book.title} #{book.googleData.last(10)} updated"
     else
       if room.errors.any?
         puts "[E] #{ book.errors.full_messages }"
