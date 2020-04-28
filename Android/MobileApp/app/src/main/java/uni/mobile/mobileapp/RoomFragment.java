@@ -28,6 +28,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import uni.mobile.mobileapp.guiAdapters.ListAdapter;
+import uni.mobile.mobileapp.rest.House;
 import uni.mobile.mobileapp.rest.MyResponse;
 import uni.mobile.mobileapp.rest.RestLocalMethods;
 import uni.mobile.mobileapp.rest.Room;
@@ -37,6 +38,7 @@ public class RoomFragment extends Fragment {
 
     private FloatingActionButton addRoomButton;
     private Spinner userHouses;
+    private List<House> houses = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,16 +54,38 @@ public class RoomFragment extends Fragment {
             public void onClick(View v) {
                 LayoutInflater inflater = getLayoutInflater();
                 View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_add_room, null);
+
+                RestLocalMethods.initRetrofit(getContext());
+
                 final EditText roomNameEditText = alertLayout.findViewById(R.id.roomName);
                 userHouses = alertLayout.findViewById(R.id.userHouses);
+
                 // Custom choices
                 List<String> choices = new ArrayList<>();
                 choices.add("Select an house!");
-                choices.add("A");
-                choices.add("B");
-                choices.add("C");
-                choices.add("D");
-                choices.add("E");
+
+                Call<MyResponse<House>> call = RestLocalMethods.getJsonPlaceHolderApi().getHouses(RestLocalMethods.getMyUserId());
+                call.enqueue(new Callback<MyResponse<House>>() {
+                    @Override
+                    public void onResponse(Call<MyResponse<House>> call, Response<MyResponse<House>> response) {
+                        if(!response.isSuccessful()) return;
+                        houses = response.body().getData();
+                        if(houses == null || houses.isEmpty()) {
+                            Toast.makeText(getContext(), "No house found, you should create one first.", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            for(House house: houses){
+                                choices.add(house.getName());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<MyResponse<House>> call, Throwable t) {
+                        Log.d("RRRR","Request Error :: " + t.getMessage() );
+                    }
+
+                });
 
                 // Create an ArrayAdapter with custom choices
                 final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, choices){
@@ -122,7 +146,7 @@ public class RoomFragment extends Fragment {
             }
         });
 
-        RestLocalMethods.initRetrofit(this.getContext());
+
 
        /* Wall w = RestLocalMethods.createWall(1,6,1,new Wall("stranaHouse") );
         //t.setText(h.getName());
