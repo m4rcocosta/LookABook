@@ -1,5 +1,6 @@
 package uni.mobile.mobileapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -46,7 +47,8 @@ public class WallFragment extends Fragment {
     private List<Room> rooms = null;
     private Map<String, Room> roomDic = null;
     private String currentRoom = "Select a room!";
-    private FragmentActivity thisActivity;
+    private Context context;
+    private FragmentActivity activity;
 
     public WallFragment(BottomNavigationView bottomNavigationView) {
         this.bottomNavigationView = bottomNavigationView;
@@ -60,8 +62,10 @@ public class WallFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        thisActivity=getActivity();
-        RestLocalMethods.initRetrofit(this.getContext());
+        context = this.getContext();
+        activity = this.getActivity();
+
+        RestLocalMethods.initRetrofit(context);
 
         // Load user walls
         getUserWalls(view);
@@ -76,25 +80,6 @@ public class WallFragment extends Fragment {
             public void onResponse(Call<MyResponse<Room>> call, Response<MyResponse<Room>> response) {
                 if(!response.isSuccessful()) return;
                 rooms = response.body().getData();
-
-                // User Can't add a Room if he has not an house
-                if (rooms.isEmpty()) {
-                    new MaterialAlertDialogBuilder(thisActivity)
-                            .setTitle("No room found")
-                            .setMessage("Please create one first.")
-                            .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    bottomNavigationView.setSelectedItemId(R.id.navigation_room);
-                                    FragmentTransaction transaction = thisActivity.getSupportFragmentManager().beginTransaction();
-                                    transaction.replace(R.id.fragmentContainer, new RoomFragment(bottomNavigationView));
-                                    transaction.commit();
-                                }
-                            })
-                            .setNegativeButton("Cancel", null)
-                            .show();
-                }
 
                 roomDic = new HashMap<String, Room>();
                 for(Room room: rooms){
@@ -111,7 +96,7 @@ public class WallFragment extends Fragment {
         });
 
         // Create an ArrayAdapter with custom choices
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, choices){
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.item_spinner, choices){
             @Override
             public boolean isEnabled(int position){
                 return position != 0;
@@ -135,47 +120,68 @@ public class WallFragment extends Fragment {
         addWallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater inflater = getLayoutInflater();
-                View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_add_wall, null);
-                final EditText wallNameEditText = alertLayout.findViewById(R.id.wallName);
-                userRooms = alertLayout.findViewById(R.id.userRooms);
-
-                // Set the adapter to th spinner
-                userRooms.setAdapter(adapter);
-
-                userRooms.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        currentRoom = userRooms.getSelectedItem().toString();
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-                new MaterialAlertDialogBuilder(getContext())
-                        .setTitle("Create new wall")
-                        .setMessage("Insert the wall name")
-                        .setView(alertLayout) // this is set the view from XML inside AlertDialog
-                        .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
-                        .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String wallName = wallNameEditText.getText().toString();
-                                if (currentRoom.equals("Select a room!")) Toast.makeText(getContext(), "Please select a room!", Toast.LENGTH_SHORT).show();
-                                else {
-                                    Room selectedRoom = roomDic.get(currentRoom);
-                                    RestLocalMethods.createWall(RestLocalMethods.getMyUserId(), selectedRoom.getHouseId(), selectedRoom.getId(), new Wall(wallName, selectedRoom.getId(), selectedRoom.getHouseId()));
-                                    // Reload fragment in order to see new added wall
-                                    FragmentTransaction transaction = thisActivity.getSupportFragmentManager().beginTransaction();
-                                    transaction.replace(R.id.fragmentContainer, new WallFragment(bottomNavigationView));
+                // User Can't add a Wall if he has not a Room
+                if (rooms.isEmpty()) {
+                    new MaterialAlertDialogBuilder(context)
+                            .setTitle("No room found")
+                            .setMessage("Please create one first.")
+                            .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    bottomNavigationView.setSelectedItemId(R.id.navigation_room);
+                                    FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.fragmentContainer, new RoomFragment(bottomNavigationView));
                                     transaction.commit();
                                 }
-                            }
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .show();
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
+                else{
+                    LayoutInflater inflater = getLayoutInflater();
+                    View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_add_wall, null);
+                    final EditText wallNameEditText = alertLayout.findViewById(R.id.wallName);
+                    userRooms = alertLayout.findViewById(R.id.userRooms);
+
+                    // Set the adapter to th spinner
+                    userRooms.setAdapter(adapter);
+
+                    userRooms.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            currentRoom = userRooms.getSelectedItem().toString();
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+                    new MaterialAlertDialogBuilder(context)
+                            .setTitle("Create new wall")
+                            .setMessage("Insert the wall name")
+                            .setView(alertLayout) // this is set the view from XML inside AlertDialog
+                            .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                            .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String wallName = wallNameEditText.getText().toString();
+                                    if (currentRoom.equals("Select a room!"))
+                                        Toast.makeText(getContext(), "Please select a room!", Toast.LENGTH_SHORT).show();
+                                    else {
+                                        Room selectedRoom = roomDic.get(currentRoom);
+                                        RestLocalMethods.createWall(RestLocalMethods.getMyUserId(), selectedRoom.getHouseId(), selectedRoom.getId(), new Wall(wallName, selectedRoom.getId(), selectedRoom.getHouseId()));
+                                        // Reload fragment in order to see new added wall
+                                        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                                        transaction.replace(R.id.fragmentContainer, new WallFragment(bottomNavigationView));
+                                        transaction.commit();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
             }
         });
     }

@@ -1,6 +1,7 @@
 package uni.mobile.mobileapp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -29,7 +30,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,7 +49,8 @@ public class RoomFragment extends Fragment {
     private List<House> houses = null;
     private Map<String, House> houseDic = null;
     private String currentHouse = "Select an house!";
-    private FragmentActivity thisActivity;
+    private Context context;
+    private FragmentActivity activity;
 
     public RoomFragment(BottomNavigationView bottomNavigationView) {
         this.bottomNavigationView = bottomNavigationView;
@@ -64,8 +65,10 @@ public class RoomFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        thisActivity=getActivity();
-        RestLocalMethods.initRetrofit(getContext());
+        context = this.getContext();
+        activity = this.getActivity();
+
+        RestLocalMethods.initRetrofit(context);
 
         // Load user Rooms
         getUserRooms(view);
@@ -81,25 +84,6 @@ public class RoomFragment extends Fragment {
                 if(!response.isSuccessful()) return;
                 houses = response.body().getData();
 
-                // User Can't add a Room if he has not an house
-                if (houses.isEmpty() ) {
-                    new MaterialAlertDialogBuilder(thisActivity)
-                            .setTitle("No house found")
-                            .setMessage("Please create one first.")
-                            .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    bottomNavigationView.setSelectedItemId(R.id.navigation_house);
-                                    FragmentTransaction transaction = thisActivity.getSupportFragmentManager().beginTransaction();
-                                    transaction.replace(R.id.fragmentContainer, new HouseFragment());
-                                    transaction.commit();
-                                }
-                            })
-                            .setNegativeButton("Cancel", null)
-                            .show();
-                }
-
                 houseDic = new HashMap<String, House>();
                 for(House house: houses){
                     choices.add(house.getName());
@@ -114,7 +98,7 @@ public class RoomFragment extends Fragment {
 
         });
         // Create an ArrayAdapter with custom choices
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, choices){
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.item_spinner, choices){
             @Override
             public boolean isEnabled(int position){
                 return position != 0;
@@ -139,49 +123,70 @@ public class RoomFragment extends Fragment {
         addRoomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater inflater = getLayoutInflater();
-                View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_add_room, null);
-
-                final EditText roomNameEditText = alertLayout.findViewById(R.id.roomName);
-                userHouses = alertLayout.findViewById(R.id.userHouses);
-
-                // Set the adapter to th spinner
-                userHouses.setAdapter(adapter);
-
-                userHouses.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        currentHouse = userHouses.getSelectedItem().toString();
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
-                new MaterialAlertDialogBuilder(getContext())
-                        .setTitle("Create new room")
-                        .setMessage("Insert the room name")
-                        .setView(alertLayout) // this is set the view from XML inside AlertDialog
-                        .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
-                        .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String roomName = roomNameEditText.getText().toString();
-                                if (currentHouse.equals("Select an house!")) Toast.makeText(getContext(), "Please select an house!", Toast.LENGTH_SHORT).show();
-                                else {
-                                    House selectedHouse = houseDic.get(currentHouse);
-                                    RestLocalMethods.createRoom(RestLocalMethods.getMyUserId(), selectedHouse.getId(), new Room(roomName, selectedHouse.getId()));
-                                    // Reload fragment in order to see new added room
-                                    FragmentTransaction transaction = thisActivity.getSupportFragmentManager().beginTransaction();
-                                    transaction.replace(R.id.fragmentContainer, new RoomFragment(bottomNavigationView));
+                // User Can't add a Room if he has not an House
+                if (houses.isEmpty() ) {
+                    new MaterialAlertDialogBuilder(context)
+                            .setTitle("No house found")
+                            .setMessage("Please create one first.")
+                            .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    bottomNavigationView.setSelectedItemId(R.id.navigation_house);
+                                    FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.fragmentContainer, new HouseFragment());
                                     transaction.commit();
                                 }
-                            }
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .show();
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
+                else {
+                    LayoutInflater inflater = getLayoutInflater();
+                    View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_add_room, null);
+
+                    final EditText roomNameEditText = alertLayout.findViewById(R.id.roomName);
+                    userHouses = alertLayout.findViewById(R.id.userHouses);
+
+                    // Set the adapter to th spinner
+                    userHouses.setAdapter(adapter);
+
+                    userHouses.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            currentHouse = userHouses.getSelectedItem().toString();
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+
+                    new MaterialAlertDialogBuilder(context)
+                            .setTitle("Create new room")
+                            .setMessage("Insert the room name")
+                            .setView(alertLayout) // this is set the view from XML inside AlertDialog
+                            .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                            .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String roomName = roomNameEditText.getText().toString();
+                                    if (currentHouse.equals("Select an house!"))
+                                        Toast.makeText(getContext(), "Please select an house!", Toast.LENGTH_SHORT).show();
+                                    else {
+                                        House selectedHouse = houseDic.get(currentHouse);
+                                        RestLocalMethods.createRoom(RestLocalMethods.getMyUserId(), selectedHouse.getId(), new Room(roomName, selectedHouse.getId()));
+                                        // Reload fragment in order to see new added room
+                                        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                                        transaction.replace(R.id.fragmentContainer, new RoomFragment(bottomNavigationView));
+                                        transaction.commit();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
             }
         });
     }
