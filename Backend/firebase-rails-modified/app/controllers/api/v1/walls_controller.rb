@@ -98,6 +98,6 @@ class Api::V1::WallsController < ApiController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def wall_params
-      params.permit(:name)
+      params.permit(:name,:user_id,:room_id,:house_id)
     end
 end

@@ -109,6 +109,6 @@ class Api::V1::ShelvesController < ApiController
   
   # Never trust parameters from the scary internet, only allow the white list through.
   def shelf_params
-    params.permit(:name)
+    params.permit(:name,:user_id,:house_id,:room_id,:wall_id)
   end
 end

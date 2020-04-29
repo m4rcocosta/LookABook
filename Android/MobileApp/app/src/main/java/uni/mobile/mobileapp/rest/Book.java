@@ -55,8 +55,15 @@ public class Book {
     @SerializedName("googleData")
     @Expose
     private GoogleData googleData;
-
-    private Integer wallId, roomId, houseId;
+    @SerializedName("wall_id")
+    @Expose
+    private Integer wallId;
+    @SerializedName("room_id")
+    @Expose
+    private Integer roomId;
+    @SerializedName("house_id")
+    @Expose
+    private Integer houseId;
 
     public Book(String title, String authors, Object isbn, Integer shelfId, Integer wallId, Integer roomId, Integer houseId) {
         this.title = title;

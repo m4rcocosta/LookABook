@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
@@ -35,6 +36,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
@@ -66,6 +68,8 @@ public class BookFragment extends Fragment {
     private List<Shelf> shelves = null;
     private Map<String, Shelf> shelfDic = null;
     private String currentShelf = "Select a shelf!";
+    private FragmentActivity thisActivity;
+
 
     public BookFragment(BottomNavigationView bottomNavigationView) {
         this.bottomNavigationView = bottomNavigationView;
@@ -80,11 +84,16 @@ public class BookFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        thisActivity = getActivity();
+        //fab
+        addBookButton = view.findViewById(R.id.addBookButton);
+        addBookButton.setClickable(false);
 
-        RestLocalMethods.setContext(getContext());
+        RestLocalMethods.initRetrofit(this.getContext());
 
         // Load user books
         getUserBooks(view);
+
 
         //car related
         cardView = view.findViewById(R.id.card);
@@ -126,8 +135,10 @@ public class BookFragment extends Fragment {
                 shelves = response.body().getData();
 
                 // User Can't add a Room if he has not an house
+                if(shelves==null)
+                    Toast.makeText(getContext(),"No shelf",Toast.LENGTH_SHORT).show();
                 if (shelves.isEmpty()) {
-                    new MaterialAlertDialogBuilder(getContext())
+                    new MaterialAlertDialogBuilder(thisActivity)
                             .setTitle("No shelf found")
                             .setMessage("Please create one first.")
                             .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
@@ -135,7 +146,7 @@ public class BookFragment extends Fragment {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     bottomNavigationView.setSelectedItemId(R.id.navigation_shelf);
-                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                    FragmentTransaction transaction = thisActivity.getSupportFragmentManager().beginTransaction();
                                     transaction.replace(R.id.fragmentContainer, new ShelfFragment(bottomNavigationView));
                                     transaction.commit();
                                 }
@@ -149,6 +160,8 @@ public class BookFragment extends Fragment {
                     choices.add(shelf.getName());
                     shelfDic.put(shelf.getName(), shelf);
                 }
+                addBookButton.setClickable(true);
+
             }
 
             @Override
@@ -180,15 +193,14 @@ public class BookFragment extends Fragment {
         adapter.setDropDownViewResource(R.layout.item_spinner);
 
         //fab related
-        addBookButton = view.findViewById(R.id.addBookButton);
         addBookButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LayoutInflater inflater = getLayoutInflater();
                 View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_add_book, null);
                 final EditText bookTitleEditText = alertLayout.findViewById(R.id.bookTitle);
-                final EditText bookAuthorEditText = alertLayout.findViewById(R.id.bookTitle);
-                final EditText bookISBNEditText = alertLayout.findViewById(R.id.bookTitle);
+                final EditText bookAuthorEditText = alertLayout.findViewById(R.id.bookAuthor);
+                final EditText bookISBNEditText = alertLayout.findViewById(R.id.bookISBN);
                 userShelves = alertLayout.findViewById(R.id.userShelves);
 
                 // Set the adapter to th spinner
@@ -213,18 +225,22 @@ public class BookFragment extends Fragment {
                         .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                addBookButton.setClickable(false);
+
                                 String bookTitle = bookTitleEditText.getText().toString();
                                 String bookAuthor = bookAuthorEditText.getText().toString();
                                 String bookISBN = bookISBNEditText.getText().toString();
                                 if (currentShelf.equals("Select a shelf!")) Toast.makeText(getContext(), "Please select a shelf!", Toast.LENGTH_SHORT).show();
                                 else {
                                     Shelf selectedShelf = shelfDic.get(currentShelf);
+                                    Log.d("shelf",currentShelf);
                                     RestLocalMethods.createBook(RestLocalMethods.getMyUserId(), selectedShelf.getHouseId(), selectedShelf.getRoomId(), selectedShelf.getWallId(), selectedShelf.getId(), new Book(bookTitle, bookAuthor, bookISBN, selectedShelf.getId(), selectedShelf.getWallId(), selectedShelf.getRoomId(), selectedShelf.getHouseId()));
                                     // Reload fragment in order to see new added wall
-                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                                    transaction.replace(R.id.fragmentContainer, new ShelfFragment(bottomNavigationView));
+                                    FragmentTransaction transaction = thisActivity.getSupportFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.fragmentContainer, new BookFragment(bottomNavigationView));
                                     transaction.commit();
                                 }
+                                addBookButton.setClickable(true);
                             }
                         })
                         .setNegativeButton("Cancel", null)
@@ -276,7 +292,7 @@ public class BookFragment extends Fragment {
                             //googleImage
                             currentBook=books.get(i);
 
-                            if(currentBook.getGoogleData()!=null) {
+                            if(currentBook.getGoogleData()!=null && currentBook.getGoogleData().getVolumeInfo() != null && currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail()!=null) {
                                 if(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail()!=null) {
                                     new DownloadImageTask(  googleImage)
                                             .execute(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail());
@@ -284,6 +300,7 @@ public class BookFragment extends Fragment {
                                 Toast.makeText(getContext(), "Google "+titles.get(i), Toast.LENGTH_SHORT).show();
                                 googleTitle.setText(currentBook.getGoogleData().getVolumeInfo().getTitle());
                                 googleAuthors.setText(currentBook.getGoogleData().getVolumeInfo().getAuthors().toString() );
+                                if(currentBook.getGoogleData().getVolumeInfo().getDescription() != null)
                                 googleDesc.setText(currentBook.getGoogleData().getVolumeInfo().getDescription());
                                 lView.setClickable(false);
                                 cardView.setVisibility(View.VISIBLE);

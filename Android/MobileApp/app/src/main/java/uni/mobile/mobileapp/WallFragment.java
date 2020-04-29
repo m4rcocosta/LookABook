@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
@@ -45,6 +46,7 @@ public class WallFragment extends Fragment {
     private List<Room> rooms = null;
     private Map<String, Room> roomDic = null;
     private String currentRoom = "Select a room!";
+    private FragmentActivity thisActivity;
 
     public WallFragment(BottomNavigationView bottomNavigationView) {
         this.bottomNavigationView = bottomNavigationView;
@@ -58,7 +60,7 @@ public class WallFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
+        thisActivity=getActivity();
         RestLocalMethods.initRetrofit(this.getContext());
 
         // Load user walls
@@ -77,7 +79,7 @@ public class WallFragment extends Fragment {
 
                 // User Can't add a Room if he has not an house
                 if (rooms.isEmpty()) {
-                    new MaterialAlertDialogBuilder(getContext())
+                    new MaterialAlertDialogBuilder(thisActivity)
                             .setTitle("No room found")
                             .setMessage("Please create one first.")
                             .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
@@ -85,7 +87,7 @@ public class WallFragment extends Fragment {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     bottomNavigationView.setSelectedItemId(R.id.navigation_room);
-                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                    FragmentTransaction transaction = thisActivity.getSupportFragmentManager().beginTransaction();
                                     transaction.replace(R.id.fragmentContainer, new RoomFragment(bottomNavigationView));
                                     transaction.commit();
                                 }
@@ -166,7 +168,7 @@ public class WallFragment extends Fragment {
                                     Room selectedRoom = roomDic.get(currentRoom);
                                     RestLocalMethods.createWall(RestLocalMethods.getMyUserId(), selectedRoom.getHouseId(), selectedRoom.getId(), new Wall(wallName, selectedRoom.getId(), selectedRoom.getHouseId()));
                                     // Reload fragment in order to see new added wall
-                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                    FragmentTransaction transaction = thisActivity.getSupportFragmentManager().beginTransaction();
                                     transaction.replace(R.id.fragmentContainer, new WallFragment(bottomNavigationView));
                                     transaction.commit();
                                 }

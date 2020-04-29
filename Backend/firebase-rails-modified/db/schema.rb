@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_25_173323) do
+ActiveRecord::Schema.define(version: 2020_04_29_014003) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -31,7 +31,15 @@ ActiveRecord::Schema.define(version: 2020_04_25_173323) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "shelf_id"
-    t.jsonb "googleData", default: "{}", null: false
+    t.jsonb "googleData", default: {}, null: false
+    t.bigint "wall_id"
+    t.bigint "room_id"
+    t.bigint "house_id"
+    t.bigint "user_id"
+    t.index ["house_id"], name: "index_books_on_house_id"
+    t.index ["room_id"], name: "index_books_on_room_id"
+    t.index ["user_id"], name: "index_books_on_user_id"
+    t.index ["wall_id"], name: "index_books_on_wall_id"
   end
 
   create_table "houses", force: :cascade do |t|
@@ -64,6 +72,12 @@ ActiveRecord::Schema.define(version: 2020_04_25_173323) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "wall_id"
+    t.bigint "room_id"
+    t.bigint "house_id"
+    t.bigint "user_id"
+    t.index ["house_id"], name: "index_shelves_on_house_id"
+    t.index ["room_id"], name: "index_shelves_on_room_id"
+    t.index ["user_id"], name: "index_shelves_on_user_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -82,8 +96,21 @@ ActiveRecord::Schema.define(version: 2020_04_25_173323) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "room_id"
+    t.bigint "house_id"
+    t.bigint "user_id"
+    t.index ["house_id"], name: "index_walls_on_house_id"
+    t.index ["user_id"], name: "index_walls_on_user_id"
   end
 
+  add_foreign_key "books", "houses"
+  add_foreign_key "books", "rooms"
+  add_foreign_key "books", "users"
+  add_foreign_key "books", "walls"
   add_foreign_key "houses_users", "houses"
   add_foreign_key "houses_users", "users"
+  add_foreign_key "shelves", "houses"
+  add_foreign_key "shelves", "rooms"
+  add_foreign_key "shelves", "users"
+  add_foreign_key "walls", "houses"
+  add_foreign_key "walls", "users"
 end

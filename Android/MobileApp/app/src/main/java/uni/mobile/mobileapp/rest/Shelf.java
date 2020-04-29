@@ -8,6 +8,7 @@ public class Shelf {
 
     public Shelf(String name, Integer wallId, Integer roomId, Integer houseId) {
         this.id = id;
+        this.name=name;
         this.wallId = wallId;
         this.roomId = roomId;
         this.houseId = houseId;

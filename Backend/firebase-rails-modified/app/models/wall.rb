@@ -3,6 +3,8 @@ class Wall < ApplicationRecord
   belongs_to :room
   has_many :shelves
   
+  accepts_nested_attributes_for :shelves
+  
   after_commit :sync_create
 
     def self.get_wall(wall_id)

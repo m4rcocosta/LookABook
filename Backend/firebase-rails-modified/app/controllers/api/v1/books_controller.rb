@@ -56,7 +56,7 @@ class Api::V1::BooksController < ApiController
   # POST /books
   # POST /books.json
   def create
-    @book = @wall.books.build(book_params)
+    @book = @shelf.books.build(book_params)
     
     if @book.save
       
@@ -130,11 +130,13 @@ class Api::V1::BooksController < ApiController
     url = URI.encode(url)
     response = HTTParty.get(url, format: :json)
     response = JSON.parse(response.body)["items"][0]
+    
     #response.save("/tmp/search.html")
     #puts "Resonse:" + JSON.pretty_generate(response)+"..."
     book.googleData = response
     if book.save
-      puts "[V] Book #{book.title} #{book.googleData.last(10)} updated"
+     # puts "[V] Book #{book.title} #{book.googleData.last(10)} updated"
+      puts "[V] Book #{book.title}  updated"
     else
       if room.errors.any?
         puts "[E] #{ book.errors.full_messages }"
@@ -185,6 +187,7 @@ class Api::V1::BooksController < ApiController
   # Never trust parameters from the scary internet, only allow the white list through.
   def book_params
     params.permit(:title, :authors, :publisher, :publishedDate, :description,
-    :isbn, :pageCount, :categories, :imageLinks, :country, :price)
+    :isbn, :pageCount, :categories, :imageLinks, :country, :price,
+    :user_id,:house_id,:room_id,:wall_id,:shelf_id)
   end
 end

@@ -1,10 +1,12 @@
 package uni.mobile.mobileapp;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,6 +49,7 @@ public class RoomFragment extends Fragment {
     private List<House> houses = null;
     private Map<String, House> houseDic = null;
     private String currentHouse = "Select an house!";
+    private FragmentActivity thisActivity;
 
     public RoomFragment(BottomNavigationView bottomNavigationView) {
         this.bottomNavigationView = bottomNavigationView;
@@ -60,6 +64,7 @@ public class RoomFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
+        thisActivity=getActivity();
         RestLocalMethods.initRetrofit(getContext());
 
         // Load user Rooms
@@ -77,8 +82,8 @@ public class RoomFragment extends Fragment {
                 houses = response.body().getData();
 
                 // User Can't add a Room if he has not an house
-                if (houses.isEmpty()) {
-                    new MaterialAlertDialogBuilder(getContext())
+                if (houses.isEmpty() ) {
+                    new MaterialAlertDialogBuilder(thisActivity)
                             .setTitle("No house found")
                             .setMessage("Please create one first.")
                             .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
@@ -86,7 +91,7 @@ public class RoomFragment extends Fragment {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     bottomNavigationView.setSelectedItemId(R.id.navigation_house);
-                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                    FragmentTransaction transaction = thisActivity.getSupportFragmentManager().beginTransaction();
                                     transaction.replace(R.id.fragmentContainer, new HouseFragment());
                                     transaction.commit();
                                 }
@@ -169,7 +174,7 @@ public class RoomFragment extends Fragment {
                                     House selectedHouse = houseDic.get(currentHouse);
                                     RestLocalMethods.createRoom(RestLocalMethods.getMyUserId(), selectedHouse.getId(), new Room(roomName, selectedHouse.getId()));
                                     // Reload fragment in order to see new added room
-                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                    FragmentTransaction transaction = thisActivity.getSupportFragmentManager().beginTransaction();
                                     transaction.replace(R.id.fragmentContainer, new RoomFragment(bottomNavigationView));
                                     transaction.commit();
                                 }

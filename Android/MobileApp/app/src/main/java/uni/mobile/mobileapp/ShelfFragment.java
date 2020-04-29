@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
@@ -45,6 +46,7 @@ public class ShelfFragment extends Fragment {
     private List<Wall> walls = null;
     private Map<String, Wall> wallDic = null;
     private String currentWall = "Select a wall!";
+    private FragmentActivity thisActivity;
 
     public ShelfFragment(BottomNavigationView bottomNavigationView) {
         this.bottomNavigationView = bottomNavigationView;
@@ -58,7 +60,7 @@ public class ShelfFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
+        thisActivity = getActivity();
         RestLocalMethods.initRetrofit(this.getContext());
 
         // Load user shelves
@@ -77,7 +79,7 @@ public class ShelfFragment extends Fragment {
 
                 // User Can't add a Room if he has not an house
                 if (walls.isEmpty()) {
-                    new MaterialAlertDialogBuilder(getContext())
+                    new MaterialAlertDialogBuilder(thisActivity)
                             .setTitle("No wall found")
                             .setMessage("Please create one first.")
                             .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
@@ -85,7 +87,7 @@ public class ShelfFragment extends Fragment {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     bottomNavigationView.setSelectedItemId(R.id.navigation_wall);
-                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                    FragmentTransaction transaction = thisActivity.getSupportFragmentManager().beginTransaction();
                                     transaction.replace(R.id.fragmentContainer, new WallFragment(bottomNavigationView));
                                     transaction.commit();
                                 }
@@ -109,7 +111,7 @@ public class ShelfFragment extends Fragment {
         });
 
         // Create an ArrayAdapter with custom choices
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, choices){
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(thisActivity, R.layout.item_spinner, choices){
             @Override
             public boolean isEnabled(int position){
                 return position != 0;
@@ -166,7 +168,7 @@ public class ShelfFragment extends Fragment {
                                     Wall selectedWall = wallDic.get(currentWall);
                                     RestLocalMethods.createShelf(RestLocalMethods.getMyUserId(), selectedWall.getHouseId(), selectedWall.getRoomId(), selectedWall.getId(), new Shelf(shelfName, selectedWall.getId(), selectedWall.getRoomId(), selectedWall.getHouseId()));
                                     // Reload fragment in order to see new added wall
-                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                    FragmentTransaction transaction = thisActivity.getSupportFragmentManager().beginTransaction();
                                     transaction.replace(R.id.fragmentContainer, new ShelfFragment(bottomNavigationView));
                                     transaction.commit();
                                 }
