@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -172,10 +173,7 @@ public class WallFragment extends Fragment {
                                     else {
                                         Room selectedRoom = roomDic.get(currentRoom);
                                         RestLocalMethods.createWall(RestLocalMethods.getMyUserId(), selectedRoom.getHouseId(), selectedRoom.getId(), new Wall(wallName, selectedRoom.getId(), selectedRoom.getHouseId()));
-                                        // Reload fragment in order to see new added wall
-                                        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-                                        transaction.replace(R.id.fragmentContainer, new WallFragment(bottomNavigationView));
-                                        transaction.commit();
+                                        reloadWallFragment();
                                     }
                                 }
                             })
@@ -184,6 +182,13 @@ public class WallFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void reloadWallFragment() {
+        // Reload fragment in order to see new added wall
+        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainer, new WallFragment(bottomNavigationView));
+        transaction.commit();
     }
 
     private void getUserWalls(View view) {
@@ -198,8 +203,8 @@ public class WallFragment extends Fragment {
 
                     ArrayList<String> names = new ArrayList<String>();
                     ArrayList<String> subNames = new ArrayList<String>();
-                    for(Wall b: walls){
-                        names.add( b.getName() ) ;
+                    for(Wall w: walls){
+                        names.add( w.getName() ) ;
                         subNames.add("None");
                     }
 
@@ -215,9 +220,33 @@ public class WallFragment extends Fragment {
                     lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                            Toast.makeText(getContext(), names.get(i), Toast.LENGTH_SHORT).show();
-
+                            LayoutInflater inflater = getLayoutInflater();
+                            View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_wall, null);
+                            final EditText wallNameEditText = alertLayout.findViewById(R.id.wallNameEdit);
+                            final String oldName = names.get(i);
+                            wallNameEditText.setText(oldName);
+                            final Button deleteWallButton = alertLayout.findViewById(R.id.deleteWallButton);
+                            deleteWallButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    RestLocalMethods.deleteWall(RestLocalMethods.getMyUserId(), walls.get(i).getHouseId(), walls.get(i).getRoomId(), walls.get(i).getId());
+                                    reloadWallFragment();
+                                }
+                            });
+                            new MaterialAlertDialogBuilder(context)
+                                    .setTitle("Edit wall")
+                                    .setMessage("Change wall name or delete it")
+                                    .setView(alertLayout) // this is set the view from XML inside AlertDialog
+                                    .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            RestLocalMethods.patchWall(RestLocalMethods.getMyUserId(), walls.get(i).getHouseId(), walls.get(i).getRoomId(), walls.get(i).getId(), new Wall(wallNameEditText.getText().toString(), walls.get(i).getRoomId(), walls.get(i).getHouseId()));
+                                            reloadWallFragment();
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", null)
+                                    .show();
                         }
                     });
 

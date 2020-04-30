@@ -5,12 +5,15 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -25,7 +28,9 @@ import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -47,6 +52,7 @@ public class HouseFragment extends Fragment {
 
     private FloatingActionButton addHouseButton;
     private Context context;
+    private FragmentActivity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,9 +63,10 @@ public class HouseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         context = this.getContext();
+        activity = this.getActivity();
 
         RestLocalMethods.initRetrofit(context, RestLocalMethods.getUserToken());
-        printHouses(view, context);
+        getUserHouses(view, context);
 
         addHouseButton = view.findViewById(R.id.addHouseButton);
         addHouseButton.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +85,8 @@ public class HouseFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String houseName = houseNameEditText.getText().toString();
-                                RestLocalMethods.createHouse(view, RestLocalMethods.getMyUserId(), new House(houseName,null,null,false));
+                                RestLocalMethods.createHouse(RestLocalMethods.getMyUserId(), new House(houseName,null,null,false));
+                                reloadHouseFragment();
                             }
                         })
                         .setNegativeButton("Cancel", null)
@@ -94,24 +102,28 @@ public class HouseFragment extends Fragment {
 
     }
 
-    public static void printHouses(View view, Context context){
+    private void reloadHouseFragment() {
+        // Reload fragment in order to see new added house
+        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainer, new HouseFragment());
+        transaction.commit();
+    }
+
+    private void getUserHouses(View view, Context context){
 
         Call<MyResponse<House>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getHouses(RestLocalMethods.getMyUserId());
-        callAsync.enqueue(new Callback<MyResponse<House>>()
-        {
+        callAsync.enqueue(new Callback<MyResponse<House>>() {
 
             @Override
-            public void onResponse(Call<MyResponse<House>> call, Response<MyResponse<House>> response)
-            {
-                if (response.isSuccessful())
-                {
+            public void onResponse(Call<MyResponse<House>> call, Response<MyResponse<House>> response) {
+                if (response.isSuccessful()) {
 
                     List<House> houses = response.body().getData();
 
                     ArrayList<String> names = new ArrayList<String>();
                     //ArrayList<String> authors = new ArrayList<String>();
                     for(House h: houses){
-                        names.add( h.getName() ) ;
+                        names.add(h.getName());
                         //authors.add(b.getAuthors());
                     }
 
@@ -120,32 +132,53 @@ public class HouseFragment extends Fragment {
                     ListAdapter lAdapter = new ListAdapter(context, names, null, null,R.drawable.ic_houseicon);
 
                     lView.setAdapter(lAdapter);
-                    if(context==null)
-                        return;
+                    if(context == null) return;
                     Toast.makeText(context, "Found " + houses.size() +" Houses", Toast.LENGTH_SHORT).show();
-                    Log.d("BBBB",names.toString());
+                    Log.d("HOUSE", names.toString());
                     lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            if(context==null)
-                                return;
-                            Toast.makeText(context, names.get(i), Toast.LENGTH_SHORT).show();
-
+                            if(context == null) return;
+                            LayoutInflater inflater = getLayoutInflater();
+                            View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_house, null);
+                            final EditText houseNameEditText = alertLayout.findViewById(R.id.houseNameEdit);
+                            final String oldName = names.get(i);
+                            houseNameEditText.setText(oldName);
+                            final Button deleteHouseButton = alertLayout.findViewById(R.id.deleteHouseButton);
+                            deleteHouseButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    RestLocalMethods.deleteHouse(RestLocalMethods.getMyUserId(), houses.get(i).getId());
+                                    reloadHouseFragment();
+                                }
+                            });
+                            new MaterialAlertDialogBuilder(context)
+                                    .setTitle("Edit house")
+                                    .setMessage("Change house name or delete it")
+                                    .setView(alertLayout) // this is set the view from XML inside AlertDialog
+                                    .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            RestLocalMethods.patchHouse(RestLocalMethods.getMyUserId(), houses.get(i).getId(), new House(houseNameEditText.getText().toString(),null,null,false));
+                                            reloadHouseFragment();
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", null)
+                                    .show();
                         }
                     });
 
 
                 }
-                else
-                {
-                    Log.d("BBBB","Request Error :: " + response.errorBody());
+                else {
+                    Log.d("HOUSE","Request Error :: " + response.errorBody());
                 }
             }
 
             @Override
-            public void onFailure(Call<MyResponse<House>> call, Throwable t)
-            {
-                Log.d("BBBB","Request Error :: " + t.getMessage() );
+            public void onFailure(Call<MyResponse<House>> call, Throwable t) {
+                Log.d("HOUSE","Request Error :: " + t.getMessage() );
             }
         });
     }

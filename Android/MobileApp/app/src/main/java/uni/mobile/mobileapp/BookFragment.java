@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -247,10 +248,7 @@ public class BookFragment extends Fragment {
                                         Shelf selectedShelf = shelfDic.get(currentShelf);
                                         Log.d("shelf", currentShelf);
                                         RestLocalMethods.createBook(RestLocalMethods.getMyUserId(), selectedShelf.getHouseId(), selectedShelf.getRoomId(), selectedShelf.getWallId(), selectedShelf.getId(), new Book(bookTitle, bookAuthor, bookISBN, selectedShelf.getId(), selectedShelf.getWallId(), selectedShelf.getRoomId(), selectedShelf.getHouseId()));
-                                        // Reload fragment in order to see new added wall
-                                        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-                                        transaction.replace(R.id.fragmentContainer, new BookFragment(bottomNavigationView));
-                                        transaction.commit();
+                                        reloadBookFragment();
                                     }
                                     addBookButton.setClickable(true);
                                 }
@@ -266,8 +264,14 @@ public class BookFragment extends Fragment {
         lView = view.findViewById(R.id.bookList);
     }
 
+    private void reloadBookFragment() {// Reload fragment in order to see new added wall
+        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainer, new BookFragment(bottomNavigationView));
+        transaction.commit();
+    }
 
-  public void getUserBooks() {
+
+    public void getUserBooks() {
         RestLocalMethods.setContext(getContext());
 
         Call<MyResponse<Book>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getAllBooks(RestLocalMethods.getMyUserId());
@@ -295,7 +299,7 @@ public class BookFragment extends Fragment {
                     ListAdapter lAdapter = new ListAdapter(getContext(), titles, authors, null,R.drawable.ic_book_red);
 
                     lView.setAdapter(lAdapter);
-                    if(getContext()==null)  //too late now to print
+                    if(getContext() == null)  //too late now to print
                         return;
                     Toast.makeText(getContext(), "Found " + books.size() +" books", Toast.LENGTH_SHORT).show();
                     Log.d("BOOK",titles.toString());
@@ -303,28 +307,64 @@ public class BookFragment extends Fragment {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             //googleImage
-                            currentBook=books.get(i);
+                            currentBook = books.get(i);
 
-                            if(currentBook.getGoogleData()!=null && currentBook.getGoogleData().getVolumeInfo() != null ){
-                                    if(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail()!=null) {
-                                        new DownloadImageTask(googleImage)
-                                                .execute(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail());
-                                    }
-                                Toast.makeText(getContext(), "Google "+titles.get(i), Toast.LENGTH_SHORT).show();
-                                //if(currentBook.getGoogleData().getVolumeInfo().getTitle() != null)
-                                    googleTitle.setText(currentBook.getGoogleData().getVolumeInfo().getTitle());
-                                if(currentBook.getGoogleData().getVolumeInfo().getAuthors() != null)
-                                googleAuthors.setText(currentBook.getGoogleData().getVolumeInfo().getAuthors().toString() );
-                                if(currentBook.getGoogleData().getVolumeInfo().getDescription() != null)
-                                googleDesc.setText(currentBook.getGoogleData().getVolumeInfo().getDescription());
+                            if(currentBook.getGoogleData() != null && currentBook.getGoogleData().getVolumeInfo() != null ){
+                                if(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail()!=null) new DownloadImageTask(googleImage).execute(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail());
+                                Toast.makeText(getContext(), "Google " + titles.get(i), Toast.LENGTH_SHORT).show();
+                                if(currentBook.getGoogleData().getVolumeInfo().getTitle() != null) googleTitle.setText(currentBook.getGoogleData().getVolumeInfo().getTitle());
+                                if(currentBook.getGoogleData().getVolumeInfo().getAuthors() != null) googleAuthors.setText(currentBook.getGoogleData().getVolumeInfo().getAuthors().toString() );
+                                if(currentBook.getGoogleData().getVolumeInfo().getDescription() != null) googleDesc.setText(currentBook.getGoogleData().getVolumeInfo().getDescription());
 
 
                                 lView.setClickable(false);
                                 cardView.setVisibility(View.VISIBLE);
                             }
                             else{
-                                Toast.makeText(getContext(), "No Google info for "+titles.get(i), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "No Google info for " + titles.get(i), Toast.LENGTH_SHORT).show();
                             }
+                        }
+                    });
+
+                    lView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                            currentBook = books.get(position);
+                            LayoutInflater inflater = getLayoutInflater();
+                            View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_book, null);
+                            final EditText bookTitleEditText = alertLayout.findViewById(R.id.bookTitleEdit);
+                            final EditText bookAuthorEditText = alertLayout.findViewById(R.id.bookAuthorEdit);
+                            final EditText bookISBNEditText = alertLayout.findViewById(R.id.bookISBNEdit);
+                            bookTitleEditText.setText(currentBook.getTitle());
+                            bookAuthorEditText.setText(currentBook.getAuthors());
+                            bookISBNEditText.setText(currentBook.getISBN());
+                            final Button deleteBookButton = alertLayout.findViewById(R.id.deleteBookButton);
+                            deleteBookButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    RestLocalMethods.deleteBook(RestLocalMethods.getMyUserId(), currentBook.getHouseId(), currentBook.getRoomId(), currentBook.getWallId(),currentBook.getShelfId(), currentBook.getId());
+                                    reloadBookFragment();
+                                }
+                            });
+                            new MaterialAlertDialogBuilder(context)
+                                    .setTitle("Edit book")
+                                    .setMessage("Change book title, authors and isbn or delete it")
+                                    .setView(alertLayout) // this is set the view from XML inside AlertDialog
+                                    .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            RestLocalMethods.patchBook(RestLocalMethods.getMyUserId(), currentBook.getHouseId(), currentBook.getRoomId(), currentBook.getWallId(), currentBook.getShelfId(), currentBook.getId(), new Book(bookTitleEditText.getText().toString(), bookAuthorEditText.getText().toString(), bookISBNEditText.getText().toString(), currentBook.getShelfId(), currentBook.getWallId(), currentBook.getRoomId(), currentBook.getHouseId()), new PatchBookCallbacks() {
+                                                @Override
+                                                public void onSuccess(@NonNull List<Book> booksRes) {
+                                                    getUserBooks();
+                                                }
+                                            });
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", null)
+                                    .show();
+                            return true;
                         }
                     });
 
@@ -379,13 +419,12 @@ public class BookFragment extends Fragment {
     }
 
     private void patchAndUpdate(View view){
-        RestLocalMethods.patchBook(RestLocalMethods.getMyUserId(), currentBook.getHouseId(), currentBook.getRoomId(),
-                currentBook.getWallId(), currentBook.getShelfId(), currentBook.getId(), currentBook, new PatchBookCallbacks() {
-                    @Override
-                    public void onSuccess(@NonNull List<Book> booksRes) {
-                        getUserBooks();
-                    }
-                });
+        RestLocalMethods.patchBook(RestLocalMethods.getMyUserId(), currentBook.getHouseId(), currentBook.getRoomId(), currentBook.getWallId(), currentBook.getShelfId(), currentBook.getId(), currentBook, new PatchBookCallbacks() {
+            @Override
+            public void onSuccess(@NonNull List<Book> booksRes) {
+                getUserBooks();
+            }
+        });
     }
 
 }

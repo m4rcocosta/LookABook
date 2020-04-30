@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -172,10 +173,7 @@ public class ShelfFragment extends Fragment {
                                     else {
                                         Wall selectedWall = wallDic.get(currentWall);
                                         RestLocalMethods.createShelf(RestLocalMethods.getMyUserId(), selectedWall.getHouseId(), selectedWall.getRoomId(), selectedWall.getId(), new Shelf(shelfName, selectedWall.getId(), selectedWall.getRoomId(), selectedWall.getHouseId()));
-                                        // Reload fragment in order to see new added wall
-                                        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-                                        transaction.replace(R.id.fragmentContainer, new ShelfFragment(bottomNavigationView));
-                                        transaction.commit();
+                                        reloadShelfFragment();
                                     }
                                 }
                             })
@@ -184,6 +182,13 @@ public class ShelfFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void reloadShelfFragment() {
+        // Reload fragment in order to see new added wall
+        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainer, new ShelfFragment(bottomNavigationView));
+        transaction.commit();
     }
 
     private void getUserShelves(View view) {
@@ -198,8 +203,8 @@ public class ShelfFragment extends Fragment {
 
                     ArrayList<String> names = new ArrayList<String>();
                     ArrayList<String> subNames = new ArrayList<String>();
-                    for(Shelf b: shelves){
-                        names.add( b.getName() ) ;
+                    for(Shelf s: shelves){
+                        names.add(s.getName()) ;
                         subNames.add("None");
                     }
 
@@ -215,7 +220,33 @@ public class ShelfFragment extends Fragment {
                     lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            Toast.makeText(getContext(), names.get(i), Toast.LENGTH_SHORT).show();
+                            LayoutInflater inflater = getLayoutInflater();
+                            View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_shelf, null);
+                            final EditText shelfNameEditText = alertLayout.findViewById(R.id.shelfNameEdit);
+                            final String oldName = names.get(i);
+                            shelfNameEditText.setText(oldName);
+                            final Button deleteShelfButton = alertLayout.findViewById(R.id.deleteShelfButton);
+                            deleteShelfButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    RestLocalMethods.deleteShelf(RestLocalMethods.getMyUserId(), shelves.get(i).getHouseId(), shelves.get(i).getRoomId(), shelves.get(i).getWallId(), shelves.get(i).getId());
+                                    reloadShelfFragment();
+                                }
+                            });
+                            new MaterialAlertDialogBuilder(context)
+                                    .setTitle("Edit shelf")
+                                    .setMessage("Change shelf name or delete it")
+                                    .setView(alertLayout) // this is set the view from XML inside AlertDialog
+                                    .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            RestLocalMethods.patchShelf(RestLocalMethods.getMyUserId(), shelves.get(i).getHouseId(), shelves.get(i).getRoomId(), shelves.get(i).getWallId(), shelves.get(i).getId(), new Shelf(shelfNameEditText.getText().toString(), shelves.get(i).getWallId(), shelves.get(i).getRoomId(), shelves.get(i).getHouseId()));
+                                            reloadShelfFragment();
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", null)
+                                    .show();
                         }
                     });
                 }

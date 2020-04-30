@@ -35,7 +35,7 @@ public interface JsonPlaceHolderApi {
     @PATCH("users/{userId}")
     Call<MyResponse<User>> patchUser(@Path("userId") int userId,  @Body User user);
 
-    @DELETE("users/{userId}/houses/{houseId}")
+    @DELETE("users/{userId}")
     Call<MyResponse<User>> deleteUser(@Path("userId") int userId);
 
 
