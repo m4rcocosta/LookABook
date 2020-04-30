@@ -153,6 +153,10 @@ public class Book {
         return isbn;
     }
 
+    public String getISBN() {
+        return "isbn.toString()";
+    }
+
     public void setIsbn(Object isbn) {
         this.isbn = isbn;
     }

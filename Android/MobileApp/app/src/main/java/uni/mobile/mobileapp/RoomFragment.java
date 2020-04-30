@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -177,10 +178,7 @@ public class RoomFragment extends Fragment {
                                     else {
                                         House selectedHouse = houseDic.get(currentHouse);
                                         RestLocalMethods.createRoom(RestLocalMethods.getMyUserId(), selectedHouse.getId(), new Room(roomName, selectedHouse.getId()));
-                                        // Reload fragment in order to see new added room
-                                        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-                                        transaction.replace(R.id.fragmentContainer, new RoomFragment(bottomNavigationView));
-                                        transaction.commit();
+                                        reloadRoomFragment();
                                     }
                                 }
                             })
@@ -189,6 +187,13 @@ public class RoomFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void reloadRoomFragment() {
+        // Reload fragment in order to see new added room
+        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainer, new RoomFragment(bottomNavigationView));
+        transaction.commit();
     }
 
     private void getUserRooms(View view) {
@@ -204,7 +209,7 @@ public class RoomFragment extends Fragment {
                     ArrayList<String> names = new ArrayList<String>();
                     ArrayList<String> subNames = new ArrayList<String>();
                     for(Room b: rooms) {
-                        names.add( b.getName() ) ;
+                        names.add(b.getName());
                         subNames.add("None");
                     }
 
@@ -220,8 +225,33 @@ public class RoomFragment extends Fragment {
                     lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                            Toast.makeText(getContext(), names.get(i), Toast.LENGTH_SHORT).show();
+                            LayoutInflater inflater = getLayoutInflater();
+                            View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_room, null);
+                            final EditText roomNameEditText = alertLayout.findViewById(R.id.roomNameEdit);
+                            final String oldName = names.get(i);
+                            roomNameEditText.setText(oldName);
+                            final Button deleteRoomButton = alertLayout.findViewById(R.id.deleteRoomButton);
+                            deleteRoomButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    RestLocalMethods.deleteRoom(RestLocalMethods.getMyUserId(), rooms.get(i).getHouseId(), rooms.get(i).getId());
+                                    reloadRoomFragment();
+                                }
+                            });
+                            new MaterialAlertDialogBuilder(context)
+                                    .setTitle("Edit room")
+                                    .setMessage("Change room name or delete it")
+                                    .setView(alertLayout) // this is set the view from XML inside AlertDialog
+                                    .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            RestLocalMethods.patchRoom(RestLocalMethods.getMyUserId(), rooms.get(i).getHouseId(), rooms.get(i).getId(), new Room(roomNameEditText.getText().toString(), rooms.get(i).getHouseId()));
+                                            reloadRoomFragment();
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", null)
+                                    .show();
 
                         }
                     });

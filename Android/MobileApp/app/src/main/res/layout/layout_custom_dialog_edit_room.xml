@@ -15,7 +15,7 @@
         app:endIconMode="clear_text">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/houseNameEdit"
+            android:id="@+id/roomNameEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/name"
@@ -27,8 +27,8 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/deleteHouseButton"
-        android:text="@string/delete_house"
+        android:id="@+id/deleteRoomButton"
+        android:text="@string/delete_room"
         android:textColor="@color/colorAccent"
         android:textAllCaps="false"
         android:layout_gravity="center"/>

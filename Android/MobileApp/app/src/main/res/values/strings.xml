@@ -48,6 +48,7 @@
     <string name="delete_wall">Delete Wall</string>
     <string name="delete_shelf">Delete Shelf</string>
     <string name="delete_book">Delete Book</string>
+    <string name="scan_books">Scan books</string>
 
 
     <string name="sign_in">Sign In</string>
