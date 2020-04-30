@@ -33,6 +33,8 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.List;
 
+import uni.mobile.mobileapp.rest.RestLocalMethods;
+
 
 public class AdvancedProfileFragment extends Fragment {
 
@@ -177,7 +179,7 @@ public class AdvancedProfileFragment extends Fragment {
                                             if (task.isSuccessful()) {
                                                 Toast.makeText(getContext(),"Passwords updated!",Toast.LENGTH_LONG).show();
                                             }
-                                            else Toast.makeText(getContext(), "Error while updating password", Toast.LENGTH_SHORT).show();
+                                            else Toast.makeText(getContext(), "Error while updating password! Try to logout and login again", Toast.LENGTH_SHORT).show();
                                         }
                                     });
 
@@ -190,10 +192,12 @@ public class AdvancedProfileFragment extends Fragment {
     }
 
     private void userDelete() {
-        AuthUI.getInstance().delete(getContext()).addOnCompleteListener(new OnCompleteListener<Void>(){
+        AuthUI.getInstance().delete(requireContext()).addOnCompleteListener(new OnCompleteListener<Void>(){
 
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                RestLocalMethods.initRetrofit(getContext(), RestLocalMethods.getUserToken());
+                RestLocalMethods.deleteUser(RestLocalMethods.getMyUserId());
                 editor.putBoolean("UseBiometrics", false);
                 editor.apply();
                 Toast.makeText(getContext(), "Your profile is deleted!", Toast.LENGTH_SHORT).show();
@@ -204,7 +208,7 @@ public class AdvancedProfileFragment extends Fragment {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getContext(), "Failed to delete your account!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Failed to delete your account! Try to logout and login again", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -100,7 +100,7 @@ public class RestLocalMethods {
             }
         });
 
-        String railsHostBaseUrl="http://192.168.1.157:3000/api/v1/"; //DEVELOPMENT
+        String railsHostBaseUrl="http://192.168.1.174:3000/api/v1/"; //DEVELOPMENT
 //        String railsHostBaseUrl="http://lookabookreal.herokuapp.com/api/v1/"; //PRODUCTION
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -296,7 +296,7 @@ public class RestLocalMethods {
         return users.get(0);
     }
 
-    public static User deleteUser(  int userId){
+    public static User deleteUser(int userId){
         Call<MyResponse<User>> call = jsonPlaceHolderApi.deleteUser(userId);
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
@@ -348,13 +348,13 @@ public class RestLocalMethods {
             }
 
         });
-        if(houses!=null) return houses;
+        if (houses != null) return houses;
         else return null;
     }
 
     //POST
-    public static House createHouse(View view,  final Integer userId, House house){
-        houses=null;
+    public static House createHouse(final Integer userId, House house){
+        houses = null;
         Call<MyResponse<House>> call = jsonPlaceHolderApi.createHouse(userId,house);
 
         call.enqueue(new Callback<MyResponse<House>>() {
@@ -364,8 +364,6 @@ public class RestLocalMethods {
 
                 houses = response.body().getData();
                 Toast.makeText(context, "House " + houses.get(0).getName() + " created!", Toast.LENGTH_SHORT).show();
-                if(view != null)
-                    HouseFragment.printHouses(view,context);
             }
 
             @Override
@@ -374,13 +372,13 @@ public class RestLocalMethods {
 
             }
         });
-        if(houses!=null) return houses.get(0);
+        if(houses != null) return houses.get(0);
         else return null;
     }
     //PATCH
-    public static void patchHouse(  final Integer userId,final Integer houseId,House patchedHouse){
+    public static void patchHouse(final Integer userId, final Integer houseId, House patchedHouse){
 
-        Call<MyResponse<House>> call = jsonPlaceHolderApi.patchHouse(userId,houseId,patchedHouse);
+        Call<MyResponse<House>> call = jsonPlaceHolderApi.patchHouse(userId, houseId, patchedHouse);
 
         call.enqueue(new Callback<MyResponse<House>>() {
             @Override
@@ -399,19 +397,19 @@ public class RestLocalMethods {
         });
     }
     //DELETE
-    public static void deleteHouse(  final Integer userId,final Integer houseId){
-        Call<MyResponse<House>> call = jsonPlaceHolderApi.deleteHouse(userId,houseId);
+    public static void deleteHouse(final Integer userId, final Integer houseId){
+        Call<MyResponse<House>> call = jsonPlaceHolderApi.deleteHouse(userId, houseId);
         call.enqueue(new Callback<MyResponse<House>>() {
             @Override
             public void onResponse(Call<MyResponse<House>> call, Response<MyResponse<House>> response) {
-                if(!isResponseSuccessfull(response)) return;;
+                if(!isResponseSuccessfull(response)) return;
 
                 List<House> hres = response.body().getData();
 //TODO print changes
             }
             @Override
             public void onFailure(Call<MyResponse<House>> call, Throwable t) {
-                Toast.makeText(context,"API response failed: "+t.getMessage() ,Toast.LENGTH_LONG).show();
+                Toast.makeText(context,"API response failed: " + t.getMessage() ,Toast.LENGTH_LONG).show();
 
             }
         });

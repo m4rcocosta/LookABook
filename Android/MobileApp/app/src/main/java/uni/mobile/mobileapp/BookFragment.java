@@ -284,7 +284,7 @@ public class BookFragment extends Fragment {
                     ListAdapter lAdapter = new ListAdapter(getContext(), titles, authors, null,R.drawable.ic_book_red);
 
                     lView.setAdapter(lAdapter);
-                    if(getContext()==null)  //too late now to print
+                    if(getContext() == null)  //too late now to print
                         return;
                     Toast.makeText(getContext(), "Found " + books.size() +" books", Toast.LENGTH_SHORT).show();
                     Log.d("BOOK",titles.toString());
@@ -294,21 +294,20 @@ public class BookFragment extends Fragment {
                             //googleImage
                             currentBook=books.get(i);
 
-                            if(currentBook.getGoogleData()!=null && currentBook.getGoogleData().getVolumeInfo() != null && currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail()!=null) {
-                                if(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail()!=null) {
-                                    new DownloadImageTask(  googleImage)
-                                            .execute(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail());
+                            if (currentBook.getGoogleData()!=null && currentBook.getGoogleData().getVolumeInfo() != null && currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail()!=null) {
+                                if (currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail() != null) {
+                                    new DownloadImageTask(  googleImage).execute(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail());
                                 }
-                                Toast.makeText(getContext(), "Google "+titles.get(i), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Google " + titles.get(i), Toast.LENGTH_SHORT).show();
                                 googleTitle.setText(currentBook.getGoogleData().getVolumeInfo().getTitle());
-                                googleAuthors.setText(currentBook.getGoogleData().getVolumeInfo().getAuthors().toString() );
-                                if(currentBook.getGoogleData().getVolumeInfo().getDescription() != null)
+                                googleAuthors.setText(currentBook.getGoogleData().getVolumeInfo().getAuthors().toString());
+                                if (currentBook.getGoogleData().getVolumeInfo().getDescription() != null)
                                 googleDesc.setText(currentBook.getGoogleData().getVolumeInfo().getDescription());
                                 lView.setClickable(false);
                                 cardView.setVisibility(View.VISIBLE);
                             }
                             else{
-                                Toast.makeText(getContext(), "No Google info for "+titles.get(i), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "No Google info for " + titles.get(i), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

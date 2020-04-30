@@ -43,6 +43,11 @@
     <string name="load_image">Load Image</string>
     <string name="copy_text">Copy Text</string>
     <string name="info">Info</string>
+    <string name="delete_house">Delete House</string>
+    <string name="delete_room">Delete Room</string>
+    <string name="delete_wall">Delete Wall</string>
+    <string name="delete_shelf">Delete Shelf</string>
+    <string name="delete_book">Delete Book</string>
 
 
     <string name="sign_in">Sign In</string>

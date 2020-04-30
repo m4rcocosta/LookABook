@@ -26,8 +26,8 @@
             android:layout_marginBottom="60dp"
             android:layout_marginEnd="5dp"
             android:backgroundTint="@color/colorPrimary"
-            app:srcCompat="@drawable/ic_add_white_24dp"
-            app:tint="@color/colorAccent"/>
+            app:tint="@color/colorAccent"
+            app:srcCompat="@drawable/ic_add_white_24dp"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </FrameLayout>
