@@ -10,7 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +55,7 @@ import uni.mobile.mobileapp.rest.callbacks.BookCallback;
 
 public class BookFragment extends Fragment {
 
+    private SwipeRefreshLayout srl;
     private BottomNavigationView bottomNavigationView;
     private FloatingActionButton addBookButton;
     private MaterialCardView cardView;
@@ -69,6 +73,7 @@ public class BookFragment extends Fragment {
     private String currentShelf = "Select a shelf!";
     private Context context;
     private FragmentActivity activity;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
 
     public BookFragment(BottomNavigationView bottomNavigationView) {
@@ -86,6 +91,10 @@ public class BookFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         context = this.getContext();
         activity = this.getActivity();
+
+        //layout
+        srl=view.findViewById(R.id.swipeLayout);
+
 
         //fab
         addBookButton = view.findViewById(R.id.addBookButton);
@@ -264,6 +273,14 @@ public class BookFragment extends Fragment {
         //List related
 
         lView = view.findViewById(R.id.bookList);
+
+
+        srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getUserBooks();
+            }
+        });
     }
 
 
@@ -369,7 +386,9 @@ public class BookFragment extends Fragment {
                                     })
                                     .setNegativeButton("Cancel", null)
                                     .show();
+
                             return true;
+
                         }
                     });
 
@@ -379,6 +398,7 @@ public class BookFragment extends Fragment {
                     Log.d("BOOK","Request Error :: " + response.errorBody());
                     Toast.makeText(getContext(), "Google api error", Toast.LENGTH_SHORT).show();
                 }
+                mHandler.post(new Runnable() { @Override public void run() { srl.setRefreshing(false); } });
             }
 
             @Override
@@ -408,5 +428,6 @@ public class BookFragment extends Fragment {
             }
         });
     }
+
 
 }

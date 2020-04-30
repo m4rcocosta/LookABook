@@ -58,5 +58,6 @@ dependencies {
 
     //Facebook
     implementation 'com.facebook.android:facebook-login:5.0.1'
+    implementation 'com.android.support:cardview-v7:28.0.0'
 
 }

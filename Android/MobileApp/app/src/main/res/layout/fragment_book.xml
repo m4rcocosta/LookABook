@@ -4,12 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".BookFragment">
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/swipeLayout">
 
     <ListView
         android:id="@+id/bookList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
@@ -49,43 +54,43 @@
                 android:layout_height="194dp"
                 android:contentDescription="@string/fooText"
                 android:src="@drawable/book" />
-<androidx.core.widget.NestedScrollView
-    android:layout_width="match_parent"
-    android:layout_height="300dp">
-            <LinearLayout
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <!-- Title, secondary and supporting text -->
-                <TextView
-                    android:id="@+id/googleTitle"
-                    android:layout_width="wrap_content"
+                android:layout_height="300dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="No title available"
-                    android:textAppearance="?attr/textAppearanceHeadline6" />
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/googleAuthors"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="No authors available"
-                    android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="?android:attr/textColorSecondary" />
+                    <!-- Title, secondary and supporting text -->
+                    <TextView
+                        android:id="@+id/googleTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No title available"
+                        android:textAppearance="?attr/textAppearanceHeadline6" />
 
-                <TextView
-                    android:id="@+id/googleDesc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="No description available"
-                    android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="?android:attr/textColorSecondary" />
+                    <TextView
+                        android:id="@+id/googleAuthors"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="No authors available"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?android:attr/textColorSecondary" />
 
-            </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+                    <TextView
+                        android:id="@+id/googleDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="No description available"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?android:attr/textColorSecondary" />
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
             <!-- Buttons -->
             <LinearLayout
                 android:layout_width="wrap_content"
