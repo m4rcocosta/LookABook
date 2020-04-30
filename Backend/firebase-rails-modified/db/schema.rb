@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_30_003122) do
+ActiveRecord::Schema.define(version: 2020_04_30_110856) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -102,15 +102,15 @@ ActiveRecord::Schema.define(version: 2020_04_30_003122) do
     t.index ["user_id"], name: "index_walls_on_user_id"
   end
 
-  add_foreign_key "books", "houses"
-  add_foreign_key "books", "rooms"
+  add_foreign_key "books", "houses", on_delete: :cascade
+  add_foreign_key "books", "rooms", on_delete: :cascade
   add_foreign_key "books", "users", on_delete: :cascade
-  add_foreign_key "books", "walls"
+  add_foreign_key "books", "walls", on_delete: :cascade
   add_foreign_key "houses_users", "houses"
   add_foreign_key "houses_users", "users"
-  add_foreign_key "shelves", "houses"
-  add_foreign_key "shelves", "rooms"
+  add_foreign_key "shelves", "houses", on_delete: :cascade
+  add_foreign_key "shelves", "rooms", on_delete: :cascade
   add_foreign_key "shelves", "users", on_delete: :cascade
-  add_foreign_key "walls", "houses"
+  add_foreign_key "walls", "houses", on_delete: :cascade
   add_foreign_key "walls", "users", on_delete: :cascade
 end

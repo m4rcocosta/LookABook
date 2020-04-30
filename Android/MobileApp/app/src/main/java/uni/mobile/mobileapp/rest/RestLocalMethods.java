@@ -36,6 +36,7 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,7 +53,11 @@ import retrofit2.http.Query;
 import uni.mobile.mobileapp.BookFragment;
 import uni.mobile.mobileapp.HouseFragment;
 import uni.mobile.mobileapp.SignInActivity;
+import uni.mobile.mobileapp.SignUpActivity;
+import uni.mobile.mobileapp.rest.callbacks.OnConnectionTimeoutListener;
 import uni.mobile.mobileapp.rest.callbacks.PatchBookCallbacks;
+
+import static com.firebase.ui.auth.AuthUI.TAG;
 
 public class RestLocalMethods {
 
@@ -66,9 +71,9 @@ public class RestLocalMethods {
     private static Gson gson= new Gson();
     private static JsonPlaceHolderApi jsonPlaceHolderApi;
     private static Context context;
-
     private static Integer userId;
     private static String userToken;
+    private static OnConnectionTimeoutListener listener;
     public static final int FIRST_CHECK = 1;
     public static final int SECOND_CHECK = 2;
     public static final int MARCO_CHECK = 3;
@@ -92,9 +97,22 @@ public class RestLocalMethods {
         }
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        listener=new OnConnectionTimeoutListener() {
+            @Override
+            public void onConnectionTimeout() {
+                Intent intent = new Intent(context, SignUpActivity.class);
+                context.startActivity(intent);
+            }
+        };
         httpClient.addInterceptor(new NetworkConnectionInterceptor(context,userToken) );
+//                .addInterceptor(new Interceptor() {
+//            @Override
+//            public okhttp3.Response intercept(Chain chain) throws IOException {
+//                return onOnIntercept(chain);
+//            }
+//        });
 
-        String railsHostBaseUrl="http://192.168.1.174:3000/api/v1/"; //DEVELOPMENT
+        String railsHostBaseUrl="http://192.168.1.157:3000/api/v1/"; //DEVELOPMENT
 //        String railsHostBaseUrl="http://lookabookreal.herokuapp.com/api/v1/"; //PRODUCTION
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -947,7 +965,21 @@ public class RestLocalMethods {
         RestLocalMethods.context = context;
     }
 
+    private static okhttp3.Response onOnIntercept(Interceptor.Chain chain) throws IOException {
+        try {
+            okhttp3.Response response = chain.proceed(chain.request());
+            String content = response.toString();
+            Log.d("retrofit",  " - " + content);
+            return response.newBuilder().body(ResponseBody.create(response.body().contentType(), content)).build();
+        }
+        catch (SocketTimeoutException exception) {
+            exception.printStackTrace();
+            if(listener != null)
+                listener.onConnectionTimeout();
+        }
 
+        return chain.proceed(chain.request());
+    }
 }
 
 
