@@ -94,6 +94,6 @@ class Api::V1::RoomsController < ApiController
   
   # Never trust parameters from the scary internet, only allow the white list through.
   def room_params
-    params.permit(:name)
+    params.permit(:name,:house_id)
   end
 end

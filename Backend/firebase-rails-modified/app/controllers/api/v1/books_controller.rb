@@ -189,6 +189,6 @@ class Api::V1::BooksController < ApiController
     params.permit(:title, :authors, :publisher, :publishedDate, :description,
     :isbn, :pageCount, :categories, :imageLinks, :country, :price,
     :user_id,:house_id,:room_id,:wall_id,:shelf_id,
-    :googleData,:small_thumbnail,:id, :created_at, :updated_at,)
+    :googleData,:small_thumbnail)
   end
 end

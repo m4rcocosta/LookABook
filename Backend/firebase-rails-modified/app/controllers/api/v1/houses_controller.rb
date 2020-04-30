@@ -84,6 +84,6 @@ class Api::V1::HousesController < ApiController
   
   # Never trust parameters from the scary internet, only allow the white list through.
   def house_params
-    params.permit(:name)
+    params.permit(:name,:id,:isMainHouse, :latitude, :longitude)
   end
 end

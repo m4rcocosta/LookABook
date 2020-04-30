@@ -9,8 +9,10 @@ public class House {
 
     private Integer id;
     private String name;
+
+    @SerializedName("latitude")
     private Float lat;
-    @SerializedName("long")
+    @SerializedName("longitude")
     private Float longt;
     private Boolean isMainHouse;
     private String createdAt;

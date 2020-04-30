@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -40,6 +41,7 @@ import uni.mobile.mobileapp.rest.House;
 import uni.mobile.mobileapp.rest.MyResponse;
 import uni.mobile.mobileapp.rest.RestLocalMethods;
 import uni.mobile.mobileapp.rest.Room;
+import uni.mobile.mobileapp.rest.callbacks.RoomCallback;
 
 
 public class RoomFragment extends Fragment {
@@ -177,8 +179,12 @@ public class RoomFragment extends Fragment {
                                         Toast.makeText(getContext(), "Please select an house!", Toast.LENGTH_SHORT).show();
                                     else {
                                         House selectedHouse = houseDic.get(currentHouse);
-                                        RestLocalMethods.createRoom(RestLocalMethods.getMyUserId(), selectedHouse.getId(), new Room(roomName, selectedHouse.getId()));
-                                        reloadRoomFragment();
+                                        RestLocalMethods.createRoom(RestLocalMethods.getMyUserId(), selectedHouse.getId(), new Room(roomName, selectedHouse.getId()), new RoomCallback() {
+                                            @Override
+                                            public void onSuccess(@NonNull List<Room> booksRes) {
+                                                getUserRooms(view);
+                                            }
+                                        });
                                     }
                                 }
                             })
@@ -187,13 +193,6 @@ public class RoomFragment extends Fragment {
                 }
             }
         });
-    }
-
-    private void reloadRoomFragment() {
-        // Reload fragment in order to see new added room
-        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragmentContainer, new RoomFragment(bottomNavigationView));
-        transaction.commit();
     }
 
     private void getUserRooms(View view) {
@@ -215,7 +214,7 @@ public class RoomFragment extends Fragment {
 
                     ListView lView = view.findViewById(R.id.roomList);
 
-                    ListAdapter lAdapter = new ListAdapter(getContext(), names, subNames, null,R.drawable.ic_roomicon);
+                    ListAdapter lAdapter = new ListAdapter(context, names, subNames, null,R.drawable.ic_roomicon);
 
                     lView.setAdapter(lAdapter);
                     if(getContext()==null)  //too late now to print
@@ -224,7 +223,7 @@ public class RoomFragment extends Fragment {
                     Log.d("ROOM",names.toString());
                     lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        public void onItemClick(AdapterView<?> adapterView, View v, int i, long l) {
                             LayoutInflater inflater = getLayoutInflater();
                             View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_room, null);
                             final EditText roomNameEditText = alertLayout.findViewById(R.id.roomNameEdit);
@@ -234,8 +233,12 @@ public class RoomFragment extends Fragment {
                             deleteRoomButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    RestLocalMethods.deleteRoom(RestLocalMethods.getMyUserId(), rooms.get(i).getHouseId(), rooms.get(i).getId());
-                                    reloadRoomFragment();
+                                    RestLocalMethods.deleteRoom(RestLocalMethods.getMyUserId(), rooms.get(i).getHouseId(), rooms.get(i).getId(), new RoomCallback() {
+                                        @Override
+                                        public void onSuccess(@NonNull List<Room> booksRes) {
+                                            getUserRooms(view);
+                                        }
+                                    });
                                 }
                             });
                             new MaterialAlertDialogBuilder(context)
@@ -246,8 +249,12 @@ public class RoomFragment extends Fragment {
                                     .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            RestLocalMethods.patchRoom(RestLocalMethods.getMyUserId(), rooms.get(i).getHouseId(), rooms.get(i).getId(), new Room(roomNameEditText.getText().toString(), rooms.get(i).getHouseId()));
-                                            reloadRoomFragment();
+                                            RestLocalMethods.patchRoom(RestLocalMethods.getMyUserId(), rooms.get(i).getHouseId(), rooms.get(i).getId(), new Room(roomNameEditText.getText().toString(), rooms.get(i).getHouseId()), new RoomCallback() {
+                                                @Override
+                                                public void onSuccess(@NonNull List<Room> booksRes) {
+                                                    getUserRooms(view);
+                                                }
+                                            });
                                         }
                                     })
                                     .setNegativeButton("Cancel", null)

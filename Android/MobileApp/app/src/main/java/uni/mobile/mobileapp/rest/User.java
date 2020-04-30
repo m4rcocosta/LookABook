@@ -1,11 +1,19 @@
 package uni.mobile.mobileapp.rest;
 
+import com.google.gson.annotations.Expose;
+
 public class User {
+    @Expose
     Integer id;
+    @Expose
     String name;
+    @Expose
     String provider_token;
+    @Expose
     String phone;
+    @Expose
     String email;
+    @Expose
     String auth_token;
 
     public Integer getId() {
