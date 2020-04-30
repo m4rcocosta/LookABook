@@ -1,5 +1,6 @@
 package uni.mobile.mobileapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -38,15 +39,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import uni.mobile.mobileapp.guiAdapters.ListAdapter;
 import uni.mobile.mobileapp.rest.Book;
-import uni.mobile.mobileapp.rest.House;
-import uni.mobile.mobileapp.rest.JsonPlaceHolderApi;
 import uni.mobile.mobileapp.rest.MyResponse;
 import uni.mobile.mobileapp.rest.RestLocalMethods;
 import uni.mobile.mobileapp.rest.Shelf;
@@ -70,7 +68,8 @@ public class BookFragment extends Fragment {
     private List<Shelf> shelves = null;
     private Map<String, Shelf> shelfDic = null;
     private String currentShelf = "Select a shelf!";
-    private FragmentActivity thisActivity;
+    private Context context;
+    private FragmentActivity activity;
 
 
     public BookFragment(BottomNavigationView bottomNavigationView) {
@@ -86,12 +85,14 @@ public class BookFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        thisActivity = getActivity();
+        context = this.getContext();
+        activity = this.getActivity();
+
         //fab
         addBookButton = view.findViewById(R.id.addBookButton);
         addBookButton.setClickable(false);
 
-        RestLocalMethods.initRetrofit(this.getContext());
+        RestLocalMethods.initRetrofit(context);
 
         // Load user books
         getUserBooks();
@@ -145,27 +146,6 @@ public class BookFragment extends Fragment {
                 if(!response.isSuccessful()) return;
                 shelves = response.body().getData();
 
-                // User Can't add a Room if he has not an house
-                if(shelves==null)
-                    Toast.makeText(getContext(),"No shelf",Toast.LENGTH_SHORT).show();
-                if (shelves.isEmpty()) {
-                    new MaterialAlertDialogBuilder(thisActivity)
-                            .setTitle("No shelf found")
-                            .setMessage("Please create one first.")
-                            .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    bottomNavigationView.setSelectedItemId(R.id.navigation_shelf);
-                                    FragmentTransaction transaction = thisActivity.getSupportFragmentManager().beginTransaction();
-                                    transaction.replace(R.id.fragmentContainer, new ShelfFragment(bottomNavigationView));
-                                    transaction.commit();
-                                }
-                            })
-                            .setNegativeButton("Cancel", null)
-                            .show();
-                }
-
                 shelfDic = new HashMap<String, Shelf>();
                 for(Shelf shelf: shelves){
                     choices.add(shelf.getName());
@@ -183,7 +163,7 @@ public class BookFragment extends Fragment {
         });
 
         // Create an ArrayAdapter with custom choices
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, choices){
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.item_spinner, choices){
             @Override
             public boolean isEnabled(int position){
                 return position != 0;
@@ -207,55 +187,77 @@ public class BookFragment extends Fragment {
         addBookButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater inflater = getLayoutInflater();
-                View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_add_book, null);
-                final EditText bookTitleEditText = alertLayout.findViewById(R.id.bookTitle);
-                final EditText bookAuthorEditText = alertLayout.findViewById(R.id.bookAuthor);
-                final EditText bookISBNEditText = alertLayout.findViewById(R.id.bookISBN);
-                userShelves = alertLayout.findViewById(R.id.userShelves);
 
-                // Set the adapter to th spinner
-                userShelves.setAdapter(adapter);
-
-                userShelves.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        currentShelf = userShelves.getSelectedItem().toString();
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-                new MaterialAlertDialogBuilder(getContext())
-                        .setTitle("Create new book")
-                        .setMessage("Insert the book name")
-                        .setView(alertLayout) // this is set the view from XML inside AlertDialog
-                        .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
-                        .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                addBookButton.setClickable(false);
-
-                                String bookTitle = bookTitleEditText.getText().toString();
-                                String bookAuthor = bookAuthorEditText.getText().toString();
-                                String bookISBN = bookISBNEditText.getText().toString();
-                                if (currentShelf.equals("Select a shelf!")) Toast.makeText(getContext(), "Please select a shelf!", Toast.LENGTH_SHORT).show();
-                                else {
-                                    Shelf selectedShelf = shelfDic.get(currentShelf);
-                                    Log.d("shelf",currentShelf);
-                                    RestLocalMethods.createBook(RestLocalMethods.getMyUserId(), selectedShelf.getHouseId(), selectedShelf.getRoomId(), selectedShelf.getWallId(), selectedShelf.getId(), new Book(bookTitle, bookAuthor, bookISBN, selectedShelf.getId(), selectedShelf.getWallId(), selectedShelf.getRoomId(), selectedShelf.getHouseId()));
-                                    // Reload fragment in order to see new added wall
-                                    FragmentTransaction transaction = thisActivity.getSupportFragmentManager().beginTransaction();
-                                    transaction.replace(R.id.fragmentContainer, new BookFragment(bottomNavigationView));
+                // User Can't add a Book if he has not a Shelf
+                if (shelves.isEmpty()) {
+                    new MaterialAlertDialogBuilder(context)
+                            .setTitle("No shelf found")
+                            .setMessage("Please create one first.")
+                            .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    bottomNavigationView.setSelectedItemId(R.id.navigation_shelf);
+                                    FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.fragmentContainer, new ShelfFragment(bottomNavigationView));
                                     transaction.commit();
                                 }
-                                addBookButton.setClickable(true);
-                            }
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .show();
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
+                else {
+                    LayoutInflater inflater = getLayoutInflater();
+                    View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_add_book, null);
+                    final EditText bookTitleEditText = alertLayout.findViewById(R.id.bookTitle);
+                    final EditText bookAuthorEditText = alertLayout.findViewById(R.id.bookAuthor);
+                    final EditText bookISBNEditText = alertLayout.findViewById(R.id.bookISBN);
+                    userShelves = alertLayout.findViewById(R.id.userShelves);
+
+                    // Set the adapter to th spinner
+                    userShelves.setAdapter(adapter);
+
+                    userShelves.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            currentShelf = userShelves.getSelectedItem().toString();
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+                    new MaterialAlertDialogBuilder(context)
+                            .setTitle("Create new book")
+                            .setMessage("Insert the book name")
+                            .setView(alertLayout) // this is set the view from XML inside AlertDialog
+                            .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                            .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    addBookButton.setClickable(false);
+
+                                    String bookTitle = bookTitleEditText.getText().toString();
+                                    String bookAuthor = bookAuthorEditText.getText().toString();
+                                    String bookISBN = bookISBNEditText.getText().toString();
+                                    if (currentShelf.equals("Select a shelf!"))
+                                        Toast.makeText(getContext(), "Please select a shelf!", Toast.LENGTH_SHORT).show();
+                                    else {
+                                        Shelf selectedShelf = shelfDic.get(currentShelf);
+                                        Log.d("shelf", currentShelf);
+                                        RestLocalMethods.createBook(RestLocalMethods.getMyUserId(), selectedShelf.getHouseId(), selectedShelf.getRoomId(), selectedShelf.getWallId(), selectedShelf.getId(), new Book(bookTitle, bookAuthor, bookISBN, selectedShelf.getId(), selectedShelf.getWallId(), selectedShelf.getRoomId(), selectedShelf.getHouseId()));
+                                        // Reload fragment in order to see new added wall
+                                        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                                        transaction.replace(R.id.fragmentContainer, new BookFragment(bottomNavigationView));
+                                        transaction.commit();
+                                    }
+                                    addBookButton.setClickable(true);
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
             }
         });
 

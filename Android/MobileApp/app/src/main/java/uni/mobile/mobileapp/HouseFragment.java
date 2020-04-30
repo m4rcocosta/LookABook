@@ -46,6 +46,7 @@ import uni.mobile.mobileapp.rest.RestLocalMethods;
 public class HouseFragment extends Fragment {
 
     private FloatingActionButton addHouseButton;
+    private Context context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,8 +56,10 @@ public class HouseFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        RestLocalMethods.initRetrofit(getContext(),RestLocalMethods.getUserToken());
-        printHouses(view,getContext());
+        context = this.getContext();
+
+        RestLocalMethods.initRetrofit(context, RestLocalMethods.getUserToken());
+        printHouses(view, context);
 
         addHouseButton = view.findViewById(R.id.addHouseButton);
         addHouseButton.setOnClickListener(new View.OnClickListener() {
@@ -66,7 +69,7 @@ public class HouseFragment extends Fragment {
                 LayoutInflater inflater = getLayoutInflater();
                 View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_add_house, null);
                 final EditText houseNameEditText = alertLayout.findViewById(R.id.houseName);
-                new MaterialAlertDialogBuilder(getContext())
+                new MaterialAlertDialogBuilder(context)
                         .setTitle("Create new house")
                         .setMessage("Insert the house name")
                         .setView(alertLayout) // this is set the view from XML inside AlertDialog
@@ -75,8 +78,7 @@ public class HouseFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String houseName = houseNameEditText.getText().toString();
-                                RestLocalMethods.createHouse(view,RestLocalMethods.getMyUserId(),new House(houseName,null,null,false));
-                                //Toast.makeText(getContext(), "House " + houseName + " created!", Toast.LENGTH_SHORT).show();
+                                RestLocalMethods.createHouse(view, RestLocalMethods.getMyUserId(), new House(houseName,null,null,false));
                             }
                         })
                         .setNegativeButton("Cancel", null)
