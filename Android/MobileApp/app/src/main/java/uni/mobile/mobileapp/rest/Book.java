@@ -29,7 +29,7 @@ public class Book {
     private Object description;
     @SerializedName("isbn")
     @Expose
-    private Object isbn;
+    private String isbn;
     @SerializedName("pageCount")
     @Expose
     private Object pageCount;
@@ -70,7 +70,7 @@ public class Book {
     private transient Bitmap smallThumbnail;
 
 
-    public Book(String title, String authors, Object isbn, Integer shelfId, Integer wallId, Integer roomId, Integer houseId) {
+    public Book(String title, String authors, String isbn, Integer shelfId, Integer wallId, Integer roomId, Integer houseId) {
         this.title = title;
         this.authors = authors;
         this.isbn = isbn;
@@ -149,15 +149,11 @@ public class Book {
         this.description = description;
     }
 
-    public Object getIsbn() {
+    public String getIsbn() {
         return isbn;
     }
 
-    public String getISBN() {
-        return "isbn.toString()";
-    }
-
-    public void setIsbn(Object isbn) {
+    public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 

@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.common.collect.HashMultimap;
@@ -21,21 +19,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.text.DateFormat;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
-import io.opencensus.common.ServerStatsFieldEnums;
 import okhttp3.Interceptor;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -43,21 +32,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.PATCH;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
-import uni.mobile.mobileapp.BookFragment;
-import uni.mobile.mobileapp.HouseFragment;
 import uni.mobile.mobileapp.SignInActivity;
 import uni.mobile.mobileapp.SignUpActivity;
 import uni.mobile.mobileapp.rest.callbacks.OnConnectionTimeoutListener;
-import uni.mobile.mobileapp.rest.callbacks.PatchBookCallbacks;
-
-import static com.firebase.ui.auth.AuthUI.TAG;
+import uni.mobile.mobileapp.rest.callbacks.BookCallback;
+import uni.mobile.mobileapp.rest.callbacks.ShelfCallback;
 
 public class RestLocalMethods {
 
@@ -112,7 +91,7 @@ public class RestLocalMethods {
 //            }
 //        });
 
-        String railsHostBaseUrl="http://192.168.1.157:3000/api/v1/"; //DEVELOPMENT
+        String railsHostBaseUrl="http://192.168.1.174:3000/api/v1/"; //DEVELOPMENT
 //        String railsHostBaseUrl="http://lookabookreal.herokuapp.com/api/v1/"; //PRODUCTION
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -584,6 +563,7 @@ public class RestLocalMethods {
                 if(!isResponseSuccessfull(response)) return;;
 
                 walls = response.body().getData();
+                if (callback != null) callback.onSuccess(walls);
 //TODO print changes
             }
 
@@ -607,6 +587,7 @@ public class RestLocalMethods {
                 if (!isResponseSuccessfull(response)) return;;
 
                 List<Wall> hres = response.body().getData();
+                if (callback != null) callback.onSuccess(hres);
 //TODO print changes
             }
 
@@ -626,6 +607,7 @@ public class RestLocalMethods {
                 if(!isResponseSuccessfull(response)) return;;
 
                 List<Wall> hres = response.body().getData();
+                if (callback != null) callback.onSuccess(hres);
 //TODO print changes
             }
             @Override
@@ -680,8 +662,7 @@ public class RestLocalMethods {
     }
 
     //POST
-    public static Shelf createShelf(   final Integer userId ,Integer houseId,
-                                       Integer roomId, Integer wallId, Shelf shelf){
+    public static Shelf createShelf(final Integer userId ,Integer houseId, Integer roomId, Integer wallId, Shelf shelf, @Nullable ShelfCallback callback){
 
         Call<MyResponse<Shelf>> call = jsonPlaceHolderApi.createShelf(userId,houseId, roomId, wallId, shelf);
 
@@ -691,6 +672,7 @@ public class RestLocalMethods {
                 if(!isResponseSuccessfull(response)) return;;
 
                 shelves = response.body().getData();
+                if (callback != null) callback.onSuccess(shelves);
 //TODO print changes
             }
 
@@ -705,7 +687,7 @@ public class RestLocalMethods {
     }
 
     //PATCH
-    public static void patchShelf(final Integer userId, final Integer houseId, Integer roomId, Integer wallId, Integer shelfId, Shelf patchedShelf){
+    public static void patchShelf(final Integer userId, final Integer houseId, Integer roomId, Integer wallId, Integer shelfId, Shelf patchedShelf, @Nullable ShelfCallback callback){
 
         Call<MyResponse<Shelf>> call = jsonPlaceHolderApi.patchShelf(userId, houseId, roomId, shelfId, wallId, patchedShelf);
 
@@ -715,18 +697,19 @@ public class RestLocalMethods {
                 if(!isResponseSuccessfull(response)) return;;
 
                 List<Shelf> hres = response.body().getData();
+                if (callback != null) callback.onSuccess(hres);
 //TODO print changes
             }
 
             @Override
             public void onFailure(Call<MyResponse<Shelf>> call, Throwable t) {
-                Toast.makeText(context,"API response failed: "+t.getMessage() ,Toast.LENGTH_LONG).show();
+                Toast.makeText(context,"API response failed: " + t.getMessage() ,Toast.LENGTH_LONG).show();
 
             }
         });
     }
     //DELETE
-    public static void deleteShelf(  Integer userId, final Integer houseId, Integer roomId, Integer wallId ,Integer shelfId){
+    public static void deleteShelf(Integer userId, final Integer houseId, Integer roomId, Integer wallId, Integer shelfId, @Nullable ShelfCallback callback){
         Call<MyResponse<Shelf>> call = jsonPlaceHolderApi.deleteShelf(userId,houseId,roomId, wallId, shelfId);
         call.enqueue(new Callback<MyResponse<Shelf>>() {
             @Override
@@ -734,6 +717,7 @@ public class RestLocalMethods {
                 if(!isResponseSuccessfull(response)) return;;
 
                 List<Shelf> hres = response.body().getData();
+                if (callback != null) callback.onSuccess(hres);
 //TODO print changes
             }
             @Override
@@ -847,7 +831,7 @@ public class RestLocalMethods {
     }
 
     //POST
-    public static Book createBook(final Integer userId, final Integer houseId, final Integer roomId, final Integer wallId, final Integer shelfId, Book book){
+    public static Book createBook(final Integer userId, final Integer houseId, final Integer roomId, final Integer wallId, final Integer shelfId, Book book, @Nullable BookCallback callback){
 
         books=null;
         Call<MyResponse<Book>> call = jsonPlaceHolderApi.createBook(userId,houseId, roomId, wallId, shelfId,book);
@@ -858,6 +842,7 @@ public class RestLocalMethods {
                 if(!isResponseSuccessfull(response)) return;;
 
                 books = response.body().getData();
+                if (callback != null) callback.onSuccess(books);
 //TODO print changes
             }
 
@@ -872,7 +857,7 @@ public class RestLocalMethods {
     }
 
     //PATCH
-    public static void patchBook(final Integer userId,final Integer houseId, final Integer roomId,final Integer wallId, final Integer shelfId,final Integer bookId, Book patchedBook, @Nullable PatchBookCallbacks callbacks) {
+    public static void patchBook(final Integer userId,final Integer houseId, final Integer roomId,final Integer wallId, final Integer shelfId,final Integer bookId, Book patchedBook, @Nullable BookCallback callback) {
 
         Call<MyResponse<Book>> call = jsonPlaceHolderApi.patchBook(userId, houseId, roomId, wallId, shelfId,bookId, patchedBook);
 
@@ -882,7 +867,7 @@ public class RestLocalMethods {
                 if(!isResponseSuccessfull(response)) return;;
 
                 List<Book> hres = response.body().getData();
-                //if (callbacks != null) callbacks.onSuccess(hres);
+                if (callback != null) callback.onSuccess(hres);
             }
 
             @Override
@@ -893,7 +878,7 @@ public class RestLocalMethods {
     }
 
     //DELETE
-    public static void deleteBook(final Integer userId, final Integer houseId, final Integer roomId, final Integer wallId, final Integer shelfId, final Integer bookId){
+    public static void deleteBook(final Integer userId, final Integer houseId, final Integer roomId, final Integer wallId, final Integer shelfId, final Integer bookId, @Nullable BookCallback callback){
         Call<MyResponse<Book>> call = jsonPlaceHolderApi.deleteBook(userId,houseId,roomId, wallId,shelfId ,bookId);
         call.enqueue(new Callback<MyResponse<Book>>() {
             @Override
@@ -901,6 +886,7 @@ public class RestLocalMethods {
                 if(!isResponseSuccessfull(response)) return;
 
                 List<Book> hres = response.body().getData();
+                if (callback != null) callback.onSuccess(hres);
 //TODO print changes
             }
             @Override

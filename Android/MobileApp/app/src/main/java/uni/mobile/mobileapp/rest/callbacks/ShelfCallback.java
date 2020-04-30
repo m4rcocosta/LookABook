@@ -4,10 +4,10 @@ import androidx.annotation.NonNull;
 
 import java.util.List;
 
-import uni.mobile.mobileapp.rest.Book;
+import uni.mobile.mobileapp.rest.Shelf;
 
-public interface PatchBookCallbacks {
-    void onSuccess(@NonNull List<Book> value);
+public interface ShelfCallback {
+    void onSuccess(@NonNull List<Shelf> value);
 
     //void onError(@NonNull Throwable throwable);
 }

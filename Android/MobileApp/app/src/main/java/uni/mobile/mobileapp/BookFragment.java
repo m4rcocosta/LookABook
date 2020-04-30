@@ -49,7 +49,7 @@ import uni.mobile.mobileapp.rest.Book;
 import uni.mobile.mobileapp.rest.MyResponse;
 import uni.mobile.mobileapp.rest.RestLocalMethods;
 import uni.mobile.mobileapp.rest.Shelf;
-import uni.mobile.mobileapp.rest.callbacks.PatchBookCallbacks;
+import uni.mobile.mobileapp.rest.callbacks.BookCallback;
 
 
 public class BookFragment extends Fragment {
@@ -247,8 +247,12 @@ public class BookFragment extends Fragment {
                                     else {
                                         Shelf selectedShelf = shelfDic.get(currentShelf);
                                         Log.d("shelf", currentShelf);
-                                        RestLocalMethods.createBook(RestLocalMethods.getMyUserId(), selectedShelf.getHouseId(), selectedShelf.getRoomId(), selectedShelf.getWallId(), selectedShelf.getId(), new Book(bookTitle, bookAuthor, bookISBN, selectedShelf.getId(), selectedShelf.getWallId(), selectedShelf.getRoomId(), selectedShelf.getHouseId()));
-                                        reloadBookFragment();
+                                        RestLocalMethods.createBook(RestLocalMethods.getMyUserId(), selectedShelf.getHouseId(), selectedShelf.getRoomId(), selectedShelf.getWallId(), selectedShelf.getId(), new Book(bookTitle, bookAuthor, bookISBN, selectedShelf.getId(), selectedShelf.getWallId(), selectedShelf.getRoomId(), selectedShelf.getHouseId()), new BookCallback() {
+                                            @Override
+                                            public void onSuccess(@NonNull List<Book> booksRes) {
+                                                getUserBooks();
+                                            }
+                                        });
                                     }
                                     addBookButton.setClickable(true);
                                 }
@@ -262,12 +266,6 @@ public class BookFragment extends Fragment {
         //List related
 
         lView = view.findViewById(R.id.bookList);
-    }
-
-    private void reloadBookFragment() {// Reload fragment in order to see new added wall
-        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragmentContainer, new BookFragment(bottomNavigationView));
-        transaction.commit();
     }
 
 
@@ -337,13 +335,17 @@ public class BookFragment extends Fragment {
                             final EditText bookISBNEditText = alertLayout.findViewById(R.id.bookISBNEdit);
                             bookTitleEditText.setText(currentBook.getTitle());
                             bookAuthorEditText.setText(currentBook.getAuthors());
-                            bookISBNEditText.setText(currentBook.getISBN());
+                            bookISBNEditText.setText(currentBook.getIsbn());
                             final Button deleteBookButton = alertLayout.findViewById(R.id.deleteBookButton);
                             deleteBookButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    RestLocalMethods.deleteBook(RestLocalMethods.getMyUserId(), currentBook.getHouseId(), currentBook.getRoomId(), currentBook.getWallId(),currentBook.getShelfId(), currentBook.getId());
-                                    reloadBookFragment();
+                                    RestLocalMethods.deleteBook(RestLocalMethods.getMyUserId(), currentBook.getHouseId(), currentBook.getRoomId(), currentBook.getWallId(),currentBook.getShelfId(), currentBook.getId(), new BookCallback() {
+                                        @Override
+                                        public void onSuccess(@NonNull List<Book> booksRes) {
+                                            getUserBooks();
+                                        }
+                                    });
                                 }
                             });
                             new MaterialAlertDialogBuilder(context)
@@ -354,7 +356,7 @@ public class BookFragment extends Fragment {
                                     .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            RestLocalMethods.patchBook(RestLocalMethods.getMyUserId(), currentBook.getHouseId(), currentBook.getRoomId(), currentBook.getWallId(), currentBook.getShelfId(), currentBook.getId(), new Book(bookTitleEditText.getText().toString(), bookAuthorEditText.getText().toString(), bookISBNEditText.getText().toString(), currentBook.getShelfId(), currentBook.getWallId(), currentBook.getRoomId(), currentBook.getHouseId()), new PatchBookCallbacks() {
+                                            RestLocalMethods.patchBook(RestLocalMethods.getMyUserId(), currentBook.getHouseId(), currentBook.getRoomId(), currentBook.getWallId(), currentBook.getShelfId(), currentBook.getId(), new Book(bookTitleEditText.getText().toString(), bookAuthorEditText.getText().toString(), bookISBNEditText.getText().toString(), currentBook.getShelfId(), currentBook.getWallId(), currentBook.getRoomId(), currentBook.getHouseId()), new BookCallback() {
                                                 @Override
                                                 public void onSuccess(@NonNull List<Book> booksRes) {
                                                     getUserBooks();
@@ -419,7 +421,7 @@ public class BookFragment extends Fragment {
     }
 
     private void patchAndUpdate(View view){
-        RestLocalMethods.patchBook(RestLocalMethods.getMyUserId(), currentBook.getHouseId(), currentBook.getRoomId(), currentBook.getWallId(), currentBook.getShelfId(), currentBook.getId(), currentBook, new PatchBookCallbacks() {
+        RestLocalMethods.patchBook(RestLocalMethods.getMyUserId(), currentBook.getHouseId(), currentBook.getRoomId(), currentBook.getWallId(), currentBook.getShelfId(), currentBook.getId(), currentBook, new BookCallback() {
             @Override
             public void onSuccess(@NonNull List<Book> booksRes) {
                 getUserBooks();
