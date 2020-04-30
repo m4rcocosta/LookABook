@@ -78,13 +78,6 @@ class ApiController < ApplicationController
                 if @user.nil? &&  (request.fullpath != "/api/v1/users" || request.method!="POST")#Non esiste token e non è una post
                     puts "no user found "
                     return unauthorize_no_token
-                elsif params[:id] #User con quel token esiste
-                    @req_user=User.find(params[:id])
-                    if user_token.to_s != @req_user.auth_token.to_s  
-                        puts "unmatched token"
-                        return unauthorize_wrong_token
-                    end
-                    puts "[V] token and user matching"
                 elsif params[:user_id] #User con quel token esiste
                     @req_user=User.find(params[:user_id])
                     if user_token.to_s != @req_user.auth_token.to_s  
@@ -92,6 +85,14 @@ class ApiController < ApplicationController
                         return unauthorize_wrong_token
                     end
                     puts "[V] token and user matching"
+                elsif params[:id] #User con quel token esiste
+                    @req_user=User.find(params[:id])
+                    if user_token.to_s != @req_user.auth_token.to_s  
+                        puts "unmatched token"
+                        return unauthorize_wrong_token
+                    end
+                    puts "[V] token and user matching"
+                
                 end
             end
             

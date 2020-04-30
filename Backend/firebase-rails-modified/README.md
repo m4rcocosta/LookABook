@@ -45,3 +45,8 @@ Ruby: 2.5.0
 
 Rails: 5.2.0
 # prova
+
+
+# Rails server start
+RUBYOPT='-W:no-deprecated -W:no-experimental' rails s -b 0.0.0.0
+

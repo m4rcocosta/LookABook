@@ -47,8 +47,8 @@ public class RestTreeLocalMethods {
 
 
     public  static void getHouses(Integer userId,final TreeNode parent,final Context ctx, final TextView textViewResult, final JsonPlaceHolderApi jsonPlaceHolderApi, final Boolean recursiveSearch  ){
-        if(userId==null)
-            userId=1; //TODO use the real one
+        //if(userId==null)
+            //userId=1; //TODO use the real one
         Call<MyResponse<House>> call = jsonPlaceHolderApi.getHouses(userId);
 
         call.enqueue(new Callback<MyResponse<House>>() {

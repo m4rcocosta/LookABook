@@ -2,11 +2,15 @@ package uni.mobile.mobileapp.rest;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.common.collect.HashMultimap;
@@ -45,8 +49,10 @@ import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import uni.mobile.mobileapp.BookFragment;
 import uni.mobile.mobileapp.HouseFragment;
 import uni.mobile.mobileapp.SignInActivity;
+import uni.mobile.mobileapp.rest.callbacks.PatchBookCallbacks;
 
 public class RestLocalMethods {
 
@@ -60,6 +66,7 @@ public class RestLocalMethods {
     private static Gson gson= new Gson();
     private static JsonPlaceHolderApi jsonPlaceHolderApi;
     private static Context context;
+
     private static Integer userId;
     private static String userToken;
     public static final int FIRST_CHECK = 1;
@@ -76,7 +83,7 @@ public class RestLocalMethods {
     }
     //To build jsonPlaceHolderApi object handling REST API
     public static Boolean initRetrofit(Context ctx) {
-
+        context=ctx;
 
 
         if(userToken==null){
@@ -85,20 +92,7 @@ public class RestLocalMethods {
         }
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
-
-                Request request = original.newBuilder()
-                        .header("TOKEN", userToken)
-                        .header("Accept", "application/json")
-                        .method(original.method(), original.body())
-                        .build();
-
-                return chain.proceed(request);
-            }
-        });
+        httpClient.addInterceptor(new NetworkConnectionInterceptor(context,userToken) );
 
         String railsHostBaseUrl="http://192.168.1.174:3000/api/v1/"; //DEVELOPMENT
 //        String railsHostBaseUrl="http://lookabookreal.herokuapp.com/api/v1/"; //PRODUCTION
@@ -126,7 +120,6 @@ public class RestLocalMethods {
 
 
         jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        context=ctx;
         return true;
     }
 
@@ -794,7 +787,7 @@ public class RestLocalMethods {
                 btn.setClickable(true);
                 Snackbar.make(act.findViewById(android.R.id.content), "Scan completed", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-
+                //TODO update books on book fragment
             }
 
             @Override
@@ -865,7 +858,7 @@ public class RestLocalMethods {
 
     //PATCH
     public static void patchBook(  final Integer userId,final Integer houseId,
-                                   final Integer roomId,final Integer wallId, final Integer shelfId,final Integer bookId, Book patchedBook){
+                                   final Integer roomId,final Integer wallId, final Integer shelfId,final Integer bookId, Book patchedBook, @Nullable PatchBookCallbacks callbacks){
 
         Call<MyResponse<Book>> call = jsonPlaceHolderApi.patchBook(userId, houseId, roomId, wallId, shelfId,bookId, patchedBook);
 
@@ -875,7 +868,8 @@ public class RestLocalMethods {
                 if(!isResponseSuccessfull(response)) return;;
 
                 List<Book> hres = response.body().getData();
-//TODO print changes
+                if (callbacks != null)
+                    callbacks.onSuccess(hres);
             }
 
             @Override
@@ -918,8 +912,17 @@ public class RestLocalMethods {
         if(t instanceof SocketTimeoutException){
             message = "Socket Time out. Please try again.";
         }
-        if(context!=null)
-            Toast.makeText(context,message,Toast.LENGTH_SHORT).show();
+        if(t instanceof NoConnectivityException) {
+            message=t.getMessage();
+            if(context!=null) {
+                Intent intent = new Intent(context, SignInActivity.class);
+                context.startActivity(intent);
+            }
+        }
+        if(context!=null) {
+
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public static JsonPlaceHolderApi getJsonPlaceHolderApi() {
@@ -950,6 +953,8 @@ public class RestLocalMethods {
     public static void setContext(Context context) {
         RestLocalMethods.context = context;
     }
+
+
 }
 
 

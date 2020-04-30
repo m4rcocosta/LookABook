@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -93,7 +94,8 @@ public class HomeActivity extends AppCompatActivity {
         scanButton = findViewById(R.id.scanButton);
         scanButton.setClickable(false);
 
-
+        //Connection check
+        new CheckNetwork(this);
 
         t = new ActionBarDrawerToggle(this, dl, toolbar, R.string.Open, R.string.Close) {
             public void onDrawerOpened(View drawerView) {
