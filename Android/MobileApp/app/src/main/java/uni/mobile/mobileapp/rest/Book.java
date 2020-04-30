@@ -154,7 +154,8 @@ public class Book {
     }
 
     public String getISBN() {
-        return isbn.toString();
+
+        return isbn!=null?isbn.toString():null;
     }
 
     public void setIsbn(Object isbn) {
