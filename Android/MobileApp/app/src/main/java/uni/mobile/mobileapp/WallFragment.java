@@ -204,7 +204,7 @@ public class WallFragment extends Fragment {
                     ArrayList<String> subNames = new ArrayList<String>();
                     for(Wall w: walls){
                         names.add( w.getName() ) ;
-                        subNames.add("None");
+                        subNames.add("");
                     }
 
                     ListView lView = view.findViewById(R.id.wallList);

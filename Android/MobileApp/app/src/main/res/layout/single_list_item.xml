@@ -26,7 +26,7 @@
 
     <TextView
         android:id="@+id/aVersiontxt"
-        android:text="Android Version"
+        android:text=""
         android:textSize="14sp"
         android:maxLines="1"
         android:layout_width="match_parent"

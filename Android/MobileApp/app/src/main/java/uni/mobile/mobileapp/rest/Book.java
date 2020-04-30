@@ -67,7 +67,7 @@ public class Book {
     @Expose
     private Integer houseId;
 
-    private transient Bitmap smallThumbnail;
+    private transient String smallThumbnailUrl;
 
 
     public Book(String title, String authors, String isbn, Integer shelfId, Integer wallId, Integer roomId, Integer houseId) {
@@ -81,12 +81,12 @@ public class Book {
     }
 
 
-    public Bitmap getSmallThumbnail() {
-        return smallThumbnail;
+    public String getSmallThumbnailUrl() {
+        return smallThumbnailUrl;
     }
 
-    public void setSmallThumbnail(Bitmap smallThumbnail) {
-        this.smallThumbnail = smallThumbnail;
+    public void setSmallThumbnail(String smallThumbnailUrl) {
+        this.smallThumbnailUrl = smallThumbnailUrl;
     }
 
     public Integer getId() {
@@ -150,6 +150,9 @@ public class Book {
     }
 
     public String getIsbn() {
+        return isbn;
+    }
+    public String getISBN() {
         return isbn;
     }
 

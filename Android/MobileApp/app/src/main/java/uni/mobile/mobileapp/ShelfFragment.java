@@ -204,7 +204,7 @@ public class ShelfFragment extends Fragment {
                     ArrayList<String> subNames = new ArrayList<String>();
                     for(Shelf s: shelves){
                         names.add(s.getName()) ;
-                        subNames.add("None");
+                        subNames.add("");
                     }
 
                     ListView lView = view.findViewById(R.id.shelfList);

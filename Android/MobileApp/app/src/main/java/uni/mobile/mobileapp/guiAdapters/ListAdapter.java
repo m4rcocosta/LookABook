@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 import uni.mobile.mobileapp.R;
+import uni.mobile.mobileapp.rest.DownloadImageTask;
 
 
 public class ListAdapter extends BaseAdapter {
@@ -22,10 +23,10 @@ public class ListAdapter extends BaseAdapter {
     Context context;
     private final ArrayList<String> titles;
     private final ArrayList<String> authors;
-    private final Integer[] images;
+    private final ArrayList<String> images;
     private final int defaultImage;
 
-    public ListAdapter(Context context, ArrayList<String> titles, ArrayList<String> authors, Integer[] images,int defaultImage) {
+    public ListAdapter(Context context, ArrayList<String> titles, ArrayList<String> authors, ArrayList<String> images,int defaultImage) {
         //super(context, R.layout.single_list_app_item, utilsArrayList);
         this.context = context;
         this.titles = titles;
@@ -81,10 +82,10 @@ public class ListAdapter extends BaseAdapter {
         }
 
         viewHolder.txtName.setText(titles.get(position) );
-
-        viewHolder.txtVersion.setText("Authors: " + authors==null?authors.get(position):"none" );
-        if(images!=null)
-        viewHolder.icon.setImageResource(images[position]);
+        if(authors!=null)
+            viewHolder.txtVersion.setText("Authors: " + authors.get(position)!=null?authors.get(position):"" );
+        if(images!=null && images.get(position)!=null)
+            new DownloadImageTask(viewHolder.icon).execute(images.get(position));
         else
         viewHolder.icon.setImageResource(defaultImage);
 

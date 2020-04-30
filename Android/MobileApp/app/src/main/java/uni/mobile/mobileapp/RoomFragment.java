@@ -209,7 +209,7 @@ public class RoomFragment extends Fragment {
                     ArrayList<String> subNames = new ArrayList<String>();
                     for(Room b: rooms) {
                         names.add(b.getName());
-                        subNames.add("None");
+                        subNames.add("");
                     }
 
                     ListView lView = view.findViewById(R.id.roomList);

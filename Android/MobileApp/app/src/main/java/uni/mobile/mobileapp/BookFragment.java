@@ -2,11 +2,8 @@ package uni.mobile.mobileapp;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -46,6 +43,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import uni.mobile.mobileapp.guiAdapters.ListAdapter;
 import uni.mobile.mobileapp.rest.Book;
+import uni.mobile.mobileapp.rest.DownloadImageTask;
 import uni.mobile.mobileapp.rest.MyResponse;
 import uni.mobile.mobileapp.rest.RestLocalMethods;
 import uni.mobile.mobileapp.rest.Shelf;
@@ -283,14 +281,17 @@ public class BookFragment extends Fragment {
 
                     ArrayList<String> titles = new ArrayList<String>();
                     ArrayList<String> authors = new ArrayList<String>();
-                    ArrayList<Integer> images = new ArrayList<Integer>();
+                    ArrayList<String> images = new ArrayList<>();
 
                     for(Book b: books){
                         titles.add( b.getTitle() ) ;
                         authors.add(b.getAuthors());
-//                        if(b.getGoogleData()!=null && b.getGoogleData().getVolumeInfo().getImageLinks().getSmallThumbnail()!=null){
-//                            //images.add(b.getGoogleData().getVolumeInfo().getImageLinks().getSmallThumbnail());
-//                        }
+                        if(b.getGoogleData()!=null && b.getSmallThumbnailUrl()!=null){
+                            images.add(b.getSmallThumbnailUrl());
+                        }
+                        else{
+                            images.add(null);
+                        }
                     }
 
 
@@ -308,8 +309,11 @@ public class BookFragment extends Fragment {
                             currentBook = books.get(i);
 
                             if(currentBook.getGoogleData() != null && currentBook.getGoogleData().getVolumeInfo() != null ){
-                                if(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail()!=null) new DownloadImageTask(googleImage).execute(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail());
                                 Toast.makeText(getContext(), "Google " + titles.get(i), Toast.LENGTH_SHORT).show();
+                                if(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getSmallThumbnail() != null)
+                                    currentBook.setSmallThumbnail(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getSmallThumbnail());
+                                if(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail()!=null)
+                                    new DownloadImageTask(googleImage).execute(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail());
                                 if(currentBook.getGoogleData().getVolumeInfo().getTitle() != null) googleTitle.setText(currentBook.getGoogleData().getVolumeInfo().getTitle());
                                 if(currentBook.getGoogleData().getVolumeInfo().getAuthors() != null) googleAuthors.setText(currentBook.getGoogleData().getVolumeInfo().getAuthors().toString() );
                                 if(currentBook.getGoogleData().getVolumeInfo().getDescription() != null) googleDesc.setText(currentBook.getGoogleData().getVolumeInfo().getDescription());
@@ -394,30 +398,7 @@ public class BookFragment extends Fragment {
             return null;
         }
     }
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
 
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
 
     private void patchAndUpdate(View view){
         RestLocalMethods.patchBook(RestLocalMethods.getMyUserId(), currentBook.getHouseId(), currentBook.getRoomId(), currentBook.getWallId(), currentBook.getShelfId(), currentBook.getId(), currentBook, new BookCallback() {
