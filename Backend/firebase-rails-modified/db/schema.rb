@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_29_014003) do
+ActiveRecord::Schema.define(version: 2020_04_29_223406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 2020_04_29_014003) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "shelf_id"
-    t.jsonb "googleData", default: {}, null: false
+    t.jsonb "googleData", default: {}
     t.bigint "wall_id"
     t.bigint "room_id"
     t.bigint "house_id"

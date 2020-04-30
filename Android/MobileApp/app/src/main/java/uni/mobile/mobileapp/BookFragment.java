@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -49,6 +50,7 @@ import uni.mobile.mobileapp.rest.JsonPlaceHolderApi;
 import uni.mobile.mobileapp.rest.MyResponse;
 import uni.mobile.mobileapp.rest.RestLocalMethods;
 import uni.mobile.mobileapp.rest.Shelf;
+import uni.mobile.mobileapp.rest.callbacks.PatchBookCallbacks;
 
 
 public class BookFragment extends Fragment {
@@ -92,7 +94,7 @@ public class BookFragment extends Fragment {
         RestLocalMethods.initRetrofit(this.getContext());
 
         // Load user books
-        getUserBooks(view);
+        getUserBooks();
 
 
         //car related
@@ -107,8 +109,13 @@ public class BookFragment extends Fragment {
         ignoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                currentBook.setGoogleData(null);
+
+                patchAndUpdate(view);
+
                 cardView.setVisibility(View.GONE);
                 lView.setClickable(true);
+                getUserBooks();
 
             }
         });
@@ -116,9 +123,13 @@ public class BookFragment extends Fragment {
             @Override
             public void onClick(View v) {
             //TODO update rails with a patch
-                //RestLocalMethods.patchBook(RestLocalMethods.getMyUserId(),currentBook);
+                currentBook.updateBookWithGoogleData();
+
+                patchAndUpdate(view);
+
                 cardView.setVisibility(View.GONE);
                 lView.setClickable(true);
+                getUserBooks();
 
             }
         });
@@ -254,7 +265,7 @@ public class BookFragment extends Fragment {
     }
 
 
-  private void getUserBooks(View view) {
+  public void getUserBooks() {
         RestLocalMethods.setContext(getContext());
 
         Call<MyResponse<Book>> callAsync = RestLocalMethods.getJsonPlaceHolderApi().getAllBooks(RestLocalMethods.getMyUserId());
@@ -292,16 +303,20 @@ public class BookFragment extends Fragment {
                             //googleImage
                             currentBook=books.get(i);
 
-                            if(currentBook.getGoogleData()!=null && currentBook.getGoogleData().getVolumeInfo() != null && currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail()!=null) {
-                                if(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail()!=null) {
-                                    new DownloadImageTask(  googleImage)
-                                            .execute(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail());
-                                }
+                            if(currentBook.getGoogleData()!=null && currentBook.getGoogleData().getVolumeInfo() != null ){
+                                    if(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail()!=null) {
+                                        new DownloadImageTask(googleImage)
+                                                .execute(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail());
+                                    }
                                 Toast.makeText(getContext(), "Google "+titles.get(i), Toast.LENGTH_SHORT).show();
-                                googleTitle.setText(currentBook.getGoogleData().getVolumeInfo().getTitle());
+                                //if(currentBook.getGoogleData().getVolumeInfo().getTitle() != null)
+                                    googleTitle.setText(currentBook.getGoogleData().getVolumeInfo().getTitle());
+                                if(currentBook.getGoogleData().getVolumeInfo().getAuthors() != null)
                                 googleAuthors.setText(currentBook.getGoogleData().getVolumeInfo().getAuthors().toString() );
                                 if(currentBook.getGoogleData().getVolumeInfo().getDescription() != null)
                                 googleDesc.setText(currentBook.getGoogleData().getVolumeInfo().getDescription());
+
+
                                 lView.setClickable(false);
                                 cardView.setVisibility(View.VISIBLE);
                             }
@@ -359,6 +374,16 @@ public class BookFragment extends Fragment {
         protected void onPostExecute(Bitmap result) {
             bmImage.setImageBitmap(result);
         }
+    }
+
+    private void patchAndUpdate(View view){
+        RestLocalMethods.patchBook(RestLocalMethods.getMyUserId(), currentBook.getHouseId(), currentBook.getRoomId(),
+                currentBook.getWallId(), currentBook.getShelfId(), currentBook.getId(), currentBook, new PatchBookCallbacks() {
+                    @Override
+                    public void onSuccess(@NonNull List<Book> booksRes) {
+                        getUserBooks();
+                    }
+                });
     }
 
 }

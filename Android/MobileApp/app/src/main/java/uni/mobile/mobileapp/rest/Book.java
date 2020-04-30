@@ -1,5 +1,7 @@
 package uni.mobile.mobileapp.rest;
 
+import android.graphics.Bitmap;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -65,6 +67,9 @@ public class Book {
     @Expose
     private Integer houseId;
 
+    private transient Bitmap smallThumbnail;
+
+
     public Book(String title, String authors, Object isbn, Integer shelfId, Integer wallId, Integer roomId, Integer houseId) {
         this.title = title;
         this.authors = authors;
@@ -73,6 +78,15 @@ public class Book {
         this.wallId = wallId;
         this.roomId = roomId;
         this.houseId = houseId;
+    }
+
+
+    public Bitmap getSmallThumbnail() {
+        return smallThumbnail;
+    }
+
+    public void setSmallThumbnail(Bitmap smallThumbnail) {
+        this.smallThumbnail = smallThumbnail;
     }
 
     public Integer getId() {
@@ -213,6 +227,17 @@ public class Book {
 
     public void setGoogleData(GoogleData googleData) {
         this.googleData = googleData;
+    }
+
+    public void updateBookWithGoogleData(){
+        Book b=this;
+        b.setTitle(b.googleData.getVolumeInfo().getTitle());
+        if(b.googleData.getVolumeInfo().getAuthors()!=null)
+        b.setAuthors(b.googleData.getVolumeInfo().getAuthors().toString());
+        if(b.googleData.getVolumeInfo().getDescription()!=null)
+        b.setDescription(b.googleData.getVolumeInfo().getDescription());
+
+
     }
 
 }

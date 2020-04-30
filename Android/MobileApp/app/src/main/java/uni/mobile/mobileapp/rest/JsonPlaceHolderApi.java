@@ -106,10 +106,10 @@ public interface JsonPlaceHolderApi {
     Call<MyResponse<Shelf>> createShelf(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Path("wallId") int wallId , @Body Shelf shelf);
 
     @PATCH("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}/shelves/{shelfId}")
-    Call<MyResponse<Shelf>> patchShelf(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Path("wallId") int wallId, @Path("wallId") int shelfId, @Body Shelf shelf);
+    Call<MyResponse<Shelf>> patchShelf(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Path("wallId") int wallId, @Path("shelfId") int shelfId, @Body Shelf shelf);
 
     @DELETE("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}/shelves/{shelfId}")
-    Call<MyResponse<Shelf>> deleteShelf(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Path("wallId") int wallId, @Path("wallId") int shelfId);
+    Call<MyResponse<Shelf>> deleteShelf(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Path("wallId") int wallId, @Path("shelfId") int shelfId);
 
 
     /*
@@ -130,11 +130,11 @@ public interface JsonPlaceHolderApi {
 
     @PATCH("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}/shelves/{shelfId}/books/{bookId}")
     Call<MyResponse<Book>> patchBook(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Path("wallId") int wallId, @Path("shelfId") int shelfId,
-                                      @Path("shelfId") int bookId, @Body Book book);
+                                      @Path("bookId") int bookId, @Body Book book);
 
     @DELETE("users/{userId}/houses/{houseId}/rooms/{roomId}/walls/{wallId}/shelves/{shelfId}/books/{bookId}")
     Call<MyResponse<Book>> deleteBook(@Path("userId") int userId, @Path("houseId") int houseId, @Path("roomId") int roomId , @Path("wallId") int wallId, @Path("shelfId") int shelfId,
-                                       @Path("shelfId") int bookId);
+                                       @Path("bookId") int bookId);
 
 
     /*
