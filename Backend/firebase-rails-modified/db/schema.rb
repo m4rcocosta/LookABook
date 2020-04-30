@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_29_223406) do
+ActiveRecord::Schema.define(version: 2020_04_30_003122) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -104,13 +104,13 @@ ActiveRecord::Schema.define(version: 2020_04_29_223406) do
 
   add_foreign_key "books", "houses"
   add_foreign_key "books", "rooms"
-  add_foreign_key "books", "users"
+  add_foreign_key "books", "users", on_delete: :cascade
   add_foreign_key "books", "walls"
   add_foreign_key "houses_users", "houses"
   add_foreign_key "houses_users", "users"
   add_foreign_key "shelves", "houses"
   add_foreign_key "shelves", "rooms"
-  add_foreign_key "shelves", "users"
+  add_foreign_key "shelves", "users", on_delete: :cascade
   add_foreign_key "walls", "houses"
-  add_foreign_key "walls", "users"
+  add_foreign_key "walls", "users", on_delete: :cascade
 end

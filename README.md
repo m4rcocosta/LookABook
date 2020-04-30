@@ -22,3 +22,10 @@ or
 RUBYOPT='-W:no-deprecated -W:no-experimental' rails s -b 0.0.0.0
 '''
 git push heroku `git subtree split --prefix Backend/firebase-rails-modified/ master`:master --force
+
+https://lookabookreal.herokuapp.com/
+
+# Heroku setup
+npm install -g heroku
+heroku login
+heroku git:remote -a my-app
