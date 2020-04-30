@@ -82,16 +82,16 @@ public class ShelfChooserActivity extends AppCompatActivity {
     }
 
     private void showFABMenu(){
-        isFABOpen=true;
-        fab1.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
-        fab2.animate().translationY(-getResources().getDimension(R.dimen.standard_100));
-        fab3.animate().translationY(-getResources().getDimension(R.dimen.standard_145));
-        fab4.animate().translationY(-getResources().getDimension(R.dimen.standard_185));
+        isFABOpen = true;
+        fab1.animate().translationY(-getResources().getDimension(R.dimen.standard_60));
+        fab2.animate().translationY(-getResources().getDimension(R.dimen.standard_120));
+        fab3.animate().translationY(-getResources().getDimension(R.dimen.standard_180));
+        fab4.animate().translationY(-getResources().getDimension(R.dimen.standard_240));
 
     }
 
     private void closeFABMenu(){
-        isFABOpen=false;
+        isFABOpen = false;
         fab1.animate().translationY(0);
         fab2.animate().translationY(0);
         fab3.animate().translationY(0);
