@@ -597,7 +597,7 @@ public class RestLocalMethods {
     }
 
     //PATCH
-    public static void patchWall(final Integer userId,final Integer houseId, Integer wallId, Integer roomId,Wall patchedWall){
+    public static void patchWall(final Integer userId,final Integer houseId, Integer roomId, Integer wallId,Wall patchedWall){
 
         Call<MyResponse<Wall>> call = jsonPlaceHolderApi.patchWall(userId, houseId, roomId, wallId, patchedWall);
 
@@ -707,7 +707,7 @@ public class RestLocalMethods {
     //PATCH
     public static void patchShelf(final Integer userId, final Integer houseId, Integer roomId, Integer wallId, Integer shelfId, Shelf patchedShelf){
 
-        Call<MyResponse<Shelf>> call = jsonPlaceHolderApi.patchShelf(userId, houseId, roomId, shelfId, wallId, patchedShelf);
+        Call<MyResponse<Shelf>> call = jsonPlaceHolderApi.patchShelf(userId, houseId, roomId, wallId, shelfId, patchedShelf);
 
         call.enqueue(new Callback<MyResponse<Shelf>>() {
             @Override
