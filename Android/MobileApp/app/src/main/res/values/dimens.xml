@@ -14,10 +14,10 @@
 
     <dimen name="standard_12">12dp</dimen>
     <dimen name="standard_23">23dp</dimen>
-    <dimen name="standard_55">55dp</dimen>
-    <dimen name="standard_100">100dp</dimen>
-    <dimen name="standard_145">145dp</dimen>
-    <dimen name="standard_185">185dp</dimen>
+    <dimen name="standard_60">60dp</dimen>
+    <dimen name="standard_120">120dp</dimen>
+    <dimen name="standard_180">180dp</dimen>
+    <dimen name="standard_240">240dp</dimen>
     <dimen name="logo_w_h">100dp</dimen>
     <dimen name="button_size">25sp</dimen>
     <dimen name="title_size">40sp</dimen>

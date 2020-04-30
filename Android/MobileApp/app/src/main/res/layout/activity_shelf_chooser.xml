@@ -20,7 +20,6 @@
         android:layout_marginBottom="60dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/colorPrimary"
-        app:tint="@color/colorAccent"
         app:srcCompat="@drawable/ic_shelficon" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -31,7 +30,6 @@
         android:layout_marginBottom="60dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/colorPrimary"
-        app:tint="@color/colorAccent"
         app:srcCompat="@drawable/ic_wallicon2" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -42,7 +40,6 @@
         android:layout_marginBottom="60dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/colorPrimary"
-        app:tint="@color/colorAccent"
         app:srcCompat="@drawable/ic_roomicon" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -53,7 +50,6 @@
         android:layout_marginBottom="60dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/colorPrimary"
-        app:tint="@color/colorAccent"
         app:srcCompat="@drawable/ic_houseicon" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
