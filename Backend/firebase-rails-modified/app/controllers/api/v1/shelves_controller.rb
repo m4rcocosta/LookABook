@@ -55,7 +55,7 @@ class Api::V1::ShelvesController < ApiController
   
   # PATCH/PUT /shelves/1
   # PATCH/PUT /shelves/1.json
-  def updated
+  def update
     
     if @shelf.update(shelf_params)
       

@@ -314,7 +314,6 @@ public class BookFragment extends Fragment {
                                 if(currentBook.getGoogleData().getVolumeInfo().getAuthors() != null) googleAuthors.setText(currentBook.getGoogleData().getVolumeInfo().getAuthors().toString() );
                                 if(currentBook.getGoogleData().getVolumeInfo().getDescription() != null) googleDesc.setText(currentBook.getGoogleData().getVolumeInfo().getDescription());
 
-
                                 lView.setClickable(false);
                                 cardView.setVisibility(View.VISIBLE);
                             }

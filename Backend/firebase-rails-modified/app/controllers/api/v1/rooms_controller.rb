@@ -51,7 +51,7 @@ class Api::V1::RoomsController < ApiController
   
   # PATCH/PUT /rooms/1
   # PATCH/PUT /rooms/1.json
-  def updated
+  def update
     
     if @room.update(room_params)
       render json: {status: 'SUCCESS', message: 'Updated room', data: [@room]}, status: :ok

@@ -34,9 +34,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import uni.mobile.mobileapp.SignInActivity;
 import uni.mobile.mobileapp.SignUpActivity;
+import uni.mobile.mobileapp.rest.callbacks.HouseCallback;
 import uni.mobile.mobileapp.rest.callbacks.OnConnectionTimeoutListener;
 import uni.mobile.mobileapp.rest.callbacks.BookCallback;
+import uni.mobile.mobileapp.rest.callbacks.RoomCallback;
 import uni.mobile.mobileapp.rest.callbacks.ShelfCallback;
+import uni.mobile.mobileapp.rest.callbacks.WallCallback;
 
 public class RestLocalMethods {
 
@@ -343,7 +346,7 @@ public class RestLocalMethods {
     }
 
     //POST
-    public static House createHouse(final Integer userId, House house){
+    public static House createHouse(final Integer userId, House house, @Nullable HouseCallback callback) {
         houses = null;
         Call<MyResponse<House>> call = jsonPlaceHolderApi.createHouse(userId,house);
 
@@ -353,7 +356,7 @@ public class RestLocalMethods {
                 if(!isResponseSuccessfull(response)) return;;
 
                 houses = response.body().getData();
-                Toast.makeText(context, "House " + houses.get(0).getName() + " created!", Toast.LENGTH_SHORT).show();
+                if (callback != null) callback.onSuccess(houses);
             }
 
             @Override
@@ -362,11 +365,11 @@ public class RestLocalMethods {
 
             }
         });
-        if(houses != null) return houses.get(0);
+        if (houses != null) return houses.get(0);
         else return null;
     }
     //PATCH
-    public static void patchHouse(final Integer userId, final Integer houseId, House patchedHouse){
+    public static void patchHouse(final Integer userId, final Integer houseId, House patchedHouse, @Nullable HouseCallback callback) {
 
         Call<MyResponse<House>> call = jsonPlaceHolderApi.patchHouse(userId, houseId, patchedHouse);
 
@@ -376,6 +379,7 @@ public class RestLocalMethods {
                 if(!isResponseSuccessfull(response)) return;;
 
                 List<House> hres = response.body().getData();
+                if (callback != null) callback.onSuccess(hres);
 //TODO print changes
             }
 
@@ -387,7 +391,7 @@ public class RestLocalMethods {
         });
     }
     //DELETE
-    public static void deleteHouse(final Integer userId, final Integer houseId){
+    public static void deleteHouse(final Integer userId, final Integer houseId, @Nullable HouseCallback callback) {
         Call<MyResponse<House>> call = jsonPlaceHolderApi.deleteHouse(userId, houseId);
         call.enqueue(new Callback<MyResponse<House>>() {
             @Override
@@ -395,6 +399,7 @@ public class RestLocalMethods {
                 if(!isResponseSuccessfull(response)) return;
 
                 List<House> hres = response.body().getData();
+                if (callback != null) callback.onSuccess(hres);
 //TODO print changes
             }
             @Override
@@ -412,7 +417,7 @@ public class RestLocalMethods {
 
 
     //GET
-    public static List<Room> getRooms(final TextView textViewResult,  final Integer userId  ,final Integer houseId   , final Boolean recursiveSearch ){
+    public static List<Room> getRooms(final TextView textViewResult, final Integer userId  ,final Integer houseId, final Boolean recursiveSearch) {
 
         rooms=null;
         Call<MyResponse<Room>> call = jsonPlaceHolderApi.getRooms(userId,houseId);
@@ -426,7 +431,7 @@ public class RestLocalMethods {
                 for (Room room : rooms) {
                     Log.d("myrest", "room:"+room.getId() );
                     if(recursiveSearch){
-                        getWalls(textViewResult,userId,houseId,room.getId(),true);
+                        getWalls(textViewResult, userId, houseId, room.getId(), true);
                     }
 
 
@@ -436,17 +441,17 @@ public class RestLocalMethods {
 
             @Override
             public void onFailure(Call<MyResponse<Room>> call, Throwable t) {
-                Log.d("myrest", "room:"+t.getMessage() );
+                Log.d("myrest", "room:" + t.getMessage() );
             }
         });
-        if(rooms!=null) return rooms;
+        if (rooms != null) return rooms;
         else return null;
 
     }
 
     //POST
-    public static Room createRoom(final Integer userId ,final Integer houseId, Room room){
-        rooms=null;
+    public static Room createRoom(final Integer userId ,final Integer houseId, Room room, @Nullable RoomCallback callback) {
+        rooms = null;
         Call<MyResponse<Room>> call = jsonPlaceHolderApi.createRoom(userId,houseId,room);
 
         call.enqueue(new Callback<MyResponse<Room>>() {
@@ -455,6 +460,7 @@ public class RestLocalMethods {
                 if(!isResponseSuccessfull(response)) return;;
 
                 rooms = response.body().getData();
+                if (callback != null) callback.onSuccess(rooms);
 //TODO print changes
             }
 
@@ -464,11 +470,11 @@ public class RestLocalMethods {
 
             }
         });
-        if(rooms!=null) return rooms.get(0);
+        if (rooms != null) return rooms.get(0);
         else return null;
     }
     //PATCH
-    public static void patchRoom(final Integer userId, final Integer houseId, final Integer roomId, Room patchedRoom){
+    public static void patchRoom(final Integer userId, final Integer houseId, final Integer roomId, Room patchedRoom, @Nullable RoomCallback callback){
 
         Call<MyResponse<Room>> call = jsonPlaceHolderApi.patchRoom(userId, houseId, roomId, patchedRoom);
 
@@ -478,6 +484,7 @@ public class RestLocalMethods {
                 if (!isResponseSuccessfull(response)) return;;
 
                 List<Room> hres = response.body().getData();
+                if (callback != null) callback.onSuccess(hres);
 //TODO print changes
             }
 
@@ -489,14 +496,15 @@ public class RestLocalMethods {
         });
     }
     //DELETE
-    public static void deleteRoom(final Integer userId, final Integer houseId, final Integer roomId){
+    public static void deleteRoom(final Integer userId, final Integer houseId, final Integer roomId, @Nullable RoomCallback callback) {
         Call<MyResponse<Room>> call = jsonPlaceHolderApi.deleteRoom(userId,houseId,roomId);
         call.enqueue(new Callback<MyResponse<Room>>() {
             @Override
             public void onResponse(Call<MyResponse<Room>> call, Response<MyResponse<Room>> response) {
-                if(!isResponseSuccessfull(response)) return;;
+                if(!isResponseSuccessfull(response)) return;
 
                 List<Room> hres = response.body().getData();
+                if (callback != null) callback.onSuccess(hres);
 //TODO print changes
             }
             @Override
@@ -512,11 +520,10 @@ public class RestLocalMethods {
      */
 
     //GET
-    public  static List<Wall> getWalls(final TextView textViewResult,
-                                       final Integer userId,final Integer houseId,final Integer roomId ,final Boolean recursiveSearch ){
+    public  static List<Wall> getWalls(final TextView textViewResult, final Integer userId, final Integer houseId, final Integer roomId, final Boolean recursiveSearch) {
         Call<MyResponse<Wall>> call = jsonPlaceHolderApi.getWalls(userId,houseId,  roomId);
 
-        walls=null;
+        walls = null;
         call.enqueue(new Callback<MyResponse<Wall>>() {
             @Override
             public void onResponse(Call<MyResponse<Wall>> call, Response<MyResponse<Wall>> response) {
@@ -531,7 +538,7 @@ public class RestLocalMethods {
                     Log.d("myrest" , "wall "+ wall.getName() );
 
                     if(recursiveSearch){
-                        getShelves(textViewResult,userId,houseId,roomId,wall.getId(),true);
+                        getShelves(textViewResult, userId, houseId, roomId, wall.getId(), true);
 
                     }
 
@@ -552,9 +559,8 @@ public class RestLocalMethods {
     }
 
     //POST  (not Trump one)
-    public static Wall createWall(final Integer userId , final Integer houseId,
-                                  Integer roomId, Wall wall){
-        walls=null;
+    public static Wall createWall(final Integer userId , final Integer houseId, Integer roomId, Wall wall, @Nullable WallCallback callback){
+        walls = null;
         Call<MyResponse<Wall>> call = jsonPlaceHolderApi.createWall(userId,houseId,roomId,wall);
 
         call.enqueue(new Callback<MyResponse<Wall>>() {
@@ -577,7 +583,7 @@ public class RestLocalMethods {
     }
 
     //PATCH
-    public static void patchWall(final Integer userId,final Integer houseId, Integer wallId, Integer roomId,Wall patchedWall){
+    public static void patchWall(final Integer userId, final Integer houseId, Integer roomId, Integer wallId, Wall patchedWall, @Nullable WallCallback callback){
 
         Call<MyResponse<Wall>> call = jsonPlaceHolderApi.patchWall(userId, houseId, roomId, wallId, patchedWall);
 
@@ -599,7 +605,7 @@ public class RestLocalMethods {
         });
     }
     //DELETE
-    public static void deleteWall(final Integer userId, final Integer houseId, final Integer roomId, final Integer wallId){
+    public static void deleteWall(final Integer userId, final Integer houseId, final Integer roomId, final Integer wallId, @Nullable WallCallback callback){
         Call<MyResponse<Wall>> call = jsonPlaceHolderApi.deleteWall(userId, houseId, roomId, wallId);
         call.enqueue(new Callback<MyResponse<Wall>>() {
             @Override
@@ -625,9 +631,8 @@ public class RestLocalMethods {
 
 //GET
 
-    public  static List<Shelf> getShelves(final TextView textViewResult,
-                                          Integer userId, final Integer houseId, final Integer roomId , final Integer wallId   , final Boolean recursiveSearch ){
-        shelves=null;
+    public  static List<Shelf> getShelves(final TextView textViewResult, Integer userId, final Integer houseId, final Integer roomId , final Integer wallId, final Boolean recursiveSearch ){
+        shelves = null;
         Call<MyResponse<Shelf>> call = jsonPlaceHolderApi.getShelves(userId,houseId, roomId, wallId);
 
         call.enqueue(new Callback<MyResponse<Shelf>>() {
@@ -643,7 +648,7 @@ public class RestLocalMethods {
                     Log.d("myrest", "shelf Code: " + shelf.getName());
 
                     if(recursiveSearch){
-                        getShelves(textViewResult,houseId,roomId,wallId,shelf.getId(),true);
+                        getShelves(textViewResult, houseId, roomId, wallId, shelf.getId(), true);
 
                     }
 
@@ -657,7 +662,7 @@ public class RestLocalMethods {
                 Log.d("myrest", "shelf Code: " + t.getMessage());
             }
         });
-        if(shelves!=null) return shelves;
+        if (shelves != null) return shelves;
         else return null;
     }
 
@@ -689,7 +694,7 @@ public class RestLocalMethods {
     //PATCH
     public static void patchShelf(final Integer userId, final Integer houseId, Integer roomId, Integer wallId, Integer shelfId, Shelf patchedShelf, @Nullable ShelfCallback callback){
 
-        Call<MyResponse<Shelf>> call = jsonPlaceHolderApi.patchShelf(userId, houseId, roomId, shelfId, wallId, patchedShelf);
+        Call<MyResponse<Shelf>> call = jsonPlaceHolderApi.patchShelf(userId, houseId, roomId, wallId, shelfId, patchedShelf);
 
         call.enqueue(new Callback<MyResponse<Shelf>>() {
             @Override

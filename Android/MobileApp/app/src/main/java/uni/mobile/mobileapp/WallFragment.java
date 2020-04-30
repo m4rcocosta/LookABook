@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -39,6 +40,7 @@ import uni.mobile.mobileapp.rest.MyResponse;
 import uni.mobile.mobileapp.rest.RestLocalMethods;
 import uni.mobile.mobileapp.rest.Room;
 import uni.mobile.mobileapp.rest.Wall;
+import uni.mobile.mobileapp.rest.callbacks.WallCallback;
 
 public class WallFragment extends Fragment {
 
@@ -172,8 +174,12 @@ public class WallFragment extends Fragment {
                                         Toast.makeText(getContext(), "Please select a room!", Toast.LENGTH_SHORT).show();
                                     else {
                                         Room selectedRoom = roomDic.get(currentRoom);
-                                        RestLocalMethods.createWall(RestLocalMethods.getMyUserId(), selectedRoom.getHouseId(), selectedRoom.getId(), new Wall(wallName, selectedRoom.getId(), selectedRoom.getHouseId()));
-                                        reloadWallFragment();
+                                        RestLocalMethods.createWall(RestLocalMethods.getMyUserId(), selectedRoom.getHouseId(), selectedRoom.getId(), new Wall(wallName, selectedRoom.getId(), selectedRoom.getHouseId()), new WallCallback() {
+                                            @Override
+                                            public void onSuccess(@NonNull List<Wall> booksRes) {
+                                                getUserWalls(view);
+                                            }
+                                        });
                                     }
                                 }
                             })
@@ -182,13 +188,6 @@ public class WallFragment extends Fragment {
                 }
             }
         });
-    }
-
-    private void reloadWallFragment() {
-        // Reload fragment in order to see new added wall
-        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragmentContainer, new WallFragment(bottomNavigationView));
-        transaction.commit();
     }
 
     private void getUserWalls(View view) {
@@ -210,7 +209,7 @@ public class WallFragment extends Fragment {
 
                     ListView lView = view.findViewById(R.id.wallList);
 
-                    ListAdapter lAdapter = new ListAdapter(getContext(), names, subNames, null,R.drawable.ic_wallicon2);
+                    ListAdapter lAdapter = new ListAdapter(context, names, subNames, null,R.drawable.ic_wallicon2);
 
                     lView.setAdapter(lAdapter);
                     if(getContext()==null)  //too late now to print
@@ -219,7 +218,7 @@ public class WallFragment extends Fragment {
                     Log.d("WALL",names.toString());
                     lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        public void onItemClick(AdapterView<?> adapterView, View v, int i, long l) {
                             LayoutInflater inflater = getLayoutInflater();
                             View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_wall, null);
                             final EditText wallNameEditText = alertLayout.findViewById(R.id.wallNameEdit);
@@ -229,8 +228,12 @@ public class WallFragment extends Fragment {
                             deleteWallButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    RestLocalMethods.deleteWall(RestLocalMethods.getMyUserId(), walls.get(i).getHouseId(), walls.get(i).getRoomId(), walls.get(i).getId());
-                                    reloadWallFragment();
+                                    RestLocalMethods.deleteWall(RestLocalMethods.getMyUserId(), walls.get(i).getHouseId(), walls.get(i).getRoomId(), walls.get(i).getId(), new WallCallback() {
+                                        @Override
+                                        public void onSuccess(@NonNull List<Wall> booksRes) {
+                                            getUserWalls(view);
+                                        }
+                                    });
                                 }
                             });
                             new MaterialAlertDialogBuilder(context)
@@ -241,8 +244,12 @@ public class WallFragment extends Fragment {
                                     .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            RestLocalMethods.patchWall(RestLocalMethods.getMyUserId(), walls.get(i).getHouseId(), walls.get(i).getRoomId(), walls.get(i).getId(), new Wall(wallNameEditText.getText().toString(), walls.get(i).getRoomId(), walls.get(i).getHouseId()));
-                                            reloadWallFragment();
+                                            RestLocalMethods.patchWall(RestLocalMethods.getMyUserId(), walls.get(i).getHouseId(), walls.get(i).getRoomId(), walls.get(i).getId(), new Wall(wallNameEditText.getText().toString(), walls.get(i).getRoomId(), walls.get(i).getHouseId()), new WallCallback() {
+                                                @Override
+                                                public void onSuccess(@NonNull List<Wall> booksRes) {
+                                                    getUserWalls(view);
+                                                }
+                                            });
                                         }
                                     })
                                     .setNegativeButton("Cancel", null)

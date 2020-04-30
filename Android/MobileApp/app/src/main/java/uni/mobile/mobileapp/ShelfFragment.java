@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -39,6 +40,7 @@ import uni.mobile.mobileapp.rest.MyResponse;
 import uni.mobile.mobileapp.rest.RestLocalMethods;
 import uni.mobile.mobileapp.rest.Shelf;
 import uni.mobile.mobileapp.rest.Wall;
+import uni.mobile.mobileapp.rest.callbacks.ShelfCallback;
 
 public class ShelfFragment extends Fragment {
 
@@ -172,8 +174,12 @@ public class ShelfFragment extends Fragment {
                                         Toast.makeText(getContext(), "Please select a wall!", Toast.LENGTH_SHORT).show();
                                     else {
                                         Wall selectedWall = wallDic.get(currentWall);
-                                        RestLocalMethods.createShelf(RestLocalMethods.getMyUserId(), selectedWall.getHouseId(), selectedWall.getRoomId(), selectedWall.getId(), new Shelf(shelfName, selectedWall.getId(), selectedWall.getRoomId(), selectedWall.getHouseId()));
-                                        reloadShelfFragment();
+                                        RestLocalMethods.createShelf(RestLocalMethods.getMyUserId(), selectedWall.getHouseId(), selectedWall.getRoomId(), selectedWall.getId(), new Shelf(shelfName, selectedWall.getId(), selectedWall.getRoomId(), selectedWall.getHouseId()), new ShelfCallback() {
+                                            @Override
+                                            public void onSuccess(@NonNull List<Shelf> booksRes) {
+                                                getUserShelves(view);
+                                            }
+                                        });
                                     }
                                 }
                             })
@@ -182,13 +188,6 @@ public class ShelfFragment extends Fragment {
                 }
             }
         });
-    }
-
-    private void reloadShelfFragment() {
-        // Reload fragment in order to see new added wall
-        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragmentContainer, new ShelfFragment(bottomNavigationView));
-        transaction.commit();
     }
 
     private void getUserShelves(View view) {
@@ -210,7 +209,7 @@ public class ShelfFragment extends Fragment {
 
                     ListView lView = view.findViewById(R.id.shelfList);
 
-                    ListAdapter lAdapter = new ListAdapter(getContext(), names, subNames, null,R.drawable.ic_shelficon);
+                    ListAdapter lAdapter = new ListAdapter(context, names, subNames, null,R.drawable.ic_shelficon);
 
                     lView.setAdapter(lAdapter);
                     if(getContext()==null)  //too late now to print
@@ -219,7 +218,7 @@ public class ShelfFragment extends Fragment {
                     Log.d("SHELF",names.toString());
                     lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        public void onItemClick(AdapterView<?> adapterView, View v, int i, long l) {
                             LayoutInflater inflater = getLayoutInflater();
                             View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_edit_shelf, null);
                             final EditText shelfNameEditText = alertLayout.findViewById(R.id.shelfNameEdit);
@@ -229,8 +228,12 @@ public class ShelfFragment extends Fragment {
                             deleteShelfButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    RestLocalMethods.deleteShelf(RestLocalMethods.getMyUserId(), shelves.get(i).getHouseId(), shelves.get(i).getRoomId(), shelves.get(i).getWallId(), shelves.get(i).getId());
-                                    reloadShelfFragment();
+                                    RestLocalMethods.deleteShelf(RestLocalMethods.getMyUserId(), shelves.get(i).getHouseId(), shelves.get(i).getRoomId(), shelves.get(i).getWallId(), shelves.get(i).getId(), new ShelfCallback() {
+                                        @Override
+                                        public void onSuccess(@NonNull List<Shelf> booksRes) {
+                                            getUserShelves(view);
+                                        }
+                                    });
                                 }
                             });
                             new MaterialAlertDialogBuilder(context)
@@ -241,8 +244,12 @@ public class ShelfFragment extends Fragment {
                                     .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            RestLocalMethods.patchShelf(RestLocalMethods.getMyUserId(), shelves.get(i).getHouseId(), shelves.get(i).getRoomId(), shelves.get(i).getWallId(), shelves.get(i).getId(), new Shelf(shelfNameEditText.getText().toString(), shelves.get(i).getWallId(), shelves.get(i).getRoomId(), shelves.get(i).getHouseId()));
-                                            reloadShelfFragment();
+                                            RestLocalMethods.patchShelf(RestLocalMethods.getMyUserId(), shelves.get(i).getHouseId(), shelves.get(i).getRoomId(), shelves.get(i).getWallId(), shelves.get(i).getId(), new Shelf(shelfNameEditText.getText().toString(), shelves.get(i).getWallId(), shelves.get(i).getRoomId(), shelves.get(i).getHouseId()), new ShelfCallback() {
+                                                @Override
+                                                public void onSuccess(@NonNull List<Shelf> booksRes) {
+                                                    getUserShelves(view);
+                                                }
+                                            });
                                         }
                                     })
                                     .setNegativeButton("Cancel", null)
