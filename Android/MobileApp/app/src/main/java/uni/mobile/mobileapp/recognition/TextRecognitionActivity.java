@@ -2,6 +2,7 @@ package uni.mobile.mobileapp.recognition;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.content.ClipData;
@@ -245,5 +246,6 @@ public class TextRecognitionActivity extends AppCompatActivity {
         Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, RESULT_LOAD_IMAGE);
     }
+
 
 }

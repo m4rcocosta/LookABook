@@ -35,6 +35,4 @@
         android:layout_alignLeft="@+id/aNametxt"
         android:layout_alignStart="@+id/aNametxt" />
 
-
-
 </RelativeLayout>

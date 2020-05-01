@@ -145,16 +145,18 @@ public class RestLocalMethods {
      */
 
 
-    public static User getUserByEmail(String email, FirebaseUser userToBeCreated, int type_of_check,  @Nullable UserCallback callback){
+    public static User getUserByEmail(FirebaseUser userToBeCreated,   @Nullable UserCallback callback){
         users = null;
+        String email = userToBeCreated.getEmail();
         Call<MyResponse<User>> call = jsonPlaceHolderApi.getUserByEmail(email);
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
             public void onResponse(Call<MyResponse<User>> call, Response<MyResponse<User>> response) {
 
-                User railsUser;
+                User railsUser=null;
                 if (!isResponseSuccessfull(response)){
-                    railsUser = null;
+//                    if(response.code()==404){railsUser = null; }
+//                    else{return;}
                 }
                 else {
                     users = response.body().getData();
@@ -163,51 +165,49 @@ public class RestLocalMethods {
                         RestLocalMethods.setMyUserId(railsUser.getId());
                     }
                     else{
-                        railsUser = null;
-                        return;
+//                        railsUser = null;
+                        //return;
                     }
                 }
-                if (type_of_check == FIRST_CHECK) {
-                    if (railsUser != null) {
+
+                    if (railsUser != null) { // User already exists in Rails, just save it into RestLocalMethods
                         Toast.makeText(context, "User with email address " + users.get(0).getEmail() + " exists!", Toast.LENGTH_SHORT).show();
                         RestLocalMethods.setUserToken(railsUser.getAuth_token());
                         RestLocalMethods.setMyUserId(railsUser.getId());
+
                     }
                     else{   // You need to create a new user in rails (Synch in this thread)
-                        Toast.makeText(context,"User with email address " + email + " doesn't exists!" ,Toast.LENGTH_SHORT).show();
-                        //SignInActivity.createUserOnBackend(userToBeCreated);
-
-                        String idToken = userToBeCreated.getUid();
-                        Log.i("User Token: ", idToken);
-                        // Send token to your backend via HTTPS
-                        RestLocalMethods.setUserToken(idToken);
-                                 User newRailsUser=new User(userToBeCreated.getDisplayName(),
-                                 "",userToBeCreated.getPhoneNumber(),userToBeCreated.getEmail(), idToken);
-
-                        Call<MyResponse<User>> call2 = jsonPlaceHolderApi.createUser(newRailsUser);
-                        try
-                        {
-                            Response<MyResponse<User>> response2 = call2.execute();
-                            railsUser= response2.body().getData().get(0);
-
-                            //API response
-                            Log.i("user","Created: " + railsUser.toString());
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.printStackTrace();
-                        }
+//                        Toast.makeText(context,"User with email address " + email + " doesn't exists!" ,Toast.LENGTH_SHORT).show();
+//                        //SignInActivity.createUserOnBackend(userToBeCreated);
+//
+//                        String idToken = userToBeCreated.getUid();
+//                        Log.d("User Token: ", idToken);
+//                        // Send token to your backend via HTTPS
+//                        RestLocalMethods.setUserToken(idToken);
+//                                 User newRailsUser=new User(userToBeCreated.getDisplayName(),
+//                                 "",userToBeCreated.getPhoneNumber(),userToBeCreated.getEmail(), idToken);
+//
+//                        Call<MyResponse<User>> call2 = jsonPlaceHolderApi.createUser(newRailsUser);
+//                        try
+//                        {
+//                            Response<MyResponse<User>> response2 = call2.execute();
+//                            railsUser= response2.body().getData().get(0);
+//
+//                            //API response
+//                            Log.i("user","Created: " + railsUser.toString());
+//                        }
+//                        catch (Exception ex)
+//                        {
+//                            ex.printStackTrace();
+//                        }
 
                     }
-                    if(callback!=null) callback.onSuccess(railsUser);
-                }
-                else if (type_of_check == SECOND_CHECK){
-                    checkGetUserByMail( users.get(0));
-                }
 
-                else{
+                    if(callback!=null) {
+//                        Toast.makeText(context,"ONSUCCESS",Toast.LENGTH_LONG).show();
+                        callback.onSuccess(railsUser);
+                    }
 
-                }
             }
 
 
@@ -240,7 +240,7 @@ public class RestLocalMethods {
 
     }
 
-    public static User createUser( User user){
+    public static User createUser( User user, @Nullable UserCallback callback){
         users = null;
 //        RequestBody rb= RequestBody.create(MediaType.parse("application/json"),jsonize(user));
 //        Log.d("rb",jsonize(user));
@@ -261,6 +261,7 @@ public class RestLocalMethods {
                 else {
                     Toast.makeText(context, "User not  created on backend (fail)!", Toast.LENGTH_SHORT).show();
                 }
+                if(callback!=null ) callback.onSuccess(newRailsUser);
             }
 
             @Override
@@ -937,6 +938,7 @@ public class RestLocalMethods {
 
     public static void isConnected(Throwable t){
         String message="Failed Api";
+        Log.e("api","retrofit fail!");
         if(t instanceof SocketTimeoutException){
             message = "Socket Time out. Please try again.";
         }

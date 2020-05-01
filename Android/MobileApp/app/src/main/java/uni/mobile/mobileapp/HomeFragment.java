@@ -127,8 +127,6 @@ public class HomeFragment extends Fragment {
         parent = new TreeNode(nodeItem).setViewHolder(new MyHolder(getActivity(), true, MyHolder.DEFAULT, MyHolder.DEFAULT));
         root.addChild(parent);
         Log.d("hf","HF::"+RestLocalMethods.getMyUserId()+RestLocalMethods.getJsonPlaceHolderApi());
-        RestLocalMethods.setContext(getActivity());
-        RestTreeLocalMethods.printAllObjectsFromUser(RestLocalMethods.getMyUserId(), parent);
 
         //Add AndroidTreeView into view.
         AndroidTreeView tView = new AndroidTreeView(getActivity(), root);
@@ -140,6 +138,8 @@ public class HomeFragment extends Fragment {
     public void onStart () {
 
         super.onStart();
+        RestLocalMethods.setContext(getActivity());
+        RestTreeLocalMethods.printAllObjectsFromUser(RestLocalMethods.getMyUserId(), parent);
 
     }
 

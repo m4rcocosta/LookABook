@@ -264,60 +264,54 @@ public class HomeActivity extends AppCompatActivity {
 
         scanButton.setClickable(true);
 
-        User railsUser = RestLocalMethods.getUserByEmail(user.getEmail(), user, RestLocalMethods.FIRST_CHECK, new UserCallback() {
-            @Override
-            public void onSuccess(@NonNull User value) {
 
-                // NOW RAILS USER HAS BEEN CREATED OR FOUND!
 
-                if (getUserProvider(user).equals("GOOGLE")) {
-                    Uri imageUri = Uri.parse(user.getPhotoUrl().toString().replace("s96-c", "s400-c"));
-                    Picasso.get().load(imageUri).fit().centerInside().into(profilePic);
+        if (getUserProvider(user).equals("GOOGLE")) {
+            Uri imageUri = Uri.parse(user.getPhotoUrl().toString().replace("s96-c", "s400-c"));
+            Picasso.get().load(imageUri).fit().centerInside().into(profilePic);
+        }
+        else if (getUserProvider(user).equals("FACEBOOK")) {
+            Uri imageUri = Uri.parse(user.getPhotoUrl().toString() + "?height=500");
+            Picasso.get().load(imageUri).fit().centerInside().into(profilePic);
+        }
+        else {
+            // Get the image stored on Firebase via "User id/Images/Profile Pic.jpg".
+            storageReference.child(firebaseAuth.getUid()).child("Images").child("Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.get().load(uri).fit().centerInside().into(profilePic);
                 }
-                else if (getUserProvider(user).equals("FACEBOOK")) {
-                    Uri imageUri = Uri.parse(user.getPhotoUrl().toString() + "?height=500");
-                    Picasso.get().load(imageUri).fit().centerInside().into(profilePic);
-                }
-                else {
-                    // Get the image stored on Firebase via "User id/Images/Profile Pic.jpg".
-                    storageReference.child(firebaseAuth.getUid()).child("Images").child("Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            });
+        }
+        navTitle.setText(user.getDisplayName());
+        Toast.makeText(HomeActivity.this, "Welcome, " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+
+        if (getUserProvider(user).equals("FIREBASE") && !user.isEmailVerified()) {
+            new AlertDialog.Builder(context)
+                    .setTitle("Email verification")
+                    .setMessage("Your account is not activated since your email address is not verified. Activate your account clicking on the activation link sent at " + user.getEmail() + ". If you didn't receive the email click on 'Send' button to send another email.")
+                    .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                    .setPositiveButton("Send", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onSuccess(Uri uri) {
-                            Picasso.get().load(uri).fit().centerInside().into(profilePic);
+                        public void onClick(DialogInterface dialog, int which) {
+                            user.sendEmailVerification();
+                            Toast.makeText(getApplicationContext(),"Email verification sent!" ,Toast.LENGTH_SHORT).show();
+                            userLogout();
                         }
-                    });
-                }
-                navTitle.setText(user.getDisplayName());
-                Toast.makeText(HomeActivity.this, "Welcome, " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            userLogout();
+                        }
+                    })
+                    .show();
+        }
 
-                if (getUserProvider(user).equals("FIREBASE") && !user.isEmailVerified()) {
-                    new AlertDialog.Builder(context)
-                            .setTitle("Email verification")
-                            .setMessage("Your account is not activated since your email address is not verified. Activate your account clicking on the activation link sent at " + user.getEmail() + ". If you didn't receive the email click on 'Send' button to send another email.")
-                            .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
-                            .setPositiveButton("Send", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    user.sendEmailVerification();
-                                    Toast.makeText(getApplicationContext(),"Email verification sent!" ,Toast.LENGTH_SHORT).show();
-                                    userLogout();
-                                }
-                            })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    userLogout();
-                                }
-                            })
-                            .show();
-                }
-
-                //loading the default fragment
-                bottomNavigationSelectedItem = -1;
-                navigationSelectedItem = R.id.nav_home;
-                openFragment(new HomeFragment());
-            }
-        });
+        //loading the default fragment
+        bottomNavigationSelectedItem = -1;
+        navigationSelectedItem = R.id.nav_home;
+        openFragment(new HomeFragment());
 
 
     }

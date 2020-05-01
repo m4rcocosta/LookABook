@@ -11,6 +11,8 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,6 +22,10 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import uni.mobile.mobileapp.rest.RestLocalMethods;
+import uni.mobile.mobileapp.rest.User;
+import uni.mobile.mobileapp.rest.callbacks.UserCallback;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -68,9 +74,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
-                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                startActivity(intent);
-                finish();
+                FirebaseUser userFromFirebase = FirebaseAuth.getInstance().getCurrentUser();
+                RestLocalMethods.initRetrofit(getApplicationContext());
+                RestLocalMethods.getUserByEmail(userFromFirebase, new UserCallback() {
+                    @Override
+                    public void onSuccess(@NonNull User value) {
+
+                        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                        finish();
+
+                    }
+                });
             }
 
             @Override
@@ -104,14 +119,41 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-            if (firebaseUser != null) {
+            else  { // (firebaseUser != null)
                 if (useBiometrics) {
                     biometricPrompt.authenticate(promptInfo);
                 }
                 else {
-                    Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                    finish();
+
+                    RestLocalMethods.initRetrofit(getApplicationContext());
+                    RestLocalMethods.getUserByEmail(firebaseUser, new UserCallback() {
+
+                        @Override
+                        public void onSuccess( User value) {
+
+                            User myNewUser = new User(firebaseUser.getDisplayName(),
+                                 "",firebaseUser.getPhoneNumber(),firebaseUser.getEmail(), firebaseUser.getUid());
+                            if(value == null) {
+                                RestLocalMethods.createUser(myNewUser, new UserCallback() {
+                                    @Override
+                                    public void onSuccess(User value) {
+                                        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                });
+                            }
+                            else{
+                                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+
+
+
+
+                        }
+                    });
                 }
             }
         }

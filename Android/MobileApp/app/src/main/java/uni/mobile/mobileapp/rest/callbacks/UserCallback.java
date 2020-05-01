@@ -8,7 +8,7 @@ import uni.mobile.mobileapp.rest.Shelf;
 import uni.mobile.mobileapp.rest.User;
 
 public interface UserCallback {
-    void onSuccess(@NonNull User value);
+    void onSuccess( User value);
 
     //void onError(@NonNull Throwable throwable);
 }
