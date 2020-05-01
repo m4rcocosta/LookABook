@@ -131,7 +131,6 @@ public class BookFragment extends Fragment {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            //TODO update rails with a patch
                 currentBook.updateBookWithGoogleData();
 
                 patchAndUpdate(view);
@@ -331,7 +330,7 @@ public class BookFragment extends Fragment {
                             currentBook = books.get(i);
 
                             if(currentBook.getGoogleData() != null && currentBook.getGoogleData().getVolumeInfo() != null ){
-                                Toast.makeText(getContext(), "Google " + titles.get(i), Toast.LENGTH_SHORT).show();
+                           //     Toast.makeText(getContext(), "Google " + titles.get(i), Toast.LENGTH_SHORT).show();
                                 if(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getSmallThumbnail() != null)
                                     currentBook.setSmallThumbnail(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getSmallThumbnail());
                                 if(currentBook.getGoogleData().getVolumeInfo().getImageLinks().getThumbnail()!=null)
@@ -344,7 +343,7 @@ public class BookFragment extends Fragment {
                                 cardView.setVisibility(View.VISIBLE);
                             }
                             else{
-                                Toast.makeText(getContext(), "No Google info for " + titles.get(i), Toast.LENGTH_SHORT).show();
+                         //       Toast.makeText(getContext(), "No Google info for " + titles.get(i), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

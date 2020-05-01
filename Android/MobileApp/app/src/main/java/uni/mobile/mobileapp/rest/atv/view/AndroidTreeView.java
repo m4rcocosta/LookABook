@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -59,9 +60,13 @@ import uni.mobile.mobileapp.R;
 import uni.mobile.mobileapp.rest.Book;
 import uni.mobile.mobileapp.rest.MyHolder;
 import uni.mobile.mobileapp.rest.RestLocalMethods;
+import uni.mobile.mobileapp.rest.RestTreeLocalMethods;
 import uni.mobile.mobileapp.rest.Shelf;
 import uni.mobile.mobileapp.rest.atv.holder.SimpleViewHolder;
 import uni.mobile.mobileapp.rest.atv.model.TreeNode;
+import uni.mobile.mobileapp.rest.callbacks.BookCallback;
+
+import uni.mobile.mobileapp.rest.callbacks.TreePrintAllCallback;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.CLIPBOARD_SERVICE;
@@ -74,6 +79,7 @@ public class AndroidTreeView {
     private static final int CAMERA_PERMISSION_CODE = 100;
 
     protected TreeNode mRoot;
+    protected TreePrintAllCallback callback;
     private Context mContext;
     private boolean applyForRoot;
     private int containerStyle = 0;
@@ -110,9 +116,10 @@ public class AndroidTreeView {
         this.mRoot = mRoot;
     }
 
-    public AndroidTreeView(Context context, TreeNode root) {
+    public AndroidTreeView(Context context, TreeNode root, @Nullable  TreePrintAllCallback callback) {
         mRoot = root;
         mContext = context;
+        this.callback=callback;
     }
 
     public void setDefaultAnimation(boolean defaultAnimation) {
@@ -422,7 +429,19 @@ public class AndroidTreeView {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         String allTitles = textView.getText().toString();
-                                        for(String title: allTitles.trim().split("\n")) RestLocalMethods.createBook(RestLocalMethods.getMyUserId(), clickedShelf.getHouseId(), clickedShelf.getRoomId(), clickedShelf.getWallId(), clickedShelf.getId(), new Book(title, "", "", clickedShelf.getId(), clickedShelf.getWallId(), clickedShelf.getRoomId(), clickedShelf.getHouseId()), null);
+                                        for(String title: allTitles.trim().split("\n")) {
+                                            RestLocalMethods.createBook(RestLocalMethods.getMyUserId(), clickedShelf.getHouseId(),
+                                                    clickedShelf.getRoomId(), clickedShelf.getWallId(), clickedShelf.getId(),
+                                                    new Book(title, "", "", clickedShelf.getId(), clickedShelf.getWallId(),
+                                                            clickedShelf.getRoomId(), clickedShelf.getHouseId()), new BookCallback() {
+                                                        @Override
+                                                        public void onSuccess(@NonNull List<Book> value) {
+                                                            if(callback!=null) callback.onSuccessRefresh();
+
+                                                        }
+                                                    });
+
+                                        }
                                     }
                                 })
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

@@ -57,55 +57,60 @@ class ApiController < ApplicationController
         #     return unauthorize_no_token
         # end
         
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
         #####DEBUG ONLY !!!!!!
         #### TODO REMOVE COMMENT 
-        
-        # if ! user_token
-        #     puts request.fullpath[0,request.fullpath.index('?')]
-        #     if(request.fullpath[0,request.fullpath.index('?')] != "/api/v1/users/get-user-by-email")
-        #         puts "ok è una get email stai calmo"
-        #     else
-        #         puts "[E] No token and no not get email "
-        #         return no_param_token
-        #     end 
-        # else #Token param c'è...
-        #     if user_token == "" # ....ma stringa vuotoa
-        #         if(request.fullpath[0,request.fullpath.index('?')] == "/api/v1/get-user-by-email") # TODO change for safety
-        #             puts "ok è una get email stai calmo"
-        #         else
-        #             puts "[E] token empty string and not get email"
-        #             return unauthorize_no_token
-        #         end 
-        #     else #... e non stringa vuota
-        #         @user = User.find_by(auth_token: user_token ) 
-        #         # if(request.fullpath.include? "?")
-        #         #     if( request.fullpath[0,request.fullpath.index('?')] == "/api/v1/get-user-by-email") # TODO change for safety
-        #         #         puts "ok è una get email stai calmo"        
-        #         #     end
-        #         if @user.nil? &&  (request.fullpath != "/api/v1/users" || request.method!="POST")#Non esiste token e non è una post
-        #             puts "[E] no user found "
-        #             return unauthorize_no_token
-        #         elsif params[:user_id] #User con quel token esiste
-        #             @req_user=User.find(params[:user_id])
-        #             if user_token.to_s != @req_user.auth_token.to_s  
-        #                 puts "[E] unmatched token (user by user_id)"
-        #                 return unauthorize_wrong_token
-        #             end
-        #             puts "[V] token and user matching"
-        #         elsif params[:id] #User con quel token esiste
-        #             @req_user=User.find(params[:id])
-        #             if user_token.to_s != @req_user.auth_token.to_s  
-        #                 puts "[E] unmatched token (user by id)"
-        #                 return unauthorize_wrong_token
-        #             end
-        #             puts "[V] token and user matching"
+
+        if ! user_token
+            if(request.fullpath.include? "?")
+            if(request.fullpath[0,request.fullpath.index('?')] != "/api/v1/users/get-user-by-email")
+                puts "ok è una get email stai calmo"
+            end
+            else
+                puts "[E] No token and no not get email "
+                return no_param_token
+            end 
+        else #Token param c'è...
+            if user_token == "" # ....ma stringa vuotoa
+                if(request.fullpath.include? "?")
+                if(request.fullpath[0,request.fullpath.index('?')] == "/api/v1/get-user-by-email") # TODO change for safety
+                    puts "ok è una get email stai calmo"
+                end
+                else
+                    puts "[E] token empty string and not get email"
+                    return unauthorize_no_token
+                end 
+            else #... e non stringa vuota
+                @user = User.find_by(auth_token: user_token ) 
+                # if(request.fullpath.include? "?")
+                #     if( request.fullpath[0,request.fullpath.index('?')] == "/api/v1/get-user-by-email") # TODO change for safety
+                #         puts "ok è una get email stai calmo"        
+                #     end
+                if @user.nil? &&  (request.fullpath != "/api/v1/users" || request.method!="POST")#Non esiste token e non è una post
+                    puts "[E] no user found "
+                    return unauthorize_no_token
+                elsif params[:user_id] #User con quel token esiste
+                    @req_user=User.find(params[:user_id])
+                    if user_token.to_s != @req_user.auth_token.to_s  
+                        puts "[E] unmatched token (user by user_id)"
+                        return unauthorize_wrong_token
+                    end
+                    puts "[V] token and user matching"
+                elsif params[:id] #User con quel token esiste
+                    @req_user=User.find(params[:id])
+                    if user_token.to_s != @req_user.auth_token.to_s  
+                        puts "[E] unmatched token (user by id)"
+                        return unauthorize_wrong_token
+                    end
+                    puts "[V] token and user matching"
                 
-        #         end
-        #     end
+                end
+            end
             
-        # end
+        end
         
+        ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #  
         
         
     end

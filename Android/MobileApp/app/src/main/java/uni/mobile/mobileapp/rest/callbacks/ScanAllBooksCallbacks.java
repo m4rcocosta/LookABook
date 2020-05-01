@@ -1,4 +1,6 @@
 package uni.mobile.mobileapp.rest.callbacks;
 
-public class ScanAllBooksCallbacks {
+public interface ScanAllBooksCallbacks {
+
+     void onScanned();
 }

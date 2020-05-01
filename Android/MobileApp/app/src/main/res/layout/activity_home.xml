@@ -43,19 +43,28 @@
                 android:layout_marginEnd="10dp"
                 android:text="@string/scan_books"
                 />
+
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
 
-
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/placeSnackBar"/>
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="56dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    </FrameLayout>
+
+
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,6 +74,7 @@
         app:labelVisibilityMode="labeled"
         app:itemIconTint="@drawable/selected_bottom_navigation_item_color"
         app:itemTextColor="@drawable/selected_bottom_navigation_item_color"/>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.navigation.NavigationView

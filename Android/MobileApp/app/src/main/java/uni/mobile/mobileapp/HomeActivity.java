@@ -52,6 +52,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import uni.mobile.mobileapp.rest.RestLocalMethods;
+import uni.mobile.mobileapp.rest.callbacks.ScanAllBooksCallbacks;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -72,6 +73,8 @@ public class HomeActivity extends AppCompatActivity {
     private Context context;
     private boolean isConnected;
     private SharedPreferences preferenceManager;
+    private BookFragment bf;
+
 
     private HomeFragment homeFragment;
 
@@ -236,7 +239,8 @@ public class HomeActivity extends AppCompatActivity {
                         if (item.getItemId() == bottomNavigationSelectedItem) break;
                         navigationSelectedItem = -1;
                         bottomNavigationSelectedItem = R.id.navigation_book;
-                        openFragment(new BookFragment(bottomNavigationView));
+                        bf =new BookFragment(bottomNavigationView);
+                        openFragment(bf);
                         return true;
                 }
                 return false;
@@ -261,7 +265,13 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Perform action on click
                 Toast.makeText(getApplicationContext(),"scan",Toast.LENGTH_SHORT).show();
-                RestLocalMethods.scanAllBooks(act, scanButton);
+                RestLocalMethods.scanAllBooks(act, scanButton, new ScanAllBooksCallbacks() {
+                    @Override
+                    public void onScanned() {
+                        if(bf!=null)
+                            bf.getUserBooks();
+                    }
+                }, null);
             }
         });
 

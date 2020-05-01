@@ -4,12 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -32,12 +37,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import uni.mobile.mobileapp.R;
 import uni.mobile.mobileapp.SignInActivity;
 import uni.mobile.mobileapp.SignUpActivity;
 import uni.mobile.mobileapp.rest.callbacks.HouseCallback;
 import uni.mobile.mobileapp.rest.callbacks.OnConnectionTimeoutListener;
 import uni.mobile.mobileapp.rest.callbacks.BookCallback;
 import uni.mobile.mobileapp.rest.callbacks.RoomCallback;
+import uni.mobile.mobileapp.rest.callbacks.ScanAllBooksCallbacks;
 import uni.mobile.mobileapp.rest.callbacks.ShelfCallback;
 import uni.mobile.mobileapp.rest.callbacks.UserCallback;
 import uni.mobile.mobileapp.rest.callbacks.WallCallback;
@@ -75,7 +82,7 @@ public class RestLocalMethods {
 
 
         if(userToken==null){
-            Toast.makeText(ctx,"Token not found",Toast.LENGTH_SHORT).show();
+           // Toast.makeText(ctx,"Token not found",Toast.LENGTH_SHORT).show();
             userToken="";
         }
 
@@ -83,7 +90,7 @@ public class RestLocalMethods {
         listener=new OnConnectionTimeoutListener() {
             @Override
             public void onConnectionTimeout() {
-                Intent intent = new Intent(context, SignUpActivity.class);
+                Intent intent = new Intent(context, SignInActivity.class);
                 context.startActivity(intent);
             }
         };
@@ -154,7 +161,8 @@ public class RestLocalMethods {
             public void onResponse(Call<MyResponse<User>> call, Response<MyResponse<User>> response) {
 
                 User railsUser=null;
-                if (!isResponseSuccessfull(response)){
+
+                if (! response.isSuccessful() && response.code() != 404){
 //                    if(response.code()==404){railsUser = null; }
 //                    else{return;}
                 }
@@ -406,7 +414,6 @@ public class RestLocalMethods {
 
                 List<House> hres = response.body().getData();
                 if (callback != null) callback.onSuccess(hres);
-//TODO print changes
             }
 
             @Override
@@ -426,7 +433,6 @@ public class RestLocalMethods {
 
                 List<House> hres = response.body().getData();
                 if (callback != null) callback.onSuccess(hres);
-//TODO print changes
             }
             @Override
             public void onFailure(Call<MyResponse<House>> call, Throwable t) {
@@ -487,7 +493,6 @@ public class RestLocalMethods {
 
                 rooms = response.body().getData();
                 if (callback != null) callback.onSuccess(rooms);
-//TODO print changes
             }
 
             @Override
@@ -511,7 +516,6 @@ public class RestLocalMethods {
 
                 List<Room> hres = response.body().getData();
                 if (callback != null) callback.onSuccess(hres);
-//TODO print changes
             }
 
             @Override
@@ -531,7 +535,6 @@ public class RestLocalMethods {
 
                 List<Room> hres = response.body().getData();
                 if (callback != null) callback.onSuccess(hres);
-//TODO print changes
             }
             @Override
             public void onFailure(Call<MyResponse<Room>> call, Throwable t) {
@@ -596,7 +599,6 @@ public class RestLocalMethods {
 
                 walls = response.body().getData();
                 if (callback != null) callback.onSuccess(walls);
-//TODO print changes
             }
 
             @Override
@@ -620,7 +622,6 @@ public class RestLocalMethods {
 
                 List<Wall> hres = response.body().getData();
                 if (callback != null) callback.onSuccess(hres);
-//TODO print changes
             }
 
             @Override
@@ -640,7 +641,6 @@ public class RestLocalMethods {
 
                 List<Wall> hres = response.body().getData();
                 if (callback != null) callback.onSuccess(hres);
-//TODO print changes
             }
             @Override
             public void onFailure(Call<MyResponse<Wall>> call, Throwable t) {
@@ -704,7 +704,6 @@ public class RestLocalMethods {
 
                 shelves = response.body().getData();
                 if (callback != null) callback.onSuccess(shelves);
-//TODO print changes
             }
 
             @Override
@@ -729,7 +728,6 @@ public class RestLocalMethods {
 
                 List<Shelf> hres = response.body().getData();
                 if (callback != null) callback.onSuccess(hres);
-//TODO print changes
             }
 
             @Override
@@ -749,7 +747,6 @@ public class RestLocalMethods {
 
                 List<Shelf> hres = response.body().getData();
                 if (callback != null) callback.onSuccess(hres);
-//TODO print changes
             }
             @Override
             public void onFailure(Call<MyResponse<Shelf>> call, Throwable t) {
@@ -798,11 +795,16 @@ public class RestLocalMethods {
 
 
     //GET
-    public  static List<Book> scanAllBooks(Activity act, Button btn){
+    public  static List<Book> scanAllBooks(Activity act, Button btn, @Nullable ScanAllBooksCallbacks callback, @Nullable View snackViewLocation){
         books=null;
         btn.setClickable(false);
-        Snackbar.make(act.findViewById(android.R.id.content), "Search on Google started ...", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+        Snackbar.make(act.findViewById(android.R.id.content), "Search on Google started ...", Snackbar.LENGTH_SHORT)
+                .setAction("DISMISS", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                }).show();
         Call<MyResponse<Book>> call = jsonPlaceHolderApi.scanAllBooks(userId );
 
         call.enqueue(new Callback<MyResponse<Book>>() {
@@ -816,9 +818,21 @@ public class RestLocalMethods {
 
                 books = response.body().getData();
                 btn.setClickable(true);
-                Snackbar.make(act.findViewById(android.R.id.content), "Scan completed", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                    Snackbar snack = Snackbar.make(act.findViewById(android.R.id.content), "Scan completed", Snackbar.LENGTH_SHORT)
+                            .setAction("DISMISS", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            });
+                    snack.show();
+
+//                Toast.makeText(context,"Scan completed",Toast.LENGTH_SHORT).show();
                 //TODO update books on book fragment
+                if(callback!=null) callback.onScanned();
+
+
             }
 
             @Override
@@ -874,7 +888,6 @@ public class RestLocalMethods {
 
                 books = response.body().getData();
                 if (callback != null) callback.onSuccess(books);
-//TODO print changes
             }
 
             @Override
@@ -918,7 +931,6 @@ public class RestLocalMethods {
 
                 List<Book> hres = response.body().getData();
                 if (callback != null) callback.onSuccess(hres);
-//TODO print changes
             }
             @Override
             public  void onFailure(Call<MyResponse<Book>> call, Throwable t) {
