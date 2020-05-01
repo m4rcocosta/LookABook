@@ -254,7 +254,12 @@ public class BookFragment extends Fragment {
                                     else {
                                         Shelf selectedShelf = shelfDic.get(currentShelf);
                                         Log.d("shelf", currentShelf);
-                                        RestLocalMethods.createBook(RestLocalMethods.getMyUserId(), selectedShelf.getHouseId(), selectedShelf.getRoomId(), selectedShelf.getWallId(), selectedShelf.getId(), new Book(bookTitle, bookAuthor, bookISBN, selectedShelf.getId(), selectedShelf.getWallId(), selectedShelf.getRoomId(), selectedShelf.getHouseId()), new BookCallback() {
+                                        RestLocalMethods.createBook(RestLocalMethods.getMyUserId(),
+                                                selectedShelf.getHouseId(), selectedShelf.getRoomId(),
+                                                selectedShelf.getWallId(), selectedShelf.getId(),
+                                                new Book(bookTitle, bookAuthor, bookISBN, selectedShelf.getId(),
+                                                        selectedShelf.getWallId(), selectedShelf.getRoomId(),
+                                                        selectedShelf.getHouseId()), new BookCallback() {
                                             @Override
                                             public void onSuccess(@NonNull List<Book> booksRes) {
                                                 getUserBooks();

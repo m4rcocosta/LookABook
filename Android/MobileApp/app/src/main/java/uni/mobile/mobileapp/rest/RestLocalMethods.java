@@ -39,6 +39,7 @@ import uni.mobile.mobileapp.rest.callbacks.OnConnectionTimeoutListener;
 import uni.mobile.mobileapp.rest.callbacks.BookCallback;
 import uni.mobile.mobileapp.rest.callbacks.RoomCallback;
 import uni.mobile.mobileapp.rest.callbacks.ShelfCallback;
+import uni.mobile.mobileapp.rest.callbacks.UserCallback;
 import uni.mobile.mobileapp.rest.callbacks.WallCallback;
 
 public class RestLocalMethods {
@@ -69,7 +70,7 @@ public class RestLocalMethods {
         return initRetrofit(ctx);
     }
     //To build jsonPlaceHolderApi object handling REST API
-    public static Boolean initRetrofit(Context ctx) {
+    public static  Boolean initRetrofit(Context ctx) {
         context=ctx;
 
 
@@ -137,49 +138,68 @@ public class RestLocalMethods {
     /*
      * ALL
      */
-    public static void getAllObjectsFromUser(final TextView textViewResult ,final JsonPlaceHolderApi jsonPlaceHolderApi,Integer userId){
-//Todo remove this
-        getHouses(textViewResult, userId,true);
-    }
+
 
     /*
      * USER
      */
 
 
-    public static User getUserByEmail( String email,FirebaseUser userToBeCreated,int type_of_check){
+    public static User getUserByEmail(String email, FirebaseUser userToBeCreated, int type_of_check,  @Nullable UserCallback callback){
         users = null;
         Call<MyResponse<User>> call = jsonPlaceHolderApi.getUserByEmail(email);
         call.enqueue(new Callback<MyResponse<User>>() {
             @Override
             public void onResponse(Call<MyResponse<User>> call, Response<MyResponse<User>> response) {
 
-                User newRailsUser;
+                User railsUser;
                 if (!isResponseSuccessfull(response)){
-                    newRailsUser = null;
+                    railsUser = null;
                 }
                 else {
                     users = response.body().getData();
                     if(users!=null) {
-                        newRailsUser = users.get(0);
-                        RestLocalMethods.setMyUserId(newRailsUser.getId());
+                        railsUser = users.get(0);
+                        RestLocalMethods.setMyUserId(railsUser.getId());
                     }
                     else{
-                        newRailsUser = null;
+                        railsUser = null;
                         return;
                     }
                 }
-
                 if (type_of_check == FIRST_CHECK) {
-                    if (newRailsUser != null) {
+                    if (railsUser != null) {
                         Toast.makeText(context, "User with email address " + users.get(0).getEmail() + " exists!", Toast.LENGTH_SHORT).show();
-                        RestLocalMethods.setUserToken(newRailsUser.getAuth_token());
-                        RestLocalMethods.setMyUserId(newRailsUser.getId());
+                        RestLocalMethods.setUserToken(railsUser.getAuth_token());
+                        RestLocalMethods.setMyUserId(railsUser.getId());
                     }
-                    else{
+                    else{   // You need to create a new user in rails (Synch in this thread)
                         Toast.makeText(context,"User with email address " + email + " doesn't exists!" ,Toast.LENGTH_SHORT).show();
-                        SignInActivity.createUserOnBackend(userToBeCreated);
+                        //SignInActivity.createUserOnBackend(userToBeCreated);
+
+                        String idToken = userToBeCreated.getUid();
+                        Log.i("User Token: ", idToken);
+                        // Send token to your backend via HTTPS
+                        RestLocalMethods.setUserToken(idToken);
+                                 User newRailsUser=new User(userToBeCreated.getDisplayName(),
+                                 "",userToBeCreated.getPhoneNumber(),userToBeCreated.getEmail(), idToken);
+
+                        Call<MyResponse<User>> call2 = jsonPlaceHolderApi.createUser(newRailsUser);
+                        try
+                        {
+                            Response<MyResponse<User>> response2 = call2.execute();
+                            railsUser= response2.body().getData().get(0);
+
+                            //API response
+                            Log.i("user","Created: " + railsUser.toString());
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.printStackTrace();
+                        }
+
                     }
+                    if(callback!=null) callback.onSuccess(railsUser);
                 }
                 else if (type_of_check == SECOND_CHECK){
                     checkGetUserByMail( users.get(0));
@@ -907,14 +927,15 @@ public class RestLocalMethods {
         });
     }
 
-    private static Boolean isResponseSuccessfull(Response response){
+    public static Boolean isResponseSuccessfull(Response response){
         if(! response.isSuccessful()){
             Toast.makeText(context,"API response unsuccessful" ,Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
-    private static void isConnected(Throwable t){
+
+    public static void isConnected(Throwable t){
         String message="Failed Api";
         if(t instanceof SocketTimeoutException){
             message = "Socket Time out. Please try again.";

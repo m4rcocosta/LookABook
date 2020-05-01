@@ -1,4 +1,4 @@
-package uni.mobile.mobileapp.rest;
+package uni.mobile.mobileapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,6 +20,10 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import uni.mobile.mobileapp.R;
+import uni.mobile.mobileapp.rest.JsonPlaceHolderApi;
+import uni.mobile.mobileapp.rest.MyHolder;
+import uni.mobile.mobileapp.rest.RestLocalMethods;
+import uni.mobile.mobileapp.rest.RestTreeLocalMethods;
 import uni.mobile.mobileapp.rest.atv.model.TreeNode;
 import uni.mobile.mobileapp.rest.atv.view.AndroidTreeView;
 
@@ -68,9 +72,8 @@ public class ShelfChooserActivity extends AppCompatActivity {
         TreeNode parent = new TreeNode(nodeItem).setViewHolder(new MyHolder(getApplicationContext(), true, MyHolder.DEFAULT, MyHolder.DEFAULT));
         root.addChild(parent);
 
-        JsonPlaceHolderApi jsonPlaceHolderApi = RestLocalMethods.getJsonPlaceHolderApi();
-
-        RestTreeLocalMethods.printAllObjectsFromUser(RestLocalMethods.getMyUserId(),parent,getApplicationContext(),null,jsonPlaceHolderApi);
+        RestLocalMethods.setContext(this);
+        RestTreeLocalMethods.printAllObjectsFromUser(RestLocalMethods.getMyUserId(),parent );
 
 
         //Add AndroidTreeView into view.

@@ -21,6 +21,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -37,6 +38,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,6 +53,7 @@ import java.util.List;
 
 import uni.mobile.mobileapp.rest.RestLocalMethods;
 import uni.mobile.mobileapp.rest.User;
+import uni.mobile.mobileapp.rest.callbacks.UserCallback;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -69,6 +72,7 @@ public class HomeActivity extends AppCompatActivity {
     private ImageView profilePic;
     private TextView navTitle;
     private Context context;
+    private boolean isConnected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +91,14 @@ public class HomeActivity extends AppCompatActivity {
             // Requesting the permission
             ActivityCompat.requestPermissions(HomeActivity.this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, STORAGE_PERMISSION_CODE);
         }
+
+        // Check internet connection
+        ConnectivityManager cm =
+                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        isConnected = activeNetwork != null &&
+                activeNetwork.isConnected();
+        checkInternetConnection();
 
         titleToolbar = findViewById(R.id.toolbar_title);
         dl = findViewById(R.id.activity_home);
@@ -254,54 +266,62 @@ public class HomeActivity extends AppCompatActivity {
 
         scanButton.setClickable(true);
 
-        User railsUser = RestLocalMethods.getUserByEmail(user.getEmail(),user,RestLocalMethods.FIRST_CHECK);
+        User railsUser = RestLocalMethods.getUserByEmail(user.getEmail(), user, RestLocalMethods.FIRST_CHECK, new UserCallback() {
+            @Override
+            public void onSuccess(@NonNull User value) {
 
-        if (getUserProvider(user).equals("GOOGLE")) {
-            Uri imageUri = Uri.parse(user.getPhotoUrl().toString().replace("s96-c", "s400-c"));
-            Picasso.get().load(imageUri).fit().centerInside().into(profilePic);
-        }
-        else if (getUserProvider(user).equals("FACEBOOK")) {
-            Uri imageUri = Uri.parse(user.getPhotoUrl().toString() + "?height=500");
-            Picasso.get().load(imageUri).fit().centerInside().into(profilePic);
-        }
-        else {
-            // Get the image stored on Firebase via "User id/Images/Profile Pic.jpg".
-            storageReference.child(firebaseAuth.getUid()).child("Images").child("Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    Picasso.get().load(uri).fit().centerInside().into(profilePic);
+                // NOW RAILS USER HAS BEEN CREATED OR FOUND!
+
+                if (getUserProvider(user).equals("GOOGLE")) {
+                    Uri imageUri = Uri.parse(user.getPhotoUrl().toString().replace("s96-c", "s400-c"));
+                    Picasso.get().load(imageUri).fit().centerInside().into(profilePic);
                 }
-            });
-        }
-        navTitle.setText(user.getDisplayName());
-        Toast.makeText(HomeActivity.this, "Welcome, " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
-
-        if (getUserProvider(user).equals("FIREBASE") && !user.isEmailVerified()) {
-            new AlertDialog.Builder(context)
-                    .setTitle("Email verification")
-                    .setMessage("Your account is not activated since your email address is not verified. Activate your account clicking on the activation link sent at " + user.getEmail() + ". If you didn't receive the email click on 'Send' button to send another email.")
-                    .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
-                    .setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                else if (getUserProvider(user).equals("FACEBOOK")) {
+                    Uri imageUri = Uri.parse(user.getPhotoUrl().toString() + "?height=500");
+                    Picasso.get().load(imageUri).fit().centerInside().into(profilePic);
+                }
+                else {
+                    // Get the image stored on Firebase via "User id/Images/Profile Pic.jpg".
+                    storageReference.child(firebaseAuth.getUid()).child("Images").child("Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            user.sendEmailVerification();
-                            Toast.makeText(getApplicationContext(),"Email verification sent!" ,Toast.LENGTH_SHORT).show();
-                            userLogout();
+                        public void onSuccess(Uri uri) {
+                            Picasso.get().load(uri).fit().centerInside().into(profilePic);
                         }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            userLogout();
-                        }
-                    })
-                    .show();
-        }
+                    });
+                }
+                navTitle.setText(user.getDisplayName());
+                Toast.makeText(HomeActivity.this, "Welcome, " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
 
-        //loading the default fragment
-        bottomNavigationSelectedItem = -1;
-        navigationSelectedItem = R.id.nav_home;
-        openFragment(new HomeFragment());
+                if (getUserProvider(user).equals("FIREBASE") && !user.isEmailVerified()) {
+                    new AlertDialog.Builder(context)
+                            .setTitle("Email verification")
+                            .setMessage("Your account is not activated since your email address is not verified. Activate your account clicking on the activation link sent at " + user.getEmail() + ". If you didn't receive the email click on 'Send' button to send another email.")
+                            .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                            .setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    user.sendEmailVerification();
+                                    Toast.makeText(getApplicationContext(),"Email verification sent!" ,Toast.LENGTH_SHORT).show();
+                                    userLogout();
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    userLogout();
+                                }
+                            })
+                            .show();
+                }
+
+                //loading the default fragment
+                bottomNavigationSelectedItem = -1;
+                navigationSelectedItem = R.id.nav_home;
+                openFragment(new HomeFragment());
+            }
+        });
+
+
     }
 
     @Override
@@ -367,6 +387,30 @@ public class HomeActivity extends AppCompatActivity {
                 finishAffinity();
             }
         });
+    }
+    private void checkInternetConnection() {
+        if (!isConnected) {
+            new MaterialAlertDialogBuilder(context)
+                    .setTitle("You are disconnected!")
+                    .setMessage("Please activate internet connection")
+                    .setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                    .setPositiveButton("Activate", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            bottomNavigationView.setSelectedItemId(R.id.navigation_shelf);
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.fragmentContainer, new ShelfFragment(bottomNavigationView));
+                            transaction.commit();
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                                checkInternetConnection();
+                        }
+                    })
+                    .show();
+        }
     }
 
 
