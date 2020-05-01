@@ -52,8 +52,6 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import uni.mobile.mobileapp.rest.RestLocalMethods;
-import uni.mobile.mobileapp.rest.User;
-import uni.mobile.mobileapp.rest.callbacks.UserCallback;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -73,6 +71,9 @@ public class HomeActivity extends AppCompatActivity {
     private TextView navTitle;
     private Context context;
     private boolean isConnected;
+    private SharedPreferences preferenceManager;
+
+    private HomeFragment homeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         context = this;
+        preferenceManager = PreferenceManager.getDefaultSharedPreferences(context);
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -151,7 +153,8 @@ public class HomeActivity extends AppCompatActivity {
                         }
                         navigationSelectedItem = R.id.nav_home;
                         bottomNavigationSelectedItem = -1;
-                        openFragment(new HomeFragment());
+                        homeFragment = new HomeFragment();
+                        openFragment(homeFragment);
                         dl.closeDrawers();
                         return true;
                     case R.id.nav_profile:
@@ -251,14 +254,14 @@ public class HomeActivity extends AppCompatActivity {
         //Do whatever
         Log.d("User", "GetTokenResult result = " + idToken);
 
-        Activity act=this;
-        RestLocalMethods.initRetrofit(context, idToken );
+        Activity act = this;
+        RestLocalMethods.initRetrofit(context, idToken);
         scanButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Perform action on click
                 Toast.makeText(getApplicationContext(),"scan",Toast.LENGTH_SHORT).show();
-                RestLocalMethods.scanAllBooks(act,scanButton);
+                RestLocalMethods.scanAllBooks(act, scanButton);
             }
         });
 
@@ -311,9 +314,17 @@ public class HomeActivity extends AppCompatActivity {
         //loading the default fragment
         bottomNavigationSelectedItem = -1;
         navigationSelectedItem = R.id.nav_home;
-        openFragment(new HomeFragment());
+        homeFragment = new HomeFragment();
+        openFragment(homeFragment);
 
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        boolean rememberMe = preferenceManager.getBoolean("RememberMe", false);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null && !rememberMe) userLogout();
     }
 
     @Override
@@ -348,6 +359,12 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        homeFragment.onActivityResultFragment(requestCode, resultCode, data);
     }
 
     private void openFragment(Fragment fragment) {

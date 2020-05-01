@@ -30,9 +30,10 @@ public class TreeNode {
     private TreeNodeLongClickListener mLongClickListener;
     private Object mValue;
     private boolean mExpanded;
+    private Object restValue;
 
     public static TreeNode root() {
-        TreeNode root = new TreeNode(null);
+        TreeNode root = new TreeNode(null, null);
         root.setSelectable(false);
         return root;
     }
@@ -41,9 +42,10 @@ public class TreeNode {
         return ++mLastId;
     }
 
-    public TreeNode(Object value) {
+    public TreeNode(Object value, Object restValue) {
         children = new ArrayList<>();
         mValue = value;
+        this.restValue = restValue;
     }
 
     public TreeNode addChild(TreeNode childNode) {
@@ -280,5 +282,15 @@ public class TreeNode {
         public void toggleSelectionMode(boolean editModeEnabled) {
             // empty
         }
+
+
+    }
+
+    public Object getRestValue() {
+        return restValue;
+    }
+
+    public void setRestValue(Object restValue) {
+        this.restValue = restValue;
     }
 }

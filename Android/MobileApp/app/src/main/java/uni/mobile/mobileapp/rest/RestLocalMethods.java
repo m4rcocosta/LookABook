@@ -95,8 +95,8 @@ public class RestLocalMethods {
 //            }
 //        });
 
-//        String railsHostBaseUrl="http://192.168.1.157:3000/api/v1/"; //DEVELOPMENT
-        String railsHostBaseUrl="http://lookabookreal.herokuapp.com/api/v1/"; //PRODUCTION
+        String railsHostBaseUrl="http://192.168.1.157:3000/api/v1/"; //DEVELOPMENT
+//        String railsHostBaseUrl="http://lookabookreal.herokuapp.com/api/v1/"; //PRODUCTION
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         Gson gson = new GsonBuilder()

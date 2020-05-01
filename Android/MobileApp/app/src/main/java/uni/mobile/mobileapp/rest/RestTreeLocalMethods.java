@@ -62,7 +62,7 @@ public class RestTreeLocalMethods {
                     objectsIds.put("houses",house.getId());
                     //Child
                     MyHolder.IconTreeItem childItem = new MyHolder.IconTreeItem(R.drawable.ic_houseicon, house.getName() );
-                    TreeNode child = new TreeNode(childItem).setViewHolder(new MyHolder(ctx, false, R.layout.child, 25));
+                    TreeNode child = new TreeNode(childItem, house).setViewHolder(new MyHolder(ctx, false, R.layout.child, 25));
                     //Add child.
                     parent.addChildren(child);
 
@@ -104,7 +104,7 @@ public class RestTreeLocalMethods {
                     objectsIds.put("rooms", room.getId());
                     //Child
                     MyHolder.IconTreeItem childItem = new MyHolder.IconTreeItem(R.drawable.ic_roomicon, room.getName() );
-                    TreeNode child = new TreeNode(childItem).setViewHolder(new MyHolder(ctx, false, R.layout.child, 45));
+                    TreeNode child = new TreeNode(childItem, room).setViewHolder(new MyHolder(ctx, false, R.layout.child, 45));
                     //Add child.
                     child.setSelected(false);
                     parent.addChildren(child);
@@ -144,7 +144,7 @@ public class RestTreeLocalMethods {
 
                     //Child
                     MyHolder.IconTreeItem childItem = new MyHolder.IconTreeItem(R.drawable.ic_wallicon2, wall.getName() );
-                    TreeNode child = new TreeNode(childItem).setViewHolder(new MyHolder(ctx, false, R.layout.child, 65));
+                    TreeNode child = new TreeNode(childItem, wall).setViewHolder(new MyHolder(ctx, false, R.layout.child, 65));
                     //Add child.
                     parent.addChildren(child);
 
@@ -191,7 +191,7 @@ public class RestTreeLocalMethods {
 
                     //Child
                     MyHolder.IconTreeItem childItem = new MyHolder.IconTreeItem(R.drawable.ic_shelficon, shelf.getName() );
-                    TreeNode child = new TreeNode(childItem).setViewHolder(new MyHolder(ctx, false, R.layout.child, 85));
+                    TreeNode child = new TreeNode(childItem, shelf).setViewHolder(new MyHolder(ctx, false, R.layout.child, 85));
                     //Add child.
                     parent.addChildren(child);
 
@@ -235,7 +235,7 @@ public class RestTreeLocalMethods {
                     objectsIds.put("books",book.getId());
                     //Child
                     MyHolder.IconTreeItem childItem = new MyHolder.IconTreeItem(R.drawable.ic_folder, book.getTitle() );
-                    TreeNode child = new TreeNode(childItem).setViewHolder(new MyHolder(ctx, false, R.layout.child, RestLocalMethods.getMyUserId() ));
+                    TreeNode child = new TreeNode(childItem, book).setViewHolder(new MyHolder(ctx, false, R.layout.child, RestLocalMethods.getMyUserId() ));
                     //Add child.
                     parent.addChildren(child);
 

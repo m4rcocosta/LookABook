@@ -1,14 +1,12 @@
 package uni.mobile.mobileapp;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -20,37 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
-import uni.mobile.mobileapp.recognition.TextRecognitionActivity;
-import uni.mobile.mobileapp.rest.MyHolder;
-import uni.mobile.mobileapp.rest.RestLocalMethods;
-import uni.mobile.mobileapp.rest.RestTreeLocalMethods;
-import uni.mobile.mobileapp.rest.atv.model.TreeNode;
-import uni.mobile.mobileapp.rest.atv.view.AndroidTreeView;
-
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import java.io.IOException;
-
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import uni.mobile.mobileapp.R;
-import uni.mobile.mobileapp.rest.JsonPlaceHolderApi;
 import uni.mobile.mobileapp.rest.MyHolder;
 import uni.mobile.mobileapp.rest.RestLocalMethods;
 import uni.mobile.mobileapp.rest.RestTreeLocalMethods;
@@ -67,6 +35,8 @@ public class HomeFragment extends Fragment {
     private FloatingActionButton fab2;
     private FloatingActionButton fab3;
     private FloatingActionButton fab4;
+
+    private AndroidTreeView tView;
 
     private TreeNode parent;
 
@@ -100,8 +70,6 @@ public class HomeFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view.findViewById(android.R.id.content), "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
                 if(!isFABOpen){
                     showFABMenu();
                 }else{
@@ -124,12 +92,12 @@ public class HomeFragment extends Fragment {
 
         //Parent
         MyHolder.IconTreeItem nodeItem = new MyHolder.IconTreeItem(R.drawable.ic_arrow_drop_down, "Choose a shelf");
-        parent = new TreeNode(nodeItem).setViewHolder(new MyHolder(getActivity(), true, MyHolder.DEFAULT, MyHolder.DEFAULT));
+        parent = new TreeNode(nodeItem, null).setViewHolder(new MyHolder(getActivity(), true, MyHolder.DEFAULT, MyHolder.DEFAULT));
         root.addChild(parent);
         Log.d("hf","HF::"+RestLocalMethods.getMyUserId()+RestLocalMethods.getJsonPlaceHolderApi());
 
         //Add AndroidTreeView into view.
-        AndroidTreeView tView = new AndroidTreeView(getActivity(), root);
+        tView = new AndroidTreeView(getActivity(), root);
         ((FrameLayout) view.findViewById(R.id.shelfChooserLayout)).addView(tView.getView());
 
 
@@ -151,8 +119,6 @@ public class HomeFragment extends Fragment {
         if (requestCode == CAMERA_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(getContext(), "Camera Permission Granted", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(), TextRecognitionActivity.class);
-                startActivity(intent);
             }
             else {
                 Toast.makeText(getContext(), "Camera Permission Denied", Toast.LENGTH_SHORT).show();
@@ -160,9 +126,16 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    public void onActivityResultFragment(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        tView.onActivityResult(requestCode, resultCode, data);
+    }
 
-
-
+    private static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
 
 
     private void showFABMenu(){

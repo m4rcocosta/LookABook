@@ -328,28 +328,6 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
-    public static void createUserOnBackend(FirebaseUser user) {
-
-        String idToken = user.getUid();
-        Log.i("User Token: ", idToken);
-        // Send token to your backend via HTTPS
-        RestLocalMethods.setUserToken(idToken);
-        User newRailsUser = RestLocalMethods.createUser(new User(user.getDisplayName(), "", user.getPhoneNumber(), user.getEmail(), idToken),null);
- /*
-        if(newRailsUser!=null) {
-                        Toast.makeText(getApplicationContext(), "User with email address " + newRailsUser.getEmail() + " created on backend!", Toast.LENGTH_SHORT).show();
-                        RestLocalMethods.setMyUserId(newRailsUser.getId());
-                        RestLocalMethods.setUserToken(newRailsUser.getAuth_token());
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(), "User not  created on backend (fail)!", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    // Handle error -> task.getException();
-                }*/
-
-    }
-
     private void navigateSignUp() {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);

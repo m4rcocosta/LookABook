@@ -102,13 +102,6 @@ public class MainActivity extends AppCompatActivity {
                 .build();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        boolean rememberMe = preferenceManager.getBoolean("RememberMe", false);
-        if (user != null && !rememberMe) userLogout();
-    }
-
     FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
         @Override
         public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {

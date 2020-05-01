@@ -24,6 +24,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -31,6 +37,10 @@ public class SignUpActivity extends AppCompatActivity {
     private Button signUpButton;
     private TextView alreadyRegisteredButton;
     private FirebaseAuth auth;
+    private DatabaseReference databaseReference;
+    private EditText nameEditText, phoneNumberEditText;
+    private StorageReference storageReference;
+    private FirebaseStorage firebaseStorage;
 
     private static final int STORAGE_PERMISSION_CODE = 101;
 
@@ -52,15 +62,31 @@ public class SignUpActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         signUpButton = findViewById(R.id.signUpButton);
         alreadyRegisteredButton = findViewById(R.id.alreadyRegisteredButton);
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        nameEditText = findViewById(R.id.nameSignUpEditText);
+        phoneNumberEditText = findViewById(R.id.phoneNumberSignUpEditText);
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
+                String name = nameEditText.getText().toString().trim();
+                String phoneNumber = phoneNumberEditText.getText().toString().trim();
                 String email = emailSignUp.getText().toString();
                 String confirmEmail = confirmEmailSignUp.getText().toString();
                 String pass = passwordSignUp.getText().toString();
                 String confirmPass = confirmPasswordSignUp.getText().toString();
 
+
+                if (TextUtils.isEmpty(name)) {
+                    Toast.makeText(getApplicationContext(), "Enter your name", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(phoneNumber)) {
+                    Toast.makeText(getApplicationContext(), "Enter your phone number", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if(TextUtils.isEmpty(email)){
                     Toast.makeText(getApplicationContext(),"Please enter your E-mail address",Toast.LENGTH_LONG).show();
                     return;
@@ -98,7 +124,7 @@ public class SignUpActivity extends AppCompatActivity {
                     return;
                 }
                 else{
-                    auth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
+                    auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (!task.isSuccessful()) {
                                         try {
@@ -120,7 +146,23 @@ public class SignUpActivity extends AppCompatActivity {
                                         }
                                     }
                                     else {
-                                        startActivity(new Intent(SignUpActivity.this, EditProfileActivity.class));
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                        Userinformation userinformation = new Userinformation(phoneNumber);
+                                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(name).build();
+                                        user.updateProfile(profileUpdates)
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            //Success
+                                                        }
+                                                    }
+                                                });
+                                        databaseReference.child(user.getUid()).setValue(userinformation);
+                                        Toast.makeText(getApplicationContext(),"User information updated",Toast.LENGTH_LONG).show();
+                                        user.sendEmailVerification();
+                                        Toast.makeText(getApplicationContext(),"Activate your account by clicking on the link sent at the email " + user.getEmail(),Toast.LENGTH_LONG).show();
+                                        startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                                         finish();
                                     }
                                 }

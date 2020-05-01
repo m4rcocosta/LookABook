@@ -2,33 +2,69 @@ package uni.mobile.mobileapp.rest.atv.view;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.text.FirebaseVisionText;
+import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import uni.mobile.mobileapp.R;
-import uni.mobile.mobileapp.recognition.TextRecognitionActivity;
+import uni.mobile.mobileapp.rest.Book;
 import uni.mobile.mobileapp.rest.MyHolder;
+import uni.mobile.mobileapp.rest.RestLocalMethods;
+import uni.mobile.mobileapp.rest.Shelf;
 import uni.mobile.mobileapp.rest.atv.holder.SimpleViewHolder;
 import uni.mobile.mobileapp.rest.atv.model.TreeNode;
+
+import static android.app.Activity.RESULT_OK;
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 /**
  * Created by Bogdan Melnychuk on 2/10/15.
@@ -48,6 +84,22 @@ public class AndroidTreeView {
     private boolean mUseDefaultAnimation = true;
     private boolean use2dScroll = false;
     private boolean enableAutoToggle = true;
+
+    private Button captureImageButton, loadImageButton, detectTextButton, copyTextButton;
+    private ImageView imageView;
+    private EditText textView;
+    private ImageButton rotateLeftButton, rotateRightButton;
+    private LinearLayout rotateButtons;
+
+    private Bitmap imageBitmap;
+    private Uri photoURI;
+    private String currentPhotoPath;
+
+    static final int REQUEST_TAKE_PHOTO = 1;
+    private static int RESULT_LOAD_IMAGE = 2;
+
+    private ClipboardManager myClipboard;
+    private ClipData myClip;
 
 
     public AndroidTreeView(Context context) {
@@ -285,15 +337,103 @@ public class AndroidTreeView {
                     toggleNode(n);
                 }
                 if( ((MyHolder.IconTreeItem) n.getValue()).icon == R.drawable.ic_shelficon ){
+                    Shelf clickedShelf = (Shelf) n.getRestValue();
                     if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA)  == PackageManager.PERMISSION_DENIED) {
                         // Requesting the permission
                         ActivityCompat.requestPermissions((Activity)mContext, new String[] { Manifest.permission.CAMERA }, CAMERA_PERMISSION_CODE);
                     }
                     else {
-                        Intent intent = new Intent(mContext, TextRecognitionActivity.class);
-                        mContext.startActivity(intent);
+                        LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+                        View alertLayout = inflater.inflate(R.layout.layout_custom_text_recognition, null);
+                        captureImageButton = alertLayout.findViewById(R.id.capture_image);
+                        loadImageButton = alertLayout.findViewById(R.id.load_image);
+                        detectTextButton = alertLayout.findViewById(R.id.detect_text_image);
+                        copyTextButton = alertLayout.findViewById(R.id.copy_text);
+                        imageView = alertLayout.findViewById(R.id.image_view);
+                        textView = alertLayout.findViewById(R.id.text_display);
+                        rotateLeftButton = alertLayout.findViewById(R.id.rotate_left);
+                        rotateRightButton = alertLayout.findViewById(R.id.rotate_right);
+                        rotateButtons = alertLayout.findViewById(R.id.rotate_buttons);
+
+                        captureImageButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                textView.setText("");
+                                copyTextButton.setVisibility(View.GONE);
+                                dispatchTakePictureIntent();
+                            }
+                        });
+
+                        loadImageButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                copyTextButton.setVisibility(View.GONE);
+                                textView.setText("");
+                                loadImageFromGallery();
+                            }
+                        });
+
+                        detectTextButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (imageBitmap != null) {
+                                    detectTextFromImage();
+                                }
+                                else Toast.makeText(mContext, "Image missing. Load an image or take a photo!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        copyTextButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                myClipboard = (ClipboardManager) mContext.getSystemService(CLIPBOARD_SERVICE);
+                                String text;
+                                text = textView.getText().toString();
+
+                                myClip = ClipData.newPlainText("text", text);
+                                myClipboard.setPrimaryClip(myClip);
+
+                                Toast.makeText(mContext, "Text Copied", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        rotateLeftButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                imageBitmap = rotateImage(imageBitmap, -90);
+                                imageView.setImageBitmap(imageBitmap);
+                            }
+                        });
+
+                        rotateRightButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                imageBitmap = rotateImage(imageBitmap, 90);
+                                imageView.setImageBitmap(imageBitmap);
+                            }
+                        });
+                        RestLocalMethods.setContext(mContext);
+                        new AlertDialog.Builder(mContext)
+                                .setTitle("Add books to " + clickedShelf.getName())
+                                .setMessage("You can add several books by scanning them with camera or from your onw personal image!\n Insert one title per row.")
+                                .setView(alertLayout) // this is set the view from XML inside AlertDialog
+                                //.setCancelable(false) // disallow cancel of AlertDialog on click of back button and outside touch
+                                .setPositiveButton("Create Books", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        String allTitles = textView.getText().toString();
+                                        for(String title: allTitles.trim().split("\n")) RestLocalMethods.createBook(RestLocalMethods.getMyUserId(), clickedShelf.getHouseId(), clickedShelf.getRoomId(), clickedShelf.getWallId(), clickedShelf.getId(), new Book(title, "", "", clickedShelf.getId(), clickedShelf.getWallId(), clickedShelf.getRoomId(), clickedShelf.getHouseId()), null);
+                                    }
+                                })
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                })
+                                .show();
                     }
-                    }
+                }
             }
         });
 
@@ -505,6 +645,119 @@ public class AndroidTreeView {
                 final TreeNode.BaseNodeViewHolder parentViewHolder = getViewHolderForNode(parent);
                 parentViewHolder.getNodeItemsView().removeViewAt(index);
             }
+        }
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                photoURI = FileProvider.getUriForFile(mContext, "uni.mobile.mobileapp.fileprovider", photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                ((Activity) mContext).startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void detectTextFromImage() {
+        FirebaseVisionImage firebaseVisionImage = FirebaseVisionImage.fromBitmap(imageBitmap);
+        FirebaseVisionTextRecognizer firebaseVisionTextRecognizer = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
+        firebaseVisionTextRecognizer.processImage(firebaseVisionImage)
+                .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
+                    @Override
+                    public void onSuccess(FirebaseVisionText firebaseVisionText) {
+                        displayTextFromImage(firebaseVisionText);
+                    }
+                })
+                .addOnFailureListener(
+                        new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(mContext, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Log.d("Error: ", e.getMessage());
+                            }
+                        });
+    }
+
+    private void displayTextFromImage(FirebaseVisionText firebaseVisionText) {
+        List<FirebaseVisionText.TextBlock> blockList = firebaseVisionText.getTextBlocks();
+        if (blockList.size() == 0) Toast.makeText(mContext, "No text found in image.", Toast.LENGTH_SHORT).show();
+        else {
+            for (FirebaseVisionText.TextBlock block : firebaseVisionText.getTextBlocks()) {
+                String text = block.getText();
+                textView.setText(text);
+            }
+            copyTextButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void loadImageFromGallery() {
+        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        ((Activity) mContext).startActivityForResult(i, RESULT_LOAD_IMAGE);
+    }
+
+    private static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            Toast.makeText(mContext, "Image saved", Toast.LENGTH_SHORT).show();
+            imageBitmap = null;
+            try {
+                imageBitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), photoURI);
+                imageBitmap = rotateImage(imageBitmap, 90);
+                imageView.setImageBitmap(imageBitmap);
+                rotateButtons.setVisibility(View.VISIBLE);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+            Cursor cursor = mContext.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            imageBitmap = BitmapFactory.decodeFile(picturePath);
+            imageView.setImageBitmap(imageBitmap);
+            rotateButtons.setVisibility(View.VISIBLE);
+
         }
     }
 }
