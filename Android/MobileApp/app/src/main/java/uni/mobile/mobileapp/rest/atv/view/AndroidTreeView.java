@@ -1,6 +1,10 @@
 package uni.mobile.mobileapp.rest.atv.view;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -11,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +25,8 @@ import java.util.List;
 import java.util.Set;
 
 import uni.mobile.mobileapp.R;
+import uni.mobile.mobileapp.recognition.TextRecognitionActivity;
+import uni.mobile.mobileapp.rest.MyHolder;
 import uni.mobile.mobileapp.rest.atv.holder.SimpleViewHolder;
 import uni.mobile.mobileapp.rest.atv.model.TreeNode;
 
@@ -27,6 +35,7 @@ import uni.mobile.mobileapp.rest.atv.model.TreeNode;
  */
 public class AndroidTreeView {
     private static final String NODES_PATH_SEPARATOR = ";";
+    private static final int CAMERA_PERMISSION_CODE = 100;
 
     protected TreeNode mRoot;
     private Context mContext;
@@ -36,9 +45,10 @@ public class AndroidTreeView {
     private TreeNode.TreeNodeClickListener nodeClickListener;
     private TreeNode.TreeNodeLongClickListener nodeLongClickListener;
     private boolean mSelectionModeEnabled;
-    private boolean mUseDefaultAnimation = false;
+    private boolean mUseDefaultAnimation = true;
     private boolean use2dScroll = false;
     private boolean enableAutoToggle = true;
+
 
     public AndroidTreeView(Context context) {
         mContext = context;
@@ -274,6 +284,16 @@ public class AndroidTreeView {
                 if (enableAutoToggle) {
                     toggleNode(n);
                 }
+                if( ((MyHolder.IconTreeItem) n.getValue()).icon == R.drawable.ic_shelficon ){
+                    if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA)  == PackageManager.PERMISSION_DENIED) {
+                        // Requesting the permission
+                        ActivityCompat.requestPermissions((Activity)mContext, new String[] { Manifest.permission.CAMERA }, CAMERA_PERMISSION_CODE);
+                    }
+                    else {
+                        Intent intent = new Intent(mContext, TextRecognitionActivity.class);
+                        mContext.startActivity(intent);
+                    }
+                    }
             }
         });
 
