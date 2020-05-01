@@ -13,34 +13,34 @@
         android:src="@drawable/ic_books">
 
     </ImageView>
-<ScrollView
+    <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/shelfChoserLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <!-- FAB MENU ELEMENTS: -->
-
-
-        <!-- <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.92"
-        tools:layout_editor_absoluteX="0dp">
-
-        <TextView
-            android:id="@+id/restText"
+        <FrameLayout
+            android:id="@+id/shelfChoserLayout"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <!-- FAB MENU ELEMENTS: -->
 
-            android:layout_height="match_parent"></TextView>
-    </androidx.core.widget.NestedScrollView>-->
 
-    </FrameLayout>
-</ScrollView>
+            <!-- <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.92"
+            tools:layout_editor_absoluteX="0dp">
+
+            <TextView
+                android:id="@+id/restText"
+                android:layout_width="match_parent"
+
+                android:layout_height="match_parent"></TextView>
+        </androidx.core.widget.NestedScrollView>-->
+
+        </FrameLayout>
+    </ScrollView>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab4"
         android:layout_width="wrap_content"

@@ -93,11 +93,9 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         // Check internet connection
-        ConnectivityManager cm =
-                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        isConnected = activeNetwork != null &&
-                activeNetwork.isConnected();
+        isConnected = activeNetwork != null && activeNetwork.isConnected();
         checkInternetConnection();
 
         titleToolbar = findViewById(R.id.toolbar_title);
