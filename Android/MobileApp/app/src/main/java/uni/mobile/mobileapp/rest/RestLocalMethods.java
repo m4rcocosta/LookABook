@@ -102,8 +102,8 @@ public class RestLocalMethods {
 //            }
 //        });
 
-        String railsHostBaseUrl="http://192.168.1.157:3000/api/v1/"; //DEVELOPMENT
-//        String railsHostBaseUrl="http://lookabookreal.herokuapp.com/api/v1/"; //PRODUCTION
+//        String railsHostBaseUrl="http://192.168.1.157:3000/api/v1/"; //DEVELOPMENT
+        String railsHostBaseUrl="http://lookabookreal.herokuapp.com/api/v1/"; //PRODUCTION
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         Gson gson = new GsonBuilder()
@@ -179,7 +179,7 @@ public class RestLocalMethods {
                 }
 
                     if (railsUser != null) { // User already exists in Rails, just save it into RestLocalMethods
-                        Toast.makeText(context, "User with email address " + users.get(0).getEmail() + " exists!", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "User with email address " + users.get(0).getEmail() + " exists!", Toast.LENGTH_SHORT).show();
                         RestLocalMethods.setUserToken(railsUser.getAuth_token());
                         RestLocalMethods.setMyUserId(railsUser.getId());
 
@@ -262,7 +262,7 @@ public class RestLocalMethods {
                 users = response.body().getData();
                 User newRailsUser = users.get(0);
                 if(newRailsUser!=null) {
-                    Toast.makeText(context, "User with email address " + newRailsUser.getEmail() + " created on backend!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "User with email address " + newRailsUser.getEmail() + " created on backend!", Toast.LENGTH_SHORT).show();
                     RestLocalMethods.setMyUserId(newRailsUser.getId());
                     RestLocalMethods.setUserToken(newRailsUser.getAuth_token());
                 }
@@ -282,7 +282,7 @@ public class RestLocalMethods {
 
     private static void checkCreate(User newRailsUser, String mail) {
         if(newRailsUser!=null) {
-            Toast.makeText(context, "User with email address " + newRailsUser.getEmail() + " created on backend!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "User with email address " + newRailsUser.getEmail() + " created on backend!", Toast.LENGTH_SHORT).show();
             RestLocalMethods.setMyUserId(newRailsUser.getId());
             RestLocalMethods.setUserToken(newRailsUser.getAuth_token());
         }
