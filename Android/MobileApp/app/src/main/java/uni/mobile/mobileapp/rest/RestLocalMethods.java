@@ -162,7 +162,7 @@ public class RestLocalMethods {
 
                 User railsUser=null;
 
-                if (! response.isSuccessful() && response.code() != 404){
+                if (! response.isSuccessful()){
 //                    if(response.code()==404){railsUser = null; }
 //                    else{return;}
                 }
