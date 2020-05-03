@@ -1,31 +1,14 @@
 # lookABookApp
 Project for Mobile Application and Cloud Computing course
 
+<a href="https://www.dis.uniroma1.it/"><img src="http://www.dis.uniroma1.it/sites/default/files/marchio%20logo%20eng%20jpg.jpg" width="1000"></a>
 
-## Pushing rails app on heroku
-You need to launch the command:
-'''
-git subtree push --prefix Backend/firebase-rails-modified heroku master
-'''
+## Team
+* Giuseppe Capaldi <a href="https://github.com/not-a-genius"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/1024px-Octicons-mark-github.svg.png" width="20"></a>
+<a href="https://www.linkedin.com/in/giuseppecapaldi/"><img src="https://www.tecnomagazine.it/tech/wp-content/uploads/2013/05/linkedin-aggiungere-immagini.png" width="20"></a>
 
-## Other
-'''
-git push origin `git subtree split --prefix build gh-pages`:master --force
+* Marco Costa <a href="https://github.com/marcocosta96"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/1024px-Octicons-mark-github.svg.png" width="20"></a>
+<a href="https://www.linkedin.com/in/marco-costa-ecs"><img src="https://www.tecnomagazine.it/tech/wp-content/uploads/2013/05/linkedin-aggiungere-immagini.png" width="20"></a>
 
-'''
-## To suppress ruby 2.7.1 warnings
-'''
-RUBYOPT='-W:no-deprecated -W:no-experimental' rails c
-'''
-or
-'''
-RUBYOPT='-W:no-deprecated -W:no-experimental' rails s -b 0.0.0.0
-'''
-git push heroku `git subtree split --prefix Backend/firebase-rails-modified/ master`:master --force
-
-https://lookabookreal.herokuapp.com/
-
-# Heroku setup
-npm install -g heroku
-heroku login
-heroku git:remote -a my-app
+## Schema
+<a href="#"><img src="./schema.jpg" width="1000"></a>
